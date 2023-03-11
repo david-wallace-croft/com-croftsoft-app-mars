@@ -37,6 +37,8 @@ name = "com-crofsoft-app-mars"
 version = "0.0.0-SNAPSHOT"
 dependencies = [
  "anyhow",
+ "com-croftsoft-lib-animation",
+ "com-croftsoft-lib-role",
  "console_error_panic_hook",
  "futures",
  "js-sys",
@@ -46,6 +48,27 @@ dependencies = [
  "web-sys",
  "wee_alloc",
 ]
+
+[[package]]
+name = "com-croftsoft-lib-animation"
+version = "0.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c418c8ca4bd7cf013674b6fe6a03275857c3e97c5e2ac6ae882d7e448aafe07"
+dependencies = [
+ "anyhow",
+ "com-croftsoft-lib-role",
+ "futures",
+ "js-sys",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+]
+
+[[package]]
+name = "com-croftsoft-lib-role"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7300d04e6ef33daadcda022076d9a790697646ab4c0f921a5be592c729d65e0"
 
 [[package]]
 name = "console_error_panic_hook"
