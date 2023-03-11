@@ -30,7 +30,7 @@ features = [
   "CanvasRenderingContext2d",
   "Document",
   "HtmlCanvasElement",
-  "HtmlDivElement",
+  "HtmlCollection",
   "Window",
   "console",
 ]
