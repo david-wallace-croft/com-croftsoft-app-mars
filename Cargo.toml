@@ -12,6 +12,34 @@ readme = "README.md"
 repository = "https://github.com/david-wallace-croft/com-croftsoft-app-mars"
 version = "0.0.0-SNAPSHOT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+anyhow = "1.0.66"
+console_error_panic_hook = "0.1.7"
+futures = "0.3.26"
+js-sys = "0.3.61"
+wasm-bindgen = "0.2.84"
+wasm-bindgen-futures = "0.4.34"
+wee_alloc = { optional = true, version = "0.4.5" }
+
+[dependencies.web-sys]
+features = [
+  "CanvasRenderingContext2d",
+  "Document",
+  "HtmlCanvasElement",
+  "HtmlDivElement",
+  "Window",
+  "console",
+]
+version = "0.3.61"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3.34"
+
+[features]
+default = ["wee_alloc"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true

@@ -1,0 +1,20 @@
+{
+  "author": "David Wallace Croft <david@CroftSoft.com>",
+  "description": "Tank combat game using the A* algorithm",
+  "devDependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^1.6.0",
+    "@webpack-cli/serve": "^2.0.1",
+    "copy-webpack-plugin": "^5.1.2",
+    "rimraf": "^4.3.0",
+    "wasm-pack": "^0.10.3",
+    "webpack": "^5.75.0",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "name": "com-croftsoft-app-mars",
+  "scripts": {
+    "build": "rimraf dist pkg && webpack",
+    "start": "rimraf dist pkg && webpack serve",
+    "test": "cargo test && wasm-pack test --firefox --headless"
+  },
+  "version": "0.0.0-SNAPSHOT"
+}
