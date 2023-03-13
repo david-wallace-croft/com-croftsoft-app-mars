@@ -11,6 +11,7 @@ pub mod constants;
 pub mod engine;
 pub mod painters;
 pub mod state;
+pub mod updaters;
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]

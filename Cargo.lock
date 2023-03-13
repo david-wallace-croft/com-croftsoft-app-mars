@@ -37,6 +37,7 @@ name = "com-crofsoft-app-mars"
 version = "0.0.0-SNAPSHOT"
 dependencies = [
  "anyhow",
+ "com-croftsoft-core",
  "com-croftsoft-lib-animation",
  "com-croftsoft-lib-role",
  "console_error_panic_hook",
@@ -48,6 +49,11 @@ dependencies = [
  "web-sys",
  "wee_alloc",
 ]
+
+[[package]]
+name = "com-croftsoft-core"
+version = "0.10.0-SNAPSHOT"
+source = "git+https://github.com/david-wallace-croft/com-croftsoft-core#4a53d4e247bb17c6d94bff0b16d50a42417282e5"
 
 [[package]]
 name = "com-croftsoft-lib-animation"

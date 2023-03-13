@@ -14,6 +14,9 @@ version = "0.0.0-SNAPSHOT"
 
 [dependencies]
 anyhow = "1.0.66"
+# com-croftsoft-core = { path = "../../../crates/com-croftsoft-core" }
+com-croftsoft-core = { git = "https://github.com/david-wallace-croft/com-croftsoft-core" }
+# com-croftsoft-core = "0.9.0"
 # com-croftsoft-lib-animation = { path = "../../../crates/com-croftsoft-lib-animation" }
 # com-croftsoft-lib-animation = { git = "https://github.com/david-wallace-croft/com-croftsoft-lib-animation" }
 com-croftsoft-lib-animation = "0.0.5"

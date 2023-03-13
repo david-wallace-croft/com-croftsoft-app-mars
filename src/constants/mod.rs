@@ -14,7 +14,7 @@
 use crate::state::configuration::Configuration;
 
 pub const CONFIGURATION: Configuration = Configuration {};
-pub const FILL_STYLE_BACKGROUND: &str = "black";
+pub const FILL_STYLE_BACKGROUND: &str = "rgb(255, 152, 109)";
 pub static INFO: &str = "CroftSoft Mars \
   v0.0.0-SNAPSHOT \
   Copyright 2023 \
