@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-13
+//! - Updated: 2023-03-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,17 +13,12 @@
 
 use crate::components::root::RootComponent;
 use crate::constants::CONFIGURATION;
-use crate::state::configuration::Configuration;
-// use super::configuration::Configuration;
-// use crate::components::root::RootComponent;
-// use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
+use crate::state::configuration::Configuration;
 use crate::state::options::Options;
 use crate::state::root::Root;
-// use crate::models::options::Options;
-// use crate::models::root::Root;
-// use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
+use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
@@ -36,7 +31,7 @@ pub struct Looper {
   events: Rc<RefCell<Events>>,
   inputs: Rc<RefCell<Inputs>>,
   root_component: RootComponent,
-  // root_updater: RootUpdater,
+  root_updater: RootUpdater,
 }
 
 impl Looper {
@@ -46,13 +41,16 @@ impl Looper {
     spawn_local_loop(looper);
   }
 
-  pub fn new(_configuration: Configuration) -> Self {
-    // let root_updater_configuration = RootUpdaterConfiguration {
-    //   update_period_millis_initial,
-    // };
-    // let frame_rater: Rc<RefCell<dyn FrameRater>> = Rc::new(RefCell::new(
-    //   SimpleFrameRater::new(update_period_millis_initial),
-    // ));
+  pub fn new(configuration: Configuration) -> Self {
+    let Configuration {
+      update_period_millis_initial,
+    } = configuration;
+    let root_updater_configuration = RootUpdaterConfiguration {
+      update_period_millis_initial,
+    };
+    let frame_rater: Rc<RefCell<dyn FrameRater>> = Rc::new(RefCell::new(
+      SimpleFrameRater::new(update_period_millis_initial),
+    ));
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
@@ -61,22 +59,22 @@ impl Looper {
       events.clone(),
       "root",
       inputs.clone(),
+      options.clone(),
+      root_state.clone(),
+    );
+    let root_updater = RootUpdater::new(
+      root_updater_configuration,
+      events.clone(),
+      frame_rater,
+      inputs.clone(),
       options,
       root_state,
     );
-    // let root_updater = RootUpdater::new(
-    //   root_updater_configuration,
-    //   events.clone(),
-    //   frame_rater,
-    //   inputs.clone(),
-    //   options,
-    //   root_model,
-    // );
     Self {
       events,
       inputs,
       root_component,
-      // root_updater,
+      root_updater,
     }
   }
 }
@@ -102,7 +100,7 @@ impl LoopUpdater for Looper {
   ) {
     self.inputs.borrow_mut().current_time_millis = update_time_millis;
     self.root_component.update();
-    // self.root_updater.update();
+    self.root_updater.update();
     self.root_component.paint();
     self.events.borrow_mut().clear();
     self.inputs.borrow_mut().clear();
