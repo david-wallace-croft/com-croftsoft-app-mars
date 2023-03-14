@@ -5,13 +5,11 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-13
+//! - Updated: 2023-03-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
-
-#![allow(clippy::uninlined_format_args)]
 
 use com_croftsoft_lib_animation::web_sys::log;
 use constants::INFO;
