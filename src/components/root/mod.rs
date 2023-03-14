@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-11
+//! - Updated: 2023-03-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,8 +23,9 @@ use crate::engine::traits::Component;
 // use crate::models::options::Options;
 // use crate::models::root::Root;
 use super::canvas::CanvasComponent;
-use crate::state::events::Events;
-use crate::state::inputs::Inputs;
+use super::update_rate::UpdateRateComponent;
+use crate::messages::events::Events;
+use crate::messages::inputs::Inputs;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use com_croftsoft_lib_animation::web_sys::{get_window, log};
@@ -35,9 +36,9 @@ use web_sys::{Document, HtmlCollection};
 
 pub struct RootComponent {
   canvas_component: Rc<RefCell<CanvasComponent>>,
-  components: [Rc<RefCell<dyn Component>>; 1],
+  components: [Rc<RefCell<dyn Component>>; 2],
   events: Rc<RefCell<Events>>,
-  // frame_rate_component: Rc<RefCell<FrameRateComponent>>,
+  update_rate_component: Rc<RefCell<UpdateRateComponent>>,
   // pause_component: Rc<RefCell<PauseComponent>>,
   // reset_component: Rc<RefCell<ResetComponent>>,
 }
@@ -52,20 +53,23 @@ impl RootComponent {
     root_state: Rc<RefCell<Root>>,
   ) -> Self {
     let canvas_component = Rc::new(RefCell::new(CanvasComponent::new(
-      "canvas", inputs, options, root_state,
+      "canvas",
+      inputs.clone(),
+      options,
+      root_state,
     )));
-    // let frame_rate_component = Rc::new(RefCell::new(FrameRateComponent::new(
-    //   "frame-rate",
-    //   inputs.clone(),
-    // )));
+    let update_rate_component = Rc::new(RefCell::new(
+      UpdateRateComponent::new("update-rate", inputs),
+    ));
     // let pause_component =
     //   Rc::new(RefCell::new(PauseComponent::new("pause", inputs.clone())));
     // let reset_component =
     //   Rc::new(RefCell::new(ResetComponent::new("reset", inputs.clone())));
     // let speed_component =
     //   Rc::new(RefCell::new(SpeedComponent::new("speed", inputs.clone())));
-    let components: [Rc<RefCell<dyn Component>>; 1] = [
+    let components: [Rc<RefCell<dyn Component>>; 2] = [
       canvas_component.clone(),
+      update_rate_component.clone(),
       // frame_rate_component.clone(),
       // pause_component.clone(),
       // reset_component.clone(),
@@ -74,7 +78,7 @@ impl RootComponent {
       canvas_component,
       components,
       events,
-      // frame_rate_component,
+      update_rate_component,
       // pause_component,
       // reset_component,
     }
@@ -84,19 +88,19 @@ impl RootComponent {
 impl Component for RootComponent {
   fn make_html(&self) -> String {
     let canvas_html: String = self.canvas_component.borrow().make_html();
-    // let frame_rate_html: String =
-    //   self.frame_rate_component.borrow().make_html();
+    let update_rate_html: String =
+      self.update_rate_component.borrow().make_html();
     // let pause_html: String = self.pause_component.borrow().make_html();
     // let reset_html: String = self.reset_component.borrow().make_html();
     // TODO: Assemble this from an HTML template
     [
       String::from("<div id=\"root\">"),
       canvas_html,
-      // String::from("<br>"),
+      String::from("<br>"),
       // reset_html,
       // String::from("<br>"),
       // speed_html,
-      // frame_rate_html,
+      update_rate_html,
       // time_html,
       // pause_html,
       String::from("</div>"),
@@ -125,6 +129,7 @@ impl Initializer for RootComponent {
 
 impl Painter for RootComponent {
   fn paint(&mut self) {
+    // TODO
     // if !self.events.borrow().updated {
     //   return;
     // }

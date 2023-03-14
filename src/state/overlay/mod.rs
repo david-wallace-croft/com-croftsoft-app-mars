@@ -1,21 +1,17 @@
 // =============================================================================
-//! - Root Model for CroftSoft Mars
+//! - Overlay state for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2022-03-11
+//! - Created: 2023-03-13
 //! - Updated: 2023-03-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::overlay::Overlay;
-use core::cell::RefCell;
-use std::rc::Rc;
-
 #[derive(Default)]
-pub struct Root {
-  pub overlay: Rc<RefCell<Overlay>>,
+pub struct Overlay {
+  pub update_rate_string: String,
 }

@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-11
+//! - Updated: 2023-03-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-// use super::overlay::OverlayPainter;
+use super::overlay::OverlayPainter;
 use crate::constants::FILL_STYLE_BACKGROUND;
 use crate::state::options::Options;
 use crate::state::root::Root;
@@ -33,7 +33,7 @@ impl RootPainter {
   pub fn new(
     canvas_element_id: &str,
     options: Rc<RefCell<Options>>,
-    root_model: &Root,
+    root_state: &Root,
   ) -> Self {
     let document: Document = window().unwrap().document().unwrap();
     let element: Element =
@@ -49,14 +49,14 @@ impl RootPainter {
     let background_painter = BackgroundPainter::new(
       canvas_height,
       canvas_width,
-      context,
+      context.clone(),
       FILL_STYLE_BACKGROUND,
     );
-    // let overlay_painter =
-    //   OverlayPainter::new(context, options, root_model.overlay.clone());
+    let overlay_painter =
+      OverlayPainter::new(context, options, root_state.overlay.clone());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
-      // Box::new(overlay_painter),
+      Box::new(overlay_painter),
     ];
     Self {
       painters,

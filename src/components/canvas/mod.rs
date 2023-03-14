@@ -5,15 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-11
+//! - Updated: 2023-03-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::engine::traits::Component;
+use crate::messages::inputs::Inputs;
 use crate::painters::root::RootPainter;
-use crate::state::inputs::Inputs;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use com_croftsoft_lib_animation::web_sys::{

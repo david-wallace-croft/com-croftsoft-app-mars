@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-11
+//! - Updated: 2023-03-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,8 +17,8 @@ use crate::state::configuration::Configuration;
 // use super::configuration::Configuration;
 // use crate::components::root::RootComponent;
 // use crate::constants::CONFIGURATION;
-use crate::state::events::Events;
-use crate::state::inputs::Inputs;
+use crate::messages::events::Events;
+use crate::messages::inputs::Inputs;
 use crate::state::options::Options;
 use crate::state::root::Root;
 // use crate::models::options::Options;
