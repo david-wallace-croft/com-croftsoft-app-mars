@@ -5,12 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-13
+//! - Updated: 2023-03-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use crate::constants::FILL_STYLE_BACKGROUND;
 use crate::state::options::Options;
@@ -52,10 +53,13 @@ impl RootPainter {
       context.clone(),
       FILL_STYLE_BACKGROUND,
     );
+    let obstacle_painter =
+      ObstaclePainter::new(context.clone(), root_state.obstacle.clone());
     let overlay_painter =
       OverlayPainter::new(context, options, root_state.overlay.clone());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
+      Box::new(obstacle_painter),
       Box::new(overlay_painter),
     ];
     Self {

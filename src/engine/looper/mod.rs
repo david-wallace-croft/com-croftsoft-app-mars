@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-14
+//! - Updated: 2023-03-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,9 +16,11 @@ use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::state::configuration::Configuration;
+use crate::state::obstacle::Obstacle;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
+use com_croftsoft_core::math::geom::structures::Circle;
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
@@ -54,7 +56,13 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-    let root_state = Rc::new(RefCell::new(Root::default()));
+    let circle = Circle {
+      center_x: 100.,
+      center_y: 100.,
+      radius: 100.,
+    };
+    let obstacle = Rc::new(RefCell::new(Obstacle::new(circle)));
+    let root_state = Rc::new(RefCell::new(Root::new(obstacle)));
     let root_component = RootComponent::new(
       events.clone(),
       "root",
