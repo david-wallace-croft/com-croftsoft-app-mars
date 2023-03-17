@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-15
+//! - Updated: 2023-03-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,7 +20,7 @@ use crate::state::obstacle::Obstacle;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
-use com_croftsoft_core::math::geom::structures::Circle;
+use com_croftsoft_core::math::geom::structures::{Circle, Rectangle};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
@@ -56,13 +56,22 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-    let circle = Circle {
+    let circle_0 = Circle {
       center_x: 100.,
       center_y: 100.,
       radius: 100.,
     };
-    let obstacle = Rc::new(RefCell::new(Obstacle::new(circle)));
-    let root_state = Rc::new(RefCell::new(Root::new(obstacle)));
+    let circle_1 = Circle {
+      center_x: 200.,
+      center_y: 200.,
+      radius: 100.,
+    };
+    let obstacle_0 = Obstacle::new(circle_0);
+    let obstacle_1 = Obstacle::new(circle_1);
+    let obstacles = Rc::new(RefCell::new(vec![
+      obstacle_0, obstacle_1,
+    ]));
+    let root_state = Rc::new(RefCell::new(Root::new(obstacles)));
     let root_component = RootComponent::new(
       events.clone(),
       "root",
@@ -70,8 +79,15 @@ impl Looper {
       options.clone(),
       root_state.clone(),
     );
+    let drift_bounds = Rectangle {
+      x_max: 600.,
+      x_min: 0.,
+      y_max: 600.,
+      y_min: 0.,
+    };
     let root_updater = RootUpdater::new(
       root_updater_configuration,
+      drift_bounds,
       events.clone(),
       frame_rater,
       inputs.clone(),

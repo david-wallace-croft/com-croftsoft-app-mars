@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-15
+//! - Updated: 2023-03-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -54,7 +54,7 @@ impl RootPainter {
       FILL_STYLE_BACKGROUND,
     );
     let obstacle_painter =
-      ObstaclePainter::new(context.clone(), root_state.obstacle.clone());
+      ObstaclePainter::new(context.clone(), root_state.obstacles.clone());
     let overlay_painter =
       OverlayPainter::new(context, options, root_state.overlay.clone());
     let painters: Vec<Box<dyn Painter>> = vec![

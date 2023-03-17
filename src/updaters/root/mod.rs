@@ -5,12 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-03-14
+//! - Updated: 2023-03-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::obstacle::ObstacleUpdater;
 use super::options::{OptionsUpdater, OptionsUpdaterInputs};
 use super::overlay::{
   OverlayUpdater, OverlayUpdaterEvents, OverlayUpdaterInputs,
@@ -19,6 +20,7 @@ use super::overlay::{
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
 use crate::state::root::Root;
+use com_croftsoft_core::math::geom::structures::Rectangle;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
@@ -228,11 +230,12 @@ pub struct RootUpdater {
 impl RootUpdater {
   pub fn new(
     configuration: RootUpdaterConfiguration,
+    drift_bounds: Rectangle,
     events: Rc<RefCell<dyn RootUpdaterEvents>>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
     options: Rc<RefCell<Options>>,
-    root_model: Rc<RefCell<Root>>,
+    root_state: Rc<RefCell<Root>>,
   ) -> Self {
     let root_updater_events_adapter =
       Rc::new(RefCell::new(RootUpdaterEventsAdapter::new(events.clone())));
@@ -242,8 +245,8 @@ impl RootUpdater {
     let root_updater_options_adapter = Rc::new(RefCell::new(
       RootUpdaterOptionsAdapter::new(options.clone()),
     ));
-    let root_model: Ref<Root> = root_model.borrow();
-    let overlay: Rc<RefCell<Overlay>> = root_model.overlay.clone();
+    let root_state: Ref<Root> = root_state.borrow();
+    let overlay: Rc<RefCell<Overlay>> = root_state.overlay.clone();
     let frame_rater_updater = FrameRaterUpdater::new(
       false,
       frame_rater.clone(),
@@ -251,6 +254,8 @@ impl RootUpdater {
     );
     let options_updater =
       OptionsUpdater::new(root_updater_inputs_adapter.clone(), options);
+    let obstacles_updater =
+      ObstacleUpdater::new(drift_bounds, root_state.obstacles.clone());
     let overlay_updater = OverlayUpdater::new(
       root_updater_events_adapter.clone(),
       frame_rater,
@@ -270,6 +275,7 @@ impl RootUpdater {
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),
+      Box::new(obstacles_updater),
       Box::new(frame_rater_updater),
       Box::new(overlay_updater),
     ];
