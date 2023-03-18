@@ -25,8 +25,9 @@ pub static INFO: &str = "CroftSoft Mars \
   Copyright 2023 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
-pub const OBSTACLE_DRIFT_RATE: f64 = 1.0;
-pub const OBSTACLE_SPEED_MAX: f64 = 1.0;
+pub const OBSTACLE_JERK_MAGNITUDE_MAX: f64 = 10.0;
+pub const OBSTACLE_SPEED_MAX: f64 = 10.0;
 pub const OVERLAY_REFRESH_PERIOD_MILLIS: f64 = 1_000.;
+pub const TIME_DELTA: f64 = 1. / UPDATES_PER_SECOND;
 pub const UPDATE_PERIOD_MILLIS: f64 = MILLIS_PER_SECOND / UPDATES_PER_SECOND;
 pub const UPDATES_PER_SECOND: f64 = 60.;

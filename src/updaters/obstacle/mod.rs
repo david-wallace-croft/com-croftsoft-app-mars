@@ -11,7 +11,9 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{OBSTACLE_DRIFT_RATE, OBSTACLE_SPEED_MAX};
+use crate::constants::{
+  OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, TIME_DELTA,
+};
 use crate::state::obstacle::Obstacle;
 use com_croftsoft_core::math::geom::structures::{Circle, Rectangle};
 use com_croftsoft_lib_role::Updater;
@@ -65,53 +67,50 @@ impl ObstacleUpdater {
     if !obstacle.active {
       return;
     }
-    // TODO
-    let time_delta = 1. / 60.;
     let mut thread_rng: ThreadRng = rand::thread_rng();
-    let random_x: f64 = thread_rng.gen_range(-1.0..=1.0);
-    let random_y: f64 = thread_rng.gen_range(-1.0..=1.0);
-    obstacle.velocity_x += OBSTACLE_DRIFT_RATE * time_delta * random_x;
-    obstacle.velocity_y += OBSTACLE_DRIFT_RATE * time_delta * random_y;
-    if obstacle.velocity_x > OBSTACLE_SPEED_MAX {
-      obstacle.velocity_x = OBSTACLE_SPEED_MAX;
-    } else if obstacle.velocity_x < -OBSTACLE_SPEED_MAX {
-      obstacle.velocity_x = -OBSTACLE_SPEED_MAX;
-    }
-    if obstacle.velocity_y > OBSTACLE_SPEED_MAX {
-      obstacle.velocity_y = OBSTACLE_SPEED_MAX;
-    } else if obstacle.velocity_y < -OBSTACLE_SPEED_MAX {
-      obstacle.velocity_y = -OBSTACLE_SPEED_MAX;
-    }
+    let velocity_x_delta: f64 = thread_rng.gen_range(-1.0..=1.0)
+      * OBSTACLE_JERK_MAGNITUDE_MAX
+      * TIME_DELTA;
+    let velocity_y_delta: f64 = thread_rng.gen_range(-1.0..=1.0)
+      * OBSTACLE_JERK_MAGNITUDE_MAX
+      * TIME_DELTA;
+    let mut velocity_x: f64 = obstacle.velocity_x + velocity_x_delta;
+    let mut velocity_y: f64 = obstacle.velocity_y + velocity_y_delta;
+    // TODO: clamp speed of vector instead of individual axis components
+    velocity_x = velocity_x.clamp(-OBSTACLE_SPEED_MAX, OBSTACLE_SPEED_MAX);
+    velocity_y = velocity_y.clamp(-OBSTACLE_SPEED_MAX, OBSTACLE_SPEED_MAX);
+    let distance_x_delta: f64 = velocity_x * TIME_DELTA;
+    let distance_y_delta: f64 = velocity_y * TIME_DELTA;
     let Circle {
-      center_x,
-      center_y,
+      center_x: old_center_x,
+      center_y: old_center_y,
       radius,
     } = obstacle.circle;
-    let old_center_x = center_x;
-    let old_center_y = center_y;
-    let mut destination_x = old_center_x + obstacle.velocity_x * time_delta;
-    let mut destination_y = old_center_y + obstacle.velocity_y * time_delta;
-    let max_x = self.drift_bounds.x_max - radius;
-    let max_y = self.drift_bounds.y_max - radius;
-    let min_x = self.drift_bounds.x_min + radius;
-    let min_y = self.drift_bounds.y_min + radius;
-    if destination_x > max_x {
-      destination_x = max_x;
-      obstacle.velocity_x = -obstacle.velocity_x;
-    } else if destination_x < min_x {
-      destination_x = min_x;
-      obstacle.velocity_x = -obstacle.velocity_x;
+    let mut new_center_x = old_center_x + distance_x_delta;
+    let mut new_center_y = old_center_y + distance_y_delta;
+    let max_center_x = self.drift_bounds.x_max - radius;
+    let max_center_y = self.drift_bounds.y_max - radius;
+    let min_center_x = self.drift_bounds.x_min + radius;
+    let min_center_y = self.drift_bounds.y_min + radius;
+    if new_center_x > max_center_x {
+      new_center_x = max_center_x;
+      velocity_x = -velocity_x;
+    } else if new_center_x < min_center_x {
+      new_center_x = min_center_x;
+      velocity_x = -velocity_x;
     }
-    if destination_y > max_y {
-      destination_y = max_y;
-      obstacle.velocity_y = -obstacle.velocity_y;
-    } else if destination_y < min_y {
-      destination_y = min_y;
-      obstacle.velocity_y = -obstacle.velocity_y;
+    if new_center_y > max_center_y {
+      new_center_y = max_center_y;
+      velocity_y = -velocity_y;
+    } else if new_center_y < min_center_y {
+      new_center_y = min_center_y;
+      velocity_y = -velocity_y;
     }
-    if destination_x != old_center_x || destination_y != old_center_y {
-      obstacle.circle.center_x = destination_x;
-      obstacle.circle.center_y = destination_y;
+    obstacle.velocity_x = velocity_x;
+    obstacle.velocity_y = velocity_y;
+    if new_center_x != old_center_x || new_center_y != old_center_y {
+      obstacle.circle.center_x = new_center_x;
+      obstacle.circle.center_y = new_center_y;
       // TODO: verify not blocked
       // TODO: if block, revert center position
       // TODO: self.events.borrow_mut().set_updated();
