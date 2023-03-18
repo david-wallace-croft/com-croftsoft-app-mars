@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-15
-//! - Updated: 2023-03-16
+//! - Updated: 2023-03-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,7 @@
 
 use crate::constants::FILL_STYLE_OBSTACLE;
 use crate::state::obstacle::Obstacle;
-use com_croftsoft_core::math::geom::structures::Circle;
+use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
 use core::cell::{Ref, RefCell};
 use core::f64::consts::TAU;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-03-16
+//! - Updated: 2023-03-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,8 +14,10 @@
 use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, TIME_DELTA,
 };
+use crate::engine::collision_detector::CollisionDetector;
 use crate::state::obstacle::Obstacle;
-use com_croftsoft_core::math::geom::structures::{Circle, Rectangle};
+use com_croftsoft_core::math::geom::circle::Circle;
+use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -36,6 +38,7 @@ use rand::{rngs::ThreadRng, Rng};
 // }
 
 pub struct ObstacleUpdater {
+  collision_detector: Rc<RefCell<CollisionDetector>>,
   drift_bounds: Rectangle,
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
@@ -45,6 +48,7 @@ pub struct ObstacleUpdater {
 
 impl ObstacleUpdater {
   pub fn new(
+    collision_detector: Rc<RefCell<CollisionDetector>>,
     drift_bounds: Rectangle,
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
@@ -52,6 +56,7 @@ impl ObstacleUpdater {
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {
+      collision_detector,
       drift_bounds,
       // events,
       // inputs,
@@ -109,11 +114,26 @@ impl ObstacleUpdater {
     obstacle.velocity_x = velocity_x;
     obstacle.velocity_y = velocity_y;
     if new_center_x != old_center_x || new_center_y != old_center_y {
-      obstacle.circle.center_x = new_center_x;
-      obstacle.circle.center_y = new_center_y;
-      // TODO: verify not blocked
-      // TODO: if block, revert center position
-      // TODO: self.events.borrow_mut().set_updated();
+      let collision_detector = self.collision_detector.borrow();
+      if collision_detector.detect_collision(&obstacle.circle, &obstacle.uuid) {
+        obstacle.circle.center_x = new_center_x;
+        obstacle.circle.center_y = new_center_y;
+        // TODO: updated event
+      } else {
+        let new_circle = Circle {
+          center_x: new_center_x,
+          center_y: new_center_y,
+          radius,
+        };
+        if !collision_detector.detect_collision(&new_circle, &obstacle.uuid) {
+          obstacle.circle.center_x = new_center_x;
+          obstacle.circle.center_y = new_center_y;
+        } else {
+          obstacle.velocity_x = 0.;
+          obstacle.velocity_y = 0.;
+          // TODO: updated event
+        }
+      }
     }
   }
 }
@@ -129,8 +149,11 @@ impl Updater for ObstacleUpdater {
     // if !inputs.get_time_to_update() || self.options.borrow().get_pause() {
     //   return;
     // }
-    for obstacle in self.obstacles.borrow_mut().iter_mut() {
-      self.update_obstacle(obstacle);
+    let length = self.obstacles.borrow().len();
+    for index in 0..length {
+      let mut obstacle = self.obstacles.borrow_mut().remove(index);
+      self.update_obstacle(&mut obstacle);
+      self.obstacles.borrow_mut().insert(index, obstacle);
     }
   }
 }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-03-16
+//! - Updated: 2023-03-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,10 +17,11 @@ use super::overlay::{
   OverlayUpdater, OverlayUpdaterEvents, OverlayUpdaterInputs,
   OverlayUpdaterOptions,
 };
+use crate::engine::collision_detector::CollisionDetector;
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
 use crate::state::root::Root;
-use com_croftsoft_core::math::geom::structures::Rectangle;
+use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
@@ -29,7 +30,7 @@ use com_croftsoft_lib_animation::metronome::updater::{
   MetronomeUpdater, MetronomeUpdaterEvents, MetronomeUpdaterInputs,
 };
 use com_croftsoft_lib_role::Updater;
-use core::cell::{Ref, RefCell};
+use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct RootUpdaterConfiguration {
@@ -245,8 +246,7 @@ impl RootUpdater {
     let root_updater_options_adapter = Rc::new(RefCell::new(
       RootUpdaterOptionsAdapter::new(options.clone()),
     ));
-    let root_state: Ref<Root> = root_state.borrow();
-    let overlay: Rc<RefCell<Overlay>> = root_state.overlay.clone();
+    let overlay: Rc<RefCell<Overlay>> = root_state.borrow().overlay.clone();
     let frame_rater_updater = FrameRaterUpdater::new(
       false,
       frame_rater.clone(),
@@ -254,8 +254,14 @@ impl RootUpdater {
     );
     let options_updater =
       OptionsUpdater::new(root_updater_inputs_adapter.clone(), options);
-    let obstacles_updater =
-      ObstacleUpdater::new(drift_bounds, root_state.obstacles.clone());
+    let collision_detector = Rc::new(RefCell::new(CollisionDetector::new(
+      root_state.borrow().obstacles.clone(),
+    )));
+    let obstacles_updater = ObstacleUpdater::new(
+      collision_detector,
+      drift_bounds,
+      root_state.borrow().obstacles.clone(),
+    );
     let overlay_updater = OverlayUpdater::new(
       root_updater_events_adapter.clone(),
       frame_rater,
