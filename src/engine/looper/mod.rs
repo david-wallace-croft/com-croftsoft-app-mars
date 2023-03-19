@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-18
+//! - Updated: 2023-03-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -27,6 +27,7 @@ use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
 use core::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 // TODO: rename this
@@ -69,9 +70,9 @@ impl Looper {
     };
     let obstacle_0 = Obstacle::new(circle_0);
     let obstacle_1 = Obstacle::new(circle_1);
-    let obstacles = Rc::new(RefCell::new(vec![
+    let obstacles = Rc::new(RefCell::new(VecDeque::from([
       obstacle_0, obstacle_1,
-    ]));
+    ])));
     let root_state = Rc::new(RefCell::new(Root::new(obstacles)));
     let root_component = RootComponent::new(
       events.clone(),

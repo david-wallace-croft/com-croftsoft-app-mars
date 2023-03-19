@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-03-18
+//! - Updated: 2023-03-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,6 +20,7 @@ use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 // TODO: Should I be using the js_sys random?
 use rand::{rngs::ThreadRng, Rng};
@@ -42,7 +43,7 @@ pub struct ObstacleUpdater {
   drift_bounds: Rectangle,
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-  obstacles: Rc<RefCell<Vec<Obstacle>>>,
+  obstacles: Rc<RefCell<VecDeque<Obstacle>>>,
   // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
 }
 
@@ -52,7 +53,7 @@ impl ObstacleUpdater {
     drift_bounds: Rectangle,
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    obstacles: Rc<RefCell<Vec<Obstacle>>>,
+    obstacles: Rc<RefCell<VecDeque<Obstacle>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {
@@ -151,9 +152,9 @@ impl Updater for ObstacleUpdater {
     // }
     let length = self.obstacles.borrow().len();
     for index in 0..length {
-      let mut obstacle = self.obstacles.borrow_mut().remove(index);
+      let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
       self.update_obstacle(&mut obstacle);
-      self.obstacles.borrow_mut().insert(index, obstacle);
+      self.obstacles.borrow_mut().push_back(obstacle);
     }
   }
 }
