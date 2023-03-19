@@ -1,11 +1,14 @@
 # Mars
 
 - Tank combat game using the A* algorithm
+- You can see the Rust code compiled to WebAssembly and running in the browser
+  - https://www.gamespawn.com/arcade/mars/
 
 ## Usage
 
-- cd mars/
-- cargo run
+- cd com-croftsoft-app-mars/
+- npm install
+- npm start
 
 ## History
 
