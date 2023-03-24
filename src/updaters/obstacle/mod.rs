@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-03-19
+//! - Updated: 2023-03-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,7 @@ use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, TIME_DELTA,
 };
 use crate::engine::collision_detector::CollisionDetector;
-use crate::state::obstacle::Obstacle;
+use crate::state::obstacle::ObstacleState;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Updater;
@@ -43,7 +43,7 @@ pub struct ObstacleUpdater {
   drift_bounds: Rectangle,
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-  obstacles: Rc<RefCell<VecDeque<Obstacle>>>,
+  obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
 }
 
@@ -53,7 +53,7 @@ impl ObstacleUpdater {
     drift_bounds: Rectangle,
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    obstacles: Rc<RefCell<VecDeque<Obstacle>>>,
+    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {
@@ -68,7 +68,7 @@ impl ObstacleUpdater {
 
   fn update_obstacle(
     &self,
-    obstacle: &mut Obstacle,
+    obstacle: &mut ObstacleState,
   ) {
     if !obstacle.active {
       return;
@@ -116,7 +116,7 @@ impl ObstacleUpdater {
     obstacle.velocity_y = velocity_y;
     if new_center_x != old_center_x || new_center_y != old_center_y {
       let collision_detector = self.collision_detector.borrow();
-      if collision_detector.detect_collision(&obstacle.circle, &obstacle.uuid) {
+      if collision_detector.detect_collision(&obstacle.circle) {
         obstacle.circle.center_x = new_center_x;
         obstacle.circle.center_y = new_center_y;
         // TODO: updated event
@@ -126,7 +126,7 @@ impl ObstacleUpdater {
           center_y: new_center_y,
           radius,
         };
-        if !collision_detector.detect_collision(&new_circle, &obstacle.uuid) {
+        if !collision_detector.detect_collision(&new_circle) {
           obstacle.circle.center_x = new_center_x;
           obstacle.circle.center_y = new_center_y;
         } else {
@@ -151,7 +151,7 @@ impl Updater for ObstacleUpdater {
     //   return;
     // }
     let length = self.obstacles.borrow().len();
-    for index in 0..length {
+    for _index in 0..length {
       let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
       self.update_obstacle(&mut obstacle);
       self.obstacles.borrow_mut().push_back(obstacle);

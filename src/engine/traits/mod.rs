@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-22
+//! - Updated: 2023-03-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,13 +26,6 @@ pub trait Damageable: Model {
     &mut self,
     damage: f64,
   );
-}
-
-pub trait Entity {
-  fn has_uuid(
-    &self,
-    uuid: &str,
-  ) -> bool;
 }
 
 pub trait Impassable: Model {}

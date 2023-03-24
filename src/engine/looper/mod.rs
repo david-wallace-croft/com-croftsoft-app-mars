@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-19
+//! - Updated: 2023-03-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::state::configuration::Configuration;
-use crate::state::obstacle::Obstacle;
+use crate::state::obstacle::ObstacleState;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
@@ -68,10 +68,16 @@ impl Looper {
       center_y: 200.,
       radius: 100.,
     };
-    let obstacle_0 = Obstacle::new(circle_0);
-    let obstacle_1 = Obstacle::new(circle_1);
+    let circle_2 = Circle {
+      center_x: 300.,
+      center_y: 300.,
+      radius: 100.,
+    };
+    let obstacle_0 = ObstacleState::new(circle_0);
+    let obstacle_1 = ObstacleState::new(circle_1);
+    let obstacle_2 = ObstacleState::new(circle_2);
     let obstacles = Rc::new(RefCell::new(VecDeque::from([
-      obstacle_0, obstacle_1,
+      obstacle_0, obstacle_1, obstacle_2,
     ])));
     let root_state = Rc::new(RefCell::new(Root::new(obstacles)));
     let root_component = RootComponent::new(
