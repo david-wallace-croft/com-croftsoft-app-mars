@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::FILL_STYLE_OBSTACLE;
+use crate::constants::{OBSTACLE_FILL_STYLE, OBSTACLE_STROKE_STYLE};
 use crate::state::obstacle::ObstacleState;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
@@ -26,6 +26,7 @@ pub struct ObstaclePainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style: JsValue,
   obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+  stroke_style: JsValue,
 }
 
 impl ObstaclePainter {
@@ -33,11 +34,13 @@ impl ObstaclePainter {
     context: Rc<RefCell<CanvasRenderingContext2d>>,
     obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   ) -> Self {
-    let fill_style: JsValue = JsValue::from_str(FILL_STYLE_OBSTACLE);
+    let fill_style: JsValue = JsValue::from_str(OBSTACLE_FILL_STYLE);
+    let stroke_style: JsValue = JsValue::from_str(OBSTACLE_STROKE_STYLE);
     Self {
       context,
       fill_style,
       obstacles,
+      stroke_style,
     }
   }
 }
@@ -46,6 +49,7 @@ impl Painter for ObstaclePainter {
   fn paint(&mut self) {
     let context = self.context.borrow();
     context.set_fill_style(&self.fill_style);
+    context.set_stroke_style(&self.stroke_style);
     let obstacles: Ref<VecDeque<ObstacleState>> = self.obstacles.borrow();
     for obstacle in obstacles.iter() {
       let Circle {
@@ -55,6 +59,7 @@ impl Painter for ObstaclePainter {
       } = obstacle.circle;
       context.begin_path();
       let _result = context.arc(center_x, center_y, radius, 0., TAU);
+      context.fill();
       context.stroke();
     }
   }

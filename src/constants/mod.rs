@@ -17,7 +17,6 @@ pub const CONFIGURATION: Configuration = Configuration {
   update_period_millis_initial: UPDATE_PERIOD_MILLIS,
 };
 pub const FILL_STYLE_BACKGROUND: &str = "rgb(255, 152, 109)";
-pub const FILL_STYLE_OBSTACLE: &str = "green";
 pub const FILL_STYLE_OVERLAY: &str = "black";
 pub static FONT: &str = "bold 17px monospace";
 pub static INFO: &str = "CroftSoft Mars \
@@ -25,6 +24,8 @@ pub static INFO: &str = "CroftSoft Mars \
   Copyright 2023 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
+pub const OBSTACLE_FILL_STYLE: &str = "#40826D";
+pub const OBSTACLE_STROKE_STYLE: &str = "black";
 pub const OBSTACLE_JERK_MAGNITUDE_MAX: f64 = 100.0;
 pub const OBSTACLE_SPEED_MAX: f64 = 1_000.0;
 pub const OBSTACLE_Z: f64 = 0.2;

@@ -95,7 +95,12 @@ impl CanvasComponent {
 impl Component for CanvasComponent {
   fn make_html(&self) -> String {
     format!(
-      "<canvas id=\"{}\" height=\"600\" style=\"cursor: crosshair\" width=\"600\"></canvas>",
+      "<canvas \
+        id=\"{}\" \
+        height=\"600\" \
+        style=\"cursor: crosshair\" \
+        width=\"600\">\
+        </canvas>",
       self.id
     )
   }
