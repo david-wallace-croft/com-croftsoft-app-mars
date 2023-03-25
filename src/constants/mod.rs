@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-16
+//! - Updated: 2023-03-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,7 +26,8 @@ pub static INFO: &str = "CroftSoft Mars \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
 pub const OBSTACLE_JERK_MAGNITUDE_MAX: f64 = 100.0;
-pub const OBSTACLE_SPEED_MAX: f64 = 100.0;
+pub const OBSTACLE_SPEED_MAX: f64 = 1_000.0;
+pub const OBSTACLE_Z: f64 = 0.2;
 pub const OVERLAY_REFRESH_PERIOD_MILLIS: f64 = 1_000.;
 pub const TIME_DELTA: f64 = 1. / UPDATES_PER_SECOND;
 pub const UPDATE_PERIOD_MILLIS: f64 = MILLIS_PER_SECOND / UPDATES_PER_SECOND;

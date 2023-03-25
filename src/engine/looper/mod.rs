@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-23
+//! - Updated: 2023-03-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -58,27 +58,17 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-    let circle_0 = Circle {
-      center_x: 100.,
-      center_y: 100.,
-      radius: 100.,
-    };
-    let circle_1 = Circle {
-      center_x: 200.,
-      center_y: 200.,
-      radius: 100.,
-    };
-    let circle_2 = Circle {
-      center_x: 300.,
-      center_y: 300.,
-      radius: 100.,
-    };
-    let obstacle_0 = ObstacleState::new(circle_0);
-    let obstacle_1 = ObstacleState::new(circle_1);
-    let obstacle_2 = ObstacleState::new(circle_2);
-    let obstacles = Rc::new(RefCell::new(VecDeque::from([
-      obstacle_0, obstacle_1, obstacle_2,
-    ])));
+    let mut obstacles_vecdeque = VecDeque::<ObstacleState>::new();
+    for i in 1..=5 {
+      let circle = Circle {
+        center_x: (i * 100) as f64,
+        center_y: (i * 100) as f64,
+        radius: (i * i * 4) as f64,
+      };
+      let obstacle = ObstacleState::new(circle);
+      obstacles_vecdeque.push_back(obstacle);
+    }
+    let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
     let root_state = Rc::new(RefCell::new(Root::new(obstacles)));
     let root_component = RootComponent::new(
       events.clone(),

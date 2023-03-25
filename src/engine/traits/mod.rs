@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-23
+//! - Updated: 2023-03-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -44,7 +44,7 @@ pub trait Model: ModelAccessor {
 }
 
 pub trait ModelAccessor {
-  fn get_shape(&self) -> dyn Shape;
+  fn get_shape(&self) -> Box<dyn Shape>;
   fn get_z(&self) -> f64;
   fn is_active(&self) -> bool;
   fn is_updated(&self) -> bool;
@@ -53,7 +53,7 @@ pub trait ModelAccessor {
 pub trait Obstacle: Damageable + Impassable + ObstacleAccessor {
   fn set_active(
     &mut self,
-    active: f64,
+    active: bool,
   );
   fn set_radius(
     &mut self,
