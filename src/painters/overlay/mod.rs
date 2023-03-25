@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-03-13
+//! - Updated: 2023-03-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{FILL_STYLE_OVERLAY, FONT};
+use crate::constants::{FONT, OVERLAY_FILL_STYLE};
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
 use com_croftsoft_lib_role::Painter;
@@ -33,7 +33,7 @@ impl OverlayPainter {
     options: Rc<RefCell<Options>>,
     overlay: Rc<RefCell<Overlay>>,
   ) -> Self {
-    let fill_style: JsValue = JsValue::from_str(FILL_STYLE_OVERLAY);
+    let fill_style: JsValue = JsValue::from_str(OVERLAY_FILL_STYLE);
     Self {
       context,
       fill_style,

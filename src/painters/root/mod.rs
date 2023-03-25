@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-16
+//! - Updated: 2023-03-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,7 @@
 
 use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
-use crate::constants::FILL_STYLE_BACKGROUND;
+use crate::constants::BACKGROUND_FILL_STYLE;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use com_croftsoft_lib_animation::painter::background::BackgroundPainter;
@@ -51,7 +51,7 @@ impl RootPainter {
       canvas_height,
       canvas_width,
       context.clone(),
-      FILL_STYLE_BACKGROUND,
+      BACKGROUND_FILL_STYLE,
     );
     let obstacle_painter =
       ObstaclePainter::new(context.clone(), root_state.obstacles.clone());
