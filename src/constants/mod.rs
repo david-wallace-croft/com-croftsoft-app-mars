@@ -19,7 +19,7 @@ pub const CONFIGURATION: Configuration = Configuration {
 };
 pub static FONT: &str = "bold 17px monospace";
 pub static INFO: &str = "CroftSoft Mars \
-  v0.0.0-SNAPSHOT \
+  v0.0.0 \
   Copyright 2023 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
