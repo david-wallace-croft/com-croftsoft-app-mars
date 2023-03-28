@@ -11,9 +11,9 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use crate::constants::BACKGROUND_FILL_STYLE;
-use crate::models::obstacle::painter::ObstaclePainter;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use com_croftsoft_lib_animation::painter::background::BackgroundPainter;

@@ -13,7 +13,6 @@
 
 use crate::engine::traits::{Damageable, Impassable, ModelAccessor};
 
-pub mod painter;
 pub mod state;
 pub mod updater;
 
