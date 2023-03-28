@@ -5,16 +5,16 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-03-24
+//! - Updated: 2023-03-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::{Obstacle, ObstacleAccessor};
 use crate::constants::OBSTACLE_Z;
 use crate::engine::traits::{
-  Damageable, Impassable, Model, ModelAccessor, Obstacle, ObstacleAccessor,
-  Shape,
+  Damageable, Impassable, Model, ModelAccessor, Shape,
 };
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;

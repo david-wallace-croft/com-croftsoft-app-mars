@@ -5,19 +5,19 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-03-18
+//! - Updated: 2023-03-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::obstacle::ObstacleUpdater;
 use super::options::{OptionsUpdater, OptionsUpdaterInputs};
 use super::overlay::{
   OverlayUpdater, OverlayUpdaterEvents, OverlayUpdaterInputs,
   OverlayUpdaterOptions,
 };
 use crate::engine::collision_detector::CollisionDetector;
+use crate::models::obstacle::updater::ObstacleUpdater;
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
 use crate::state::root::Root;

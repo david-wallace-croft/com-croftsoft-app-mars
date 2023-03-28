@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-14
+//! - Updated: 2023-03-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,6 +21,7 @@ pub mod components;
 pub mod constants;
 pub mod engine;
 pub mod messages;
+pub mod models;
 pub mod painters;
 pub mod state;
 pub mod updaters;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-24
+//! - Updated: 2023-03-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -49,19 +49,6 @@ pub trait ModelAccessor {
   fn is_active(&self) -> bool;
   fn is_updated(&self) -> bool;
 }
-
-pub trait Obstacle: Damageable + Impassable + ObstacleAccessor {
-  fn set_active(
-    &mut self,
-    active: bool,
-  );
-  fn set_radius(
-    &mut self,
-    radius: f64,
-  );
-}
-
-pub trait ObstacleAccessor: ModelAccessor {}
 
 pub trait Shape {
   // TODO: java.awt.Shape

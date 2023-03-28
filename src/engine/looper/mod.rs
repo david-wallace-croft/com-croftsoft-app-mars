@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-24
+//! - Updated: 2023-03-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,8 +15,8 @@ use crate::components::root::RootComponent;
 use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
+use crate::models::obstacle::state::ObstacleState;
 use crate::state::configuration::Configuration;
-use crate::state::obstacle::ObstacleState;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
