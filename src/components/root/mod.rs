@@ -111,7 +111,6 @@ impl Component for RootComponent {
 
 impl Initializer for RootComponent {
   fn initialize(&mut self) {
-    log("initialize");
     let document: Document = get_window().unwrap().document().unwrap();
     let html_collection: HtmlCollection =
       document.get_elements_by_tag_name("com-croftsoft-app-mars");
