@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-03-28
+//! - Updated: 2023-03-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,9 +13,7 @@
 
 use super::{Obstacle, ObstacleAccessor};
 use crate::constants::OBSTACLE_Z;
-use crate::engine::traits::{
-  Damageable, Impassable, Model, ModelAccessor, Shape,
-};
+use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 
@@ -87,9 +85,14 @@ impl Model for ObstacleState {
 }
 
 impl ModelAccessor for ObstacleState {
-  fn get_shape(&self) -> Box<dyn Shape> {
-    // Box::new(self.circle)
-    todo!()
+  fn get_shape(
+    &self,
+    mut circle: Circle,
+  ) -> Circle {
+    circle.center_x = self.circle.center_x;
+    circle.center_y = self.circle.center_y;
+    circle.radius = self.circle.radius;
+    circle
   }
 
   fn get_z(&self) -> f64 {

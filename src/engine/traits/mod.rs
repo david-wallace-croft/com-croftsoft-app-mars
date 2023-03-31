@@ -5,12 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-29
+//! - Updated: 2023-03-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::{Initializer, Updater};
 
 pub struct Color {
@@ -44,7 +45,11 @@ pub trait Model: ModelAccessor {
 }
 
 pub trait ModelAccessor {
-  fn get_shape(&self) -> Box<dyn Shape>;
+  // TODO: return Shape instead of Circle
+  fn get_shape(
+    &self,
+    circle: Circle,
+  ) -> Circle;
   fn get_z(&self) -> f64;
   fn is_active(&self) -> bool;
   fn is_updated(&self) -> bool;
