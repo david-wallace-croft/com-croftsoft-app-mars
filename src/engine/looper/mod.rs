@@ -5,17 +5,19 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-27
+//! - Updated: 2023-03-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::traits::Color;
 use crate::components::root::RootComponent;
 use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::obstacle::state::ObstacleState;
+use crate::models::tank::state::TankState;
 use crate::state::configuration::Configuration;
 use crate::state::options::Options;
 use crate::state::root::Root;
@@ -69,7 +71,16 @@ impl Looper {
       obstacles_vecdeque.push_back(obstacle);
     }
     let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
-    let root_state = Rc::new(RefCell::new(Root::new(obstacles)));
+    let mut tanks_vecdeque = VecDeque::<TankState>::new();
+    for i in 1..=5 {
+      let center_x: f64 = (600 - (i * 100)) as f64;
+      let center_y: f64 = (i * 100) as f64;
+      let color = Color {};
+      let tank = TankState::new(center_x, center_y, color);
+      tanks_vecdeque.push_back(tank);
+    }
+    let tanks = Rc::new(RefCell::new(tanks_vecdeque));
+    let root_state = Rc::new(RefCell::new(Root::new(obstacles, tanks)));
     let root_component = RootComponent::new(
       events.clone(),
       "root",

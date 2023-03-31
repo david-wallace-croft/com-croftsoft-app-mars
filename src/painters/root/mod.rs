@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-27
+//! - Updated: 2023-03-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
+use super::tank::TankPainter;
 use crate::constants::BACKGROUND_FILL_STYLE;
 use crate::state::options::Options;
 use crate::state::root::Root;
@@ -56,10 +57,12 @@ impl RootPainter {
     let obstacle_painter =
       ObstaclePainter::new(context.clone(), root_state.obstacles.clone());
     let overlay_painter =
-      OverlayPainter::new(context, options, root_state.overlay.clone());
+      OverlayPainter::new(context.clone(), options, root_state.overlay.clone());
+    let tank_painter = TankPainter::new(context, root_state.tanks.clone());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
       Box::new(obstacle_painter),
+      Box::new(tank_painter),
       Box::new(overlay_painter),
     ];
     Self {
