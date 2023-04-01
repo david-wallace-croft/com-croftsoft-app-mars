@@ -5,22 +5,23 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-03-30
+//! - Updated: 2023-04-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use com_croftsoft_core::math::geom::circle::Circle;
-use com_croftsoft_core::math::geom::point_2dd::Point2DD;
-
 use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor, SpaceTester,
 };
+use com_croftsoft_core::math::geom::circle::Circle;
+use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 
 pub mod state;
 
-pub trait Tank: Damageable + Impassable + Model + TankConsole {
+pub trait Tank:
+  Damageable + Impassable + Model + TankConsole + TankMutator
+{
   fn get_tank_operator(&self) -> dyn TankOperator;
   fn initialize(
     &mut self,
@@ -83,5 +84,12 @@ pub trait TankOperator {
   fn update(
     &mut self,
     time_delta: f64,
+  );
+}
+
+pub trait TankMutator {
+  fn set_body_heading(
+    &mut self,
+    body_heading: f64,
   );
 }

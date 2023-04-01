@@ -5,15 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-03-30
+//! - Updated: 2023-04-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use core::f64::consts::{PI, TAU};
-
-use super::{TankAccessor, TankConsole};
+use super::{TankAccessor, TankConsole, TankMutator};
 use crate::constants::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
@@ -25,7 +23,7 @@ use crate::engine::traits::{
 };
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
-// use com_croftsoft_core::math::geom::point_xy::PointXY;
+use core::f64::consts::{PI, TAU};
 
 pub struct TankState {
   active: bool,
@@ -403,5 +401,14 @@ impl TankConsole for TankState {
     target_point: Point2DD,
   ) {
     self.target_point = target_point;
+  }
+}
+
+impl TankMutator for TankState {
+  fn set_body_heading(
+    &mut self,
+    body_heading: f64,
+  ) {
+    self.body_heading = body_heading;
   }
 }

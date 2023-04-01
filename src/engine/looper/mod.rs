@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-31
+//! - Updated: 2023-04-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
+use crate::models::tank::TankMutator;
 use crate::state::configuration::Configuration;
 use crate::state::options::Options;
 use crate::state::root::Root;
@@ -29,6 +30,7 @@ use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
 use core::cell::RefCell;
+use core::f64::consts::TAU;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -76,7 +78,8 @@ impl Looper {
       let center_x: f64 = (600 - (i * 100)) as f64;
       let center_y: f64 = (i * 100) as f64;
       let color = Color {};
-      let tank = TankState::new(center_x, center_y, color);
+      let mut tank = TankState::new(center_x, center_y, color);
+      tank.set_body_heading(((i - 1) as f64) * TAU / 8.);
       tanks_vecdeque.push_back(tank);
     }
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));
