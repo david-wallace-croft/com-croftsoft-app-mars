@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-04-01
+//! - Updated: 2023-04-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use crate::models::tank::TankAccessor;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
 use core::cell::{Ref, RefCell};
+use core::f64::consts::TAU;
 use std::collections::VecDeque;
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
@@ -46,7 +47,7 @@ impl TankPainter {
     }
   }
 
-  fn paint_tank_body(
+  fn paint_tank(
     &self,
     tank: &TankState,
   ) {
@@ -60,6 +61,7 @@ impl TankPainter {
     let _result = context.rotate(tank.get_body_heading());
     // let _result = context.translate(-center_x, -center_y);
     // TODO: rescale this in terms of TANK_RADIUS
+    // tank body
     let x: f64 = -25.;
     let y: f64 = -15.;
     let w: f64 = 50.;
@@ -70,6 +72,7 @@ impl TankPainter {
     context.rect(x, y, w, h);
     context.fill();
     context.stroke();
+    // tank body window
     let x: f64 = 21.;
     let y: f64 = -2.;
     let w: f64 = 2.;
@@ -79,8 +82,28 @@ impl TankPainter {
     context.rect(x, y, w, h);
     context.fill();
     context.restore();
-    // let _result = context.translate(0., 0.);
-    // let _result = context.rotate(-PI / 4.);
+    context.save();
+    let _result = context.translate(center_x, center_y);
+    let _result = context.rotate(tank.get_turret_heading());
+    // tank turret
+    context.begin_path();
+    let _result = context.arc(0., 0., 10., 0., TAU);
+    context.stroke();
+    // tank turret hatch
+    context.begin_path();
+    let _result = context.arc(0., 0., 4., 0., TAU);
+    context.stroke();
+    // tank turret cannon mount
+    context.begin_path();
+    context.rect(10., -2., 4., 4.);
+    context.stroke();
+    context.set_fill_style(&self.fill_style);
+    // tank cannon
+    context.begin_path();
+    context.rect(14., -1., 16., 2.);
+    context.fill();
+    context.stroke();
+    context.restore();
   }
 }
 
@@ -91,7 +114,7 @@ impl Painter for TankPainter {
     context.set_stroke_style(&self.stroke_style);
     let tanks: Ref<VecDeque<TankState>> = self.tanks.borrow();
     for tank in tanks.iter() {
-      self.paint_tank_body(tank);
+      self.paint_tank(tank);
     }
   }
 }

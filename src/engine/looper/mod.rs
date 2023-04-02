@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-01
+//! - Updated: 2023-04-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -80,6 +80,7 @@ impl Looper {
       let color = Color {};
       let mut tank = TankState::new(center_x, center_y, color);
       tank.set_body_heading(((i - 1) as f64) * TAU / 8.);
+      tank.set_turret_heading(((i - 1) as f64) * TAU / 4.);
       tanks_vecdeque.push_back(tank);
     }
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));

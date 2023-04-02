@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-01
+//! - Updated: 2023-04-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -410,5 +410,12 @@ impl TankMutator for TankState {
     body_heading: f64,
   ) {
     self.body_heading = body_heading;
+  }
+
+  fn set_turret_heading(
+    &mut self,
+    turret_heading: f64,
+  ) {
+    self.turret_heading = turret_heading;
   }
 }
