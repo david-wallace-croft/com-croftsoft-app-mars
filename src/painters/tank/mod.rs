@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-04-02
+//! - Updated: 2023-04-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -59,15 +59,41 @@ impl TankPainter {
     context.save();
     let _result = context.translate(center_x, center_y);
     let _result = context.rotate(tank.get_body_heading());
+    context.set_fill_style(&self.fill_style);
+    context.set_stroke_style(&self.stroke_style);
     // let _result = context.translate(-center_x, -center_y);
     // TODO: rescale this in terms of TANK_RADIUS
+    // tank treads
+    let x: f64 = -25.;
+    let y: f64 = -25.;
+    let w: f64 = 50.;
+    let h: f64 = 10.;
+    context.begin_path();
+    context.rect(x, y, w, h);
+    context.fill();
+    context.stroke();
+    let x: f64 = -25.;
+    let y: f64 = 15.;
+    let w: f64 = 50.;
+    let h: f64 = 10.;
+    context.begin_path();
+    context.rect(x, y, w, h);
+    context.fill();
+    context.stroke();
+    context.begin_path();
+    for index in -4..=4 {
+      let x: f64 = (index * 5) as f64;
+      context.move_to(x, -25.);
+      context.line_to(x, -15.);
+      context.move_to(x, 15.);
+      context.line_to(x, 25.);
+    }
+    context.stroke();
     // tank body
     let x: f64 = -25.;
     let y: f64 = -15.;
     let w: f64 = 50.;
     let h: f64 = 30.;
-    context.set_fill_style(&self.fill_style);
-    context.set_stroke_style(&self.stroke_style);
     context.begin_path();
     context.rect(x, y, w, h);
     context.fill();
@@ -100,7 +126,7 @@ impl TankPainter {
     context.set_fill_style(&self.fill_style);
     // tank cannon
     context.begin_path();
-    context.rect(14., -1., 16., 2.);
+    context.rect(14., -1., 11., 2.);
     context.fill();
     context.stroke();
     context.restore();
