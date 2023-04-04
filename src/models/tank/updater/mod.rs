@@ -5,15 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-03-30
+//! - Updated: 2023-04-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::TankAccessor;
-use crate::constants::TANK_AMMO_MAX;
-use crate::engine::traits::ModelAccessor;
+use crate::constants::TIME_DELTA;
 use crate::models::tank::state::TankState;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
@@ -54,7 +52,7 @@ impl Updater for TankUpdater {
     let length = self.tanks.borrow().len();
     for _index in 0..length {
       let mut tank = self.tanks.borrow_mut().pop_front().unwrap();
-      tank.update();
+      tank.update(TIME_DELTA);
       self.tanks.borrow_mut().push_back(tank);
     }
   }

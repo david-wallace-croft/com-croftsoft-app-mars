@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-02
+//! - Updated: 2023-04-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::constants::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
   TANK_SPEED_METERS_PER_SECOND, TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND,
-  TANK_Z, TIME_DELTA,
+  TANK_Z,
 };
 use crate::engine::traits::{
   Color, Damageable, Model, ModelAccessor, SpaceTester,
@@ -24,7 +24,6 @@ use crate::engine::traits::{
 use crate::models::tank_operator::TankOperatorState;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
-use com_croftsoft_lib_role::Updater;
 use core::f64::consts::{PI, TAU};
 
 pub struct TankState {
@@ -105,6 +104,16 @@ impl TankState {
     ammo: usize,
   ) {
     self.ammo = ammo;
+  }
+
+  pub fn update(
+    &mut self,
+    time_delta: f64,
+  ) {
+    self.tank_operator.update(time_delta);
+    self.update_ammo();
+    self.update_position(time_delta);
+    self.update_turret_heading(time_delta);
   }
 
   // private update functions
@@ -420,14 +429,5 @@ impl TankMutator for TankState {
     turret_heading: f64,
   ) {
     self.turret_heading = turret_heading;
-  }
-}
-
-impl Updater for TankState {
-  fn update(&mut self) {
-    self.tank_operator.update(TIME_DELTA);
-    self.update_ammo();
-    self.update_position(TIME_DELTA);
-    self.update_turret_heading(TIME_DELTA);
   }
 }
