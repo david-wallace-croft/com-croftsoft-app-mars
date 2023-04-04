@@ -11,6 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::tank_operator::TankOperator;
 use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor, SpaceTester,
 };
@@ -18,10 +19,10 @@ use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 
 pub mod state;
+pub mod updater;
 
-pub trait Tank:
-  Damageable + Impassable + Model + TankConsole + TankMutator
-{
+// trait TankConsole
+pub trait Tank: Damageable + Impassable + Model + TankMutator {
   fn get_tank_operator(&self) -> dyn TankOperator;
   fn initialize(
     &mut self,
@@ -71,19 +72,6 @@ pub trait TankConsole: TankAccessor + SpaceTester {
   fn rotate_turret(
     &mut self,
     target_point: Point2DD,
-  );
-}
-
-pub trait TankOperator {
-  fn fire(&mut self);
-  fn get_path(&self) -> Vec<(f64, f64)>; // TODO: was iterator
-  fn set_tank_console(
-    &mut self,
-    tank_console: dyn TankConsole,
-  );
-  fn update(
-    &mut self,
-    time_delta: f64,
   );
 }
 

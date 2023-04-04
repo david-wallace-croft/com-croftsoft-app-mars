@@ -11,18 +11,20 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{TankAccessor, TankConsole, TankMutator};
+use super::{TankAccessor, TankConsole, TankMutator, TankOperator};
 use crate::constants::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
   TANK_SPEED_METERS_PER_SECOND, TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND,
-  TANK_Z,
+  TANK_Z, TIME_DELTA,
 };
 use crate::engine::traits::{
   Color, Damageable, Model, ModelAccessor, SpaceTester,
 };
+use crate::models::tank_operator::TankOperatorState;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
+use com_croftsoft_lib_role::Updater;
 use core::f64::consts::{PI, TAU};
 
 pub struct TankState {
@@ -38,7 +40,7 @@ pub struct TankState {
   dry_firing: bool,
   firing: bool,
   sparking: bool,
-  // tank_operator: dyn TankOperator,
+  tank_operator: TankOperatorState,
   target_point: Point2DD,
   test_circle: Circle,
   turret_heading: f64,
@@ -87,6 +89,7 @@ impl TankState {
       dry_firing: false,
       firing: false,
       sparking: false,
+      tank_operator: TankOperatorState::default(),
       target_point: Point2DD::default(),
       test_circle,
       turret_heading: 0.,
@@ -417,5 +420,14 @@ impl TankMutator for TankState {
     turret_heading: f64,
   ) {
     self.turret_heading = turret_heading;
+  }
+}
+
+impl Updater for TankState {
+  fn update(&mut self) {
+    self.tank_operator.update(TIME_DELTA);
+    self.update_ammo();
+    self.update_position(TIME_DELTA);
+    self.update_turret_heading(TIME_DELTA);
   }
 }
