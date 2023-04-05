@@ -5,17 +5,22 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-03-30
+//! - Updated: 2023-04-05
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::{Obstacle, ObstacleAccessor};
-use crate::constants::OBSTACLE_Z;
+use crate::constants::{
+  OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
+};
+use crate::engine::collision_detector::CollisionDetector;
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
+use rand::rngs::ThreadRng;
+use rand::Rng;
 
 pub struct ObstacleState {
   pub active: bool,
@@ -121,6 +126,79 @@ impl Obstacle for ObstacleState {
     radius: f64,
   ) {
     self.circle.radius = radius;
+  }
+
+  fn update(
+    &mut self,
+    collision_detector: &CollisionDetector,
+    drift_bounds: &Rectangle,
+    time_delta: f64,
+  ) {
+    if !self.active {
+      return;
+    }
+    let mut thread_rng: ThreadRng = rand::thread_rng();
+    let velocity_x_delta: f64 = thread_rng.gen_range(-1.0..=1.0)
+      * OBSTACLE_JERK_MAGNITUDE_MAX
+      * time_delta;
+    let velocity_y_delta: f64 = thread_rng.gen_range(-1.0..=1.0)
+      * OBSTACLE_JERK_MAGNITUDE_MAX
+      * time_delta;
+    let mut velocity_x: f64 = self.velocity_x + velocity_x_delta;
+    let mut velocity_y: f64 = self.velocity_y + velocity_y_delta;
+    // TODO: clamp speed of vector instead of individual axis components
+    velocity_x = velocity_x.clamp(-OBSTACLE_SPEED_MAX, OBSTACLE_SPEED_MAX);
+    velocity_y = velocity_y.clamp(-OBSTACLE_SPEED_MAX, OBSTACLE_SPEED_MAX);
+    let distance_x_delta: f64 = velocity_x * time_delta;
+    let distance_y_delta: f64 = velocity_y * time_delta;
+    let Circle {
+      center_x: old_center_x,
+      center_y: old_center_y,
+      radius,
+    } = self.circle;
+    let mut new_center_x = old_center_x + distance_x_delta;
+    let mut new_center_y = old_center_y + distance_y_delta;
+    let max_center_x = drift_bounds.x_max - radius;
+    let max_center_y = drift_bounds.y_max - radius;
+    let min_center_x = drift_bounds.x_min + radius;
+    let min_center_y = drift_bounds.y_min + radius;
+    if new_center_x > max_center_x {
+      new_center_x = max_center_x;
+      velocity_x = -velocity_x;
+    } else if new_center_x < min_center_x {
+      new_center_x = min_center_x;
+      velocity_x = -velocity_x;
+    }
+    if new_center_y > max_center_y {
+      new_center_y = max_center_y;
+      velocity_y = -velocity_y;
+    } else if new_center_y < min_center_y {
+      new_center_y = min_center_y;
+      velocity_y = -velocity_y;
+    }
+    self.velocity_x = velocity_x;
+    self.velocity_y = velocity_y;
+    if new_center_x != old_center_x || new_center_y != old_center_y {
+      if collision_detector.detect_collision(&self.circle) {
+        self.circle.center_x = new_center_x;
+        self.circle.center_y = new_center_y;
+        // TODO: updated event
+      } else {
+        let new_circle = Circle {
+          center_x: new_center_x,
+          center_y: new_center_y,
+          radius,
+        };
+        if !collision_detector.detect_collision(&new_circle) {
+          self.circle.center_x = new_center_x;
+          self.circle.center_y = new_center_y;
+        } else {
+          self.velocity_x = 0.;
+          self.velocity_y = 0.;
+          // TODO: updated event
+        }
+      }
+    }
   }
 }
 
