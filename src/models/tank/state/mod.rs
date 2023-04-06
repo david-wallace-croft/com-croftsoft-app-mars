@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-04
+//! - Updated: 2023-04-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,10 +21,11 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Damageable, Model, ModelAccessor, SpaceTester,
 };
-use crate::models::tank_operator::TankOperatorState;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::f64::consts::{PI, TAU};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 pub struct TankState {
   active: bool,
@@ -39,7 +40,7 @@ pub struct TankState {
   dry_firing: bool,
   firing: bool,
   sparking: bool,
-  tank_operator: TankOperatorState,
+  tank_operator: Option<Rc<RefCell<dyn TankOperator>>>,
   target_point: Point2DD,
   test_circle: Circle,
   turret_heading: f64,
@@ -67,17 +68,17 @@ impl TankState {
     center_y: f64,
     color: Color,
   ) -> Self {
-    let circle = Circle {
+    let circle: Circle = Circle {
       center_x: 0.,
       center_y: 0.,
       radius: TANK_RADIUS,
     };
-    let test_circle = Circle {
+    let test_circle: Circle = Circle {
       center_x: 0.,
       center_y: 0.,
       radius: TANK_RADIUS,
     };
-    let mut tank = Self {
+    let mut tank: TankState = Self {
       active: false,
       ammo: 0,
       body_heading: 0.,
@@ -88,7 +89,7 @@ impl TankState {
       dry_firing: false,
       firing: false,
       sparking: false,
-      tank_operator: TankOperatorState::default(),
+      tank_operator: None,
       target_point: Point2DD::default(),
       test_circle,
       turret_heading: 0.,
@@ -110,7 +111,9 @@ impl TankState {
     &mut self,
     time_delta: f64,
   ) {
-    self.tank_operator.update(time_delta);
+    if let Some(tank_operator) = &self.tank_operator {
+      tank_operator.borrow_mut().update(time_delta);
+    }
     self.update_ammo();
     self.update_position(time_delta);
     self.update_turret_heading(time_delta);
