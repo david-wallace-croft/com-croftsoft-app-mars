@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-27
+//! - Updated: 2023-04-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,6 +17,7 @@ use engine::looper::Looper;
 use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
+pub mod ai;
 pub mod components;
 pub mod constants;
 pub mod engine;
