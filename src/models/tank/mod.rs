@@ -5,15 +5,16 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-07
+//! - Updated: 2023-04-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::{engine::traits::{
-  Color, Damageable, Impassable, Model, ModelAccessor,
-}, ai::tank_operator::TankOperator};
+use crate::{
+  ai::tank_operator::TankOperator,
+  engine::traits::{Color, Damageable, Impassable, Model, ModelAccessor},
+};
 
 pub mod state;
 

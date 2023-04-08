@@ -54,8 +54,8 @@ dependencies = [
 
 [[package]]
 name = "com-croftsoft-core"
-version = "0.10.0-SNAPSHOT"
-source = "git+https://github.com/david-wallace-croft/com-croftsoft-core#f757e8dac27f5ad4bce2e3be5828fe48dc86af45"
+version = "0.11.0-SNAPSHOT"
+source = "git+https://github.com/david-wallace-croft/com-croftsoft-core#c3064f672892e1eb817a55a3855be414d0e3874f"
 
 [[package]]
 name = "com-croftsoft-lib-animation"

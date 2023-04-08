@@ -5,15 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-04
-//! - Updated: 2023-04-07
+//! - Updated: 2023-04-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::tank_console::TankConsole;
 use core::cell::RefCell;
 use std::rc::Rc;
-use super::tank_console::TankConsole;
 
 pub mod default;
 
