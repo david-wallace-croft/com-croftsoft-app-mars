@@ -11,11 +11,12 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use com_croftsoft_core::math::geom::point_2dd::Point2DD;
+use core::hash::Hash;
 use std::{
   f64::consts::{PI, TAU},
   fmt::Display,
 };
-use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 
 pub struct StateSpaceNode {
   heading: f64,
@@ -98,5 +99,25 @@ impl Display for StateSpaceNode {
     f: &mut std::fmt::Formatter<'_>,
   ) -> std::fmt::Result {
     write!(f, "{}", self.point_2dd.to_string())
+  }
+}
+
+impl Eq for StateSpaceNode {}
+
+impl Hash for StateSpaceNode {
+  fn hash<H: std::hash::Hasher>(
+    &self,
+    state: &mut H,
+  ) {
+    self.point_2dd.hash(state);
+  }
+}
+
+impl PartialEq for StateSpaceNode {
+  fn eq(
+    &self,
+    other: &Self,
+  ) -> bool {
+    self.point_2dd == other.point_2dd
   }
 }

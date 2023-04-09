@@ -12,19 +12,22 @@
 // =============================================================================
 
 use super::TankOperator;
+use crate::ai::state_space_node::StateSpaceNode;
+use crate::ai::tank_cartographer::TankCartographer;
 use crate::ai::tank_console::TankConsole;
+use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct DefaultTankOperator {
-  // a_star: AStar,
+  a_star: AStar<TankCartographer, StateSpaceNode>,
   center: Point2DD,
   destination: Point2DD,
   // TODO: was PointXY
   enemy_center: Point2DD,
-  // state_space_node: StateSpaceNode,
-  // tank_cartographer: TankCartographer,
+  start_state_space_node: StateSpaceNode,
+  tank_cartographer: TankCartographer,
   tank_console: Rc<RefCell<dyn TankConsole>>,
 }
 
