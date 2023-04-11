@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-04-10
+//! - Updated: 2023-04-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,10 +26,20 @@ pub struct DefaultTankOperator {
   center: Point2DD,
   destination: Point2DD,
   // TODO: was PointXY
-  enemy_center: Point2DD,
+  enemy_center: Option<Point2DD>,
   start_state_space_node: StateSpaceNode,
   // tank_cartographer: TankCartographer,
   tank_console: Option<Rc<RefCell<dyn TankConsole>>>,
+}
+
+impl DefaultTankOperator {
+  fn get_first_step(
+    &self,
+    destination: &Point2DD,
+  ) -> Point2DD {
+    // TODO
+    todo!();
+  }
 }
 
 impl Default for DefaultTankOperator {
@@ -39,7 +49,7 @@ impl Default for DefaultTankOperator {
     let a_star = AStar::new(tank_cartographer);
     let center = Point2DD::default();
     let destination = Point2DD::default();
-    let enemy_center = Point2DD::default();
+    let enemy_center = None;
     let start_state_space_node = StateSpaceNode::default();
     let tank_console = None;
     Self {
@@ -83,10 +93,19 @@ impl TankOperator for DefaultTankOperator {
     if self.tank_console.is_none() {
       return;
     }
+    let tank_console = &mut self.tank_console.as_ref().unwrap().borrow_mut();
+    tank_console.get_center(&mut self.center);
+    self.enemy_center = tank_console.get_closest_enemy_tank_center();
+    tank_console.rotate_turret(&self.enemy_center);
+    if tank_console.get_ammo() < 1 {
+      let closest_ammo_dump_center_option: Option<Point2DD> =
+        tank_console.get_closest_ammo_dump_center();
+      if let Some(closest_ammo_dump_center) = closest_ammo_dump_center_option {
+        tank_console.go(&self.get_first_step(&closest_ammo_dump_center));
+      }
+      return;
+    }
     // TODO: left off here
     todo!();
-    // let tank_console: Rc<RefCell<dyn TankConsole>> = self.tank_console.unwrap();
-    // let tank_console = tank_console.borrow();
-    // tank_console.get_center(&mut self.center);
   }
 }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-10
+//! - Updated: 2023-04-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -70,7 +70,7 @@ impl StateSpaceNode {
     state_space_node: StateSpaceNode,
   ) {
     self.set_heading(state_space_node.get_heading());
-    self.set_point_xy(state_space_node.get_point_xy());
+    self.set_point_xy(&state_space_node.get_point_xy());
   }
 
   pub fn set_heading(
@@ -88,7 +88,7 @@ impl StateSpaceNode {
 
   pub fn set_point_xy(
     &mut self,
-    point_xy: Point2DD,
+    point_xy: &Point2DD,
   ) {
     self.point_2dd.set_xy_point(point_xy);
   }

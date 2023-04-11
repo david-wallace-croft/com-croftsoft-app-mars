@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-10
+//! - Updated: 2023-04-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -24,18 +24,18 @@ pub trait TankConsole: TankAccessor + SpaceTester {
     center: &mut Point2DD,
   );
   // TODO: was PointXY
-  fn get_closest_ammo_dump_center(&self) -> (f64, f64);
+  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
   // TODO: was PointXY
-  fn get_closest_enemy_tank_center(&self) -> (f64, f64);
+  fn get_closest_enemy_tank_center(&self) -> Option<Point2DD>;
   fn get_tank_speed(&self) -> f64;
   fn go(
     &mut self,
     // TODO: was PointXY
-    destination: Option<Point2DD>,
+    destination: &Point2DD,
   );
   // TODO: was targetPointXY
   fn rotate_turret(
     &mut self,
-    target_point: Point2DD,
+    target_point: &Option<Point2DD>,
   );
 }

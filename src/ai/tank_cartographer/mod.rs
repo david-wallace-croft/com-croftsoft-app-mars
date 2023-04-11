@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-08
+//! - Updated: 2023-04-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -62,7 +62,7 @@ impl TankCartographer {
 
   pub fn set_goal_point_xy(
     &mut self,
-    goal_point_xy: Point2DD,
+    goal_point_xy: &Point2DD,
   ) {
     self.goal_state_space_node.set_point_xy(goal_point_xy);
   }
@@ -120,8 +120,8 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
       let adjacent_state_space_node: StateSpaceNode = StateSpaceNode::new(
         heading,
         Point2DD::new(
-          x + (step_size as f64) * heading.cos(),
-          y + (step_size as f64) * heading.sin(),
+          x + step_size * heading.cos(),
+          y + step_size * heading.sin(),
         ),
       );
       if let Some(tank_console) = &self.tank_console {

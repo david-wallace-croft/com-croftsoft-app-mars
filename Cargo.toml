@@ -13,7 +13,7 @@ repository = "https://github.com/david-wallace-croft/com-croftsoft-app-mars"
 version = "0.0.1-SNAPSHOT"
 
 [dependencies]
-anyhow = "1.0.66"
+anyhow = "1.0.70"
 # com-croftsoft-core = { path = "../../../crates/com-croftsoft-core" }
 com-croftsoft-core = { git = "https://github.com/david-wallace-croft/com-croftsoft-core" }
 # com-croftsoft-core = "0.9.0"
@@ -22,7 +22,7 @@ com-croftsoft-core = { git = "https://github.com/david-wallace-croft/com-croftso
 com-croftsoft-lib-animation = "0.0.5"
 com-croftsoft-lib-role = "0.2.0"
 console_error_panic_hook = "0.1.7"
-futures = "0.3.26"
+futures = "0.3.28"
 js-sys = "0.3.61"
 # TODO: maybe remove rand if I can access random number generator via js-sys
 rand = "0.8.5"
@@ -35,7 +35,7 @@ wee_alloc = { optional = true, version = "0.4.5" }
 features = [
   "js",
 ]
-version = "0.2.8"
+version = "0.2.9"
 
 [dependencies.web-sys]
 features = [

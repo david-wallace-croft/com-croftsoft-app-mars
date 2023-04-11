@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-10
+//! - Updated: 2023-04-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -393,11 +393,11 @@ impl TankConsole for TankState {
     center.set_xy(self.circle.center_x, self.circle.center_y);
   }
 
-  fn get_closest_ammo_dump_center(&self) -> (f64, f64) {
+  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
     todo!()
   }
 
-  fn get_closest_enemy_tank_center(&self) -> (f64, f64) {
+  fn get_closest_enemy_tank_center(&self) -> Option<Point2DD> {
     todo!()
   }
 
@@ -407,16 +407,19 @@ impl TankConsole for TankState {
 
   fn go(
     &mut self,
-    destination: Option<Point2DD>,
+    destination: &Point2DD,
   ) {
-    self.destination = destination;
+    self.destination = Some(Point2DD::new(destination.x, destination.y));
   }
 
   fn rotate_turret(
     &mut self,
-    target_point: Point2DD,
+    target_point: &Option<Point2DD>,
   ) {
-    self.target_point = target_point;
+    if let Some(target_point) = target_point {
+      self.target_point.set_xy_point(target_point);
+    }
+    // TODO: else if None, rotate turret forward maybe
   }
 }
 
