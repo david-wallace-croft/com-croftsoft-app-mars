@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-08
+//! - Updated: 2023-04-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use std::{
   fmt::Display,
 };
 
+#[derive(Default)]
 pub struct StateSpaceNode {
   heading: f64,
   point_2dd: Point2DD,
@@ -98,7 +99,7 @@ impl Display for StateSpaceNode {
     &self,
     f: &mut std::fmt::Formatter<'_>,
   ) -> std::fmt::Result {
-    write!(f, "{}", self.point_2dd.to_string())
+    write!(f, "{}", self.point_2dd)
   }
 }
 

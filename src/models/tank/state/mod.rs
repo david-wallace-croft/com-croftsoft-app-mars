@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-07
+//! - Updated: 2023-04-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -386,18 +386,18 @@ impl TankConsole for TankState {
     todo!()
   }
 
+  fn get_center(
+    &self,
+    center: &mut Point2DD,
+  ) {
+    center.set_xy(self.circle.center_x, self.circle.center_y);
+  }
+
   fn get_closest_ammo_dump_center(&self) -> (f64, f64) {
     todo!()
   }
 
   fn get_closest_enemy_tank_center(&self) -> (f64, f64) {
-    todo!()
-  }
-
-  fn get_shape(
-    &self,
-    circle: Circle,
-  ) -> Circle {
     todo!()
   }
 

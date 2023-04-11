@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-01
+//! - Updated: 2023-04-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,6 +14,9 @@
 use crate::state::configuration::Configuration;
 use core::f64::consts::TAU;
 
+pub const A_STAR_DIRECTIONS: usize = 8;
+pub const A_STAR_LOOPS: usize = 100;
+pub const A_STAR_STEP_SIZE: f64 = 10.;
 pub const BACKGROUND_FILL_STYLE: &str = "rgb(255, 152, 109)";
 pub const CONFIGURATION: Configuration = Configuration {
   update_period_millis_initial: UPDATE_PERIOD_MILLIS,
