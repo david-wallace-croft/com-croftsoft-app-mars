@@ -50,7 +50,7 @@ impl TankPainter {
   fn paint_tank(
     &self,
     tank: &TankState,
-  ) {
+  ) -> Result<(), JsValue> {
     let mut circle: Circle = Circle::default();
     circle = tank.get_shape(circle);
     let center_x: f64 = circle.center_x;
@@ -61,7 +61,6 @@ impl TankPainter {
     let _result = context.rotate(tank.get_body_heading());
     context.set_fill_style(&self.fill_style);
     context.set_stroke_style(&self.stroke_style);
-    // let _result = context.translate(-center_x, -center_y);
     // TODO: rescale this in terms of TANK_RADIUS
     // tank treads
     let x: f64 = -25.;
@@ -109,15 +108,15 @@ impl TankPainter {
     context.fill();
     context.restore();
     context.save();
-    let _result = context.translate(center_x, center_y);
-    let _result = context.rotate(tank.get_turret_heading());
+    context.translate(center_x, center_y)?;
+    context.rotate(tank.get_turret_heading())?;
     // tank turret
     context.begin_path();
-    let _result = context.arc(0., 0., 10., 0., TAU);
+    context.arc(0., 0., 10., 0., TAU)?;
     context.stroke();
     // tank turret hatch
     context.begin_path();
-    let _result = context.arc(0., 0., 4., 0., TAU);
+    context.arc(0., 0., 4., 0., TAU)?;
     context.stroke();
     // tank turret cannon mount
     context.begin_path();
@@ -130,6 +129,7 @@ impl TankPainter {
     context.fill();
     context.stroke();
     context.restore();
+    Ok(())
   }
 }
 
@@ -140,7 +140,7 @@ impl Painter for TankPainter {
     context.set_stroke_style(&self.stroke_style);
     let tanks: Ref<VecDeque<TankState>> = self.tanks.borrow();
     for tank in tanks.iter() {
-      self.paint_tank(tank);
+      let _result = self.paint_tank(tank);
     }
   }
 }

@@ -18,7 +18,7 @@ use crate::ai::tank_console::TankConsole;
 use crate::constants::{A_STAR_DIRECTIONS, A_STAR_STEP_SIZE};
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
-use core::cell::RefCell;
+use core::cell::{RefCell, RefMut};
 use std::rc::Rc;
 
 pub struct DefaultTankOperator {
@@ -90,10 +90,8 @@ impl TankOperator for DefaultTankOperator {
     &mut self,
     time_delta: f64,
   ) {
-    if self.tank_console.is_none() {
-      return;
-    }
-    let tank_console = &mut self.tank_console.as_ref().unwrap().borrow_mut();
+    let Some(tank_console) = &self.tank_console else { return; };
+    let mut tank_console: RefMut<dyn TankConsole> = tank_console.borrow_mut();
     tank_console.get_center(&mut self.center);
     self.enemy_center = tank_console.get_closest_enemy_tank_center();
     tank_console.rotate_turret(&self.enemy_center);
