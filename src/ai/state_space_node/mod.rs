@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-11
+//! - Updated: 2023-04-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,7 +18,7 @@ use std::{
   fmt::Display,
 };
 
-#[derive(Default)]
+#[derive(Clone, Copy, Default)]
 pub struct StateSpaceNode {
   heading: f64,
   point_2dd: Point2DD,

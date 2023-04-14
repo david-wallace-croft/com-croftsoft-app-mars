@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-04-11
+//! - Updated: 2023-04-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,10 +15,16 @@ use super::TankOperator;
 use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_cartographer::TankCartographer;
 use crate::ai::tank_console::TankConsole;
-use crate::constants::{A_STAR_DIRECTIONS, A_STAR_STEP_SIZE};
+use crate::constants::{
+  A_STAR_DIRECTIONS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
+  TANK_FIRING_PROBABILITY,
+};
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};
+use rand::distributions::Uniform;
+use rand::prelude::Distribution;
+use rand::rngs::ThreadRng;
 use std::rc::Rc;
 
 pub struct DefaultTankOperator {
@@ -37,7 +43,11 @@ impl DefaultTankOperator {
     &self,
     destination: &Point2DD,
   ) -> Point2DD {
-    // TODO
+    // self.start_state_space_node.set_point_xy(&self.center);
+    // self.start_state_space_node.set_heading(
+    //   self.tank_console.as_ref().unwrap().borrow().get_body_heading(),
+    // );
+    // TODO: left off here
     todo!();
   }
 }
@@ -70,8 +80,8 @@ impl TankOperator for DefaultTankOperator {
   }
 
   // TODO: was iterator
-  fn get_path(&self) -> Vec<(f64, f64)> {
-    todo!();
+  fn get_path(&self) -> Vec<StateSpaceNode> {
+    self.a_star.get_path()
   }
 
   fn set_tank_console(
@@ -99,11 +109,36 @@ impl TankOperator for DefaultTankOperator {
       let closest_ammo_dump_center_option: Option<Point2DD> =
         tank_console.get_closest_ammo_dump_center();
       if let Some(closest_ammo_dump_center) = closest_ammo_dump_center_option {
-        tank_console.go(&self.get_first_step(&closest_ammo_dump_center));
+        let destination: Point2DD =
+          self.get_first_step(&closest_ammo_dump_center);
+        tank_console.go(&destination);
       }
       return;
     }
-    // TODO: left off here
-    todo!();
+    let mut thread_rng: ThreadRng = rand::thread_rng();
+    let uniform = Uniform::from(0.0..1.);
+    if let Some(enemy_center) = self.enemy_center {
+      let destination: Point2DD = self.get_first_step(&enemy_center);
+      tank_console.go(&destination);
+      let random_number = uniform.sample(&mut thread_rng);
+      if random_number < time_delta * TANK_FIRING_PROBABILITY {
+        tank_console.fire();
+      }
+      return;
+    }
+    let random_number = uniform.sample(&mut thread_rng);
+    if random_number < time_delta * TANK_DRIFT_PROBABILITY {
+      let uniform_drift = Uniform::from(-1.0..=1.0);
+      let drift_x = uniform_drift.sample(&mut thread_rng);
+      let drift_y = uniform_drift.sample(&mut thread_rng);
+      let destination_x = self.center.x + drift_x;
+      let destination_y = self.center.y + drift_y;
+      self.destination.set_xy(destination_x, destination_y);
+      tank_console.go(&self.destination);
+    }
+    let random_number = uniform.sample(&mut thread_rng);
+    if random_number < time_delta * TANK_FIRING_PROBABILITY {
+      tank_console.fire();
+    }
   }
 }
