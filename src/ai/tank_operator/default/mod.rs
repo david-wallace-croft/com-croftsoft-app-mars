@@ -147,9 +147,8 @@ impl TankOperator for DefaultTankOperator {
     time_delta: f64,
   ) {
     let tank_console_option = self.tank_console.take();
-    if let Some(tank_console) = tank_console_option {
-      self.update_with_tank_console(time_delta, tank_console.clone());
-      self.tank_console = Some(tank_console);
-    }
+    let Some(tank_console) = tank_console_option else { return; };
+    self.update_with_tank_console(time_delta, tank_console.clone());
+    self.tank_console = Some(tank_console);
   }
 }
