@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-04-13
+//! - Updated: 2023-04-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_cartographer::TankCartographer;
 use crate::ai::tank_console::TankConsole;
 use crate::constants::{
-  A_STAR_DIRECTIONS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
+  A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
 use com_croftsoft_core::ai::astar::structures::AStar;
@@ -34,7 +34,7 @@ pub struct DefaultTankOperator {
   // TODO: was PointXY
   enemy_center: Option<Point2DD>,
   start_state_space_node: StateSpaceNode,
-  // tank_cartographer: TankCartographer,
+  tank_cartographer: Rc<RefCell<TankCartographer>>,
   tank_console: Option<Rc<RefCell<dyn TankConsole>>>,
 }
 
@@ -47,16 +47,31 @@ impl DefaultTankOperator {
     self.start_state_space_node.set_heading(
       self.tank_console.as_ref().unwrap().borrow().get_body_heading(),
     );
-    // TODO: left off here
-    todo!();
+    self.a_star.reset(self.start_state_space_node);
+    self.tank_cartographer.borrow_mut().set_goal_point_xy(destination);
+    for _ in 0..A_STAR_LOOPS {
+      if !self.a_star.loop_once() {
+        break;
+      }
+    }
+    if !self.a_star.is_goal_found() {
+      return *destination;
+    }
+    if let Some(state_space_node) = self.a_star.get_first_step() {
+      state_space_node.get_point_xy()
+    } else {
+      *destination
+    }
   }
 }
 
 impl Default for DefaultTankOperator {
   fn default() -> Self {
-    let tank_cartographer =
-      TankCartographer::new(A_STAR_STEP_SIZE, A_STAR_DIRECTIONS);
-    let a_star = AStar::new(tank_cartographer);
+    let tank_cartographer = Rc::new(RefCell::new(TankCartographer::new(
+      A_STAR_STEP_SIZE,
+      A_STAR_DIRECTIONS,
+    )));
+    let a_star = AStar::new(tank_cartographer.clone());
     let center = Point2DD::default();
     let destination = Point2DD::default();
     let enemy_center = None;
@@ -68,7 +83,7 @@ impl Default for DefaultTankOperator {
       destination,
       enemy_center,
       start_state_space_node,
-      // tank_cartographer,
+      tank_cartographer,
       tank_console,
     }
   }
@@ -89,9 +104,11 @@ impl TankOperator for DefaultTankOperator {
     tank_console: Rc<RefCell<dyn TankConsole>>,
   ) {
     // TODO: old code would delegate to the existing tank cartographer
-    let mut tank_cartographer =
-      TankCartographer::new(A_STAR_STEP_SIZE, A_STAR_DIRECTIONS);
-    tank_cartographer.set_tank_console(tank_console.clone());
+    let tank_cartographer = Rc::new(RefCell::new(TankCartographer::new(
+      A_STAR_STEP_SIZE,
+      A_STAR_DIRECTIONS,
+    )));
+    tank_cartographer.borrow_mut().set_tank_console(tank_console.clone());
     self.a_star = AStar::new(tank_cartographer);
     self.tank_console = Some(tank_console);
   }
