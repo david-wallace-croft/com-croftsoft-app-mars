@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-11
+//! - Updated: 2023-04-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{TankAccessor, TankMutator, TankOperator};
+use super::{Tank, TankAccessor, TankMutator, TankOperator};
 use crate::ai::tank_console::TankConsole;
 use crate::constants::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
@@ -20,10 +20,11 @@ use crate::constants::{
   TANK_Z,
 };
 use crate::engine::traits::{
-  Color, Damageable, Model, ModelAccessor, SpaceTester,
+  Color, Damageable, Impassable, Model, ModelAccessor, SpaceTester,
 };
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
+use com_croftsoft_lib_animation::web_sys::log;
 use core::f64::consts::{PI, TAU};
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -113,6 +114,7 @@ impl TankState {
     time_delta: f64,
   ) {
     if let Some(tank_operator) = &self.tank_operator {
+      log("TankState.update()");
       tank_operator.borrow_mut().update(time_delta);
     }
     self.update_ammo();
@@ -260,6 +262,8 @@ impl Damageable for TankState {
   }
 }
 
+impl Impassable for TankState {}
+
 impl Model for TankState {
   fn prepare(&mut self) {
     self.updated = false;
@@ -281,7 +285,15 @@ impl Model for TankState {
     &mut self,
     time_delta: f64,
   ) {
-    todo!()
+    log("TankState.update()");
+    if !self.active {
+      return;
+    }
+    let Some(tank_operator) = &self.tank_operator else { return; };
+    tank_operator.borrow_mut().update(time_delta);
+    self.update_ammo();
+    self.update_position(time_delta);
+    self.update_turret_heading(time_delta);
   }
 }
 
@@ -317,6 +329,27 @@ impl SpaceTester for TankState {
     y: f64,
   ) -> bool {
     todo!()
+  }
+}
+
+impl Tank for TankState {
+  fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
+    todo!()
+  }
+
+  fn initialize(
+    &mut self,
+    center_x: f64,
+    center_y: f64,
+  ) {
+    todo!()
+  }
+
+  fn set_tank_operator(
+    &mut self,
+    tank_operator: Rc<RefCell<dyn TankOperator>>,
+  ) {
+    self.tank_operator = Some(tank_operator);
   }
 }
 

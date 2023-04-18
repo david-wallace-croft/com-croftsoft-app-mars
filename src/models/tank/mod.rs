@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-08
+//! - Updated: 2023-04-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,20 +15,24 @@ use crate::{
   ai::tank_operator::TankOperator,
   engine::traits::{Color, Damageable, Impassable, Model, ModelAccessor},
 };
+use core::cell::RefCell;
+use std::rc::Rc;
 
 pub mod state;
 
 // trait TankConsole
 pub trait Tank: Damageable + Impassable + Model + TankMutator {
-  fn get_tank_operator(&self) -> dyn TankOperator;
+  fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
+
   fn initialize(
     &mut self,
     center_x: f64,
     center_y: f64,
   );
+
   fn set_tank_operator(
     &mut self,
-    tank_operator: dyn TankOperator,
+    tank_operator: Rc<RefCell<dyn TankOperator>>,
   );
 }
 

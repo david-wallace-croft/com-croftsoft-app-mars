@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-02
+//! - Updated: 2023-04-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -73,14 +73,15 @@ impl Looper {
       obstacles_vecdeque.push_back(obstacle);
     }
     let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
-    let mut tanks_vecdeque = VecDeque::<TankState>::new();
+    let mut tanks_vecdeque = VecDeque::<Rc<RefCell<TankState>>>::new();
     for i in 1..=5 {
       let center_x: f64 = (600 - (i * 100)) as f64;
       let center_y: f64 = (i * 100) as f64;
       let color = Color {};
-      let mut tank = TankState::new(center_x, center_y, color);
-      tank.set_body_heading(((i - 1) as f64) * TAU / 8.);
-      tank.set_turret_heading(((i - 1) as f64) * TAU / 4.);
+      let tank = Root::make_tank(center_x, center_y, color);
+      // let mut tank = TankState::new(center_x, center_y, color);
+      tank.borrow_mut().set_body_heading(((i - 1) as f64) * TAU / 8.);
+      tank.borrow_mut().set_turret_heading(((i - 1) as f64) * TAU / 4.);
       tanks_vecdeque.push_back(tank);
     }
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));

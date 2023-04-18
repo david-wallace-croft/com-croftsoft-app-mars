@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-04-03
+//! - Updated: 2023-04-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -29,13 +29,13 @@ pub struct TankPainter {
   fill_style: JsValue,
   stroke_style: JsValue,
   // TODO: change this to dyn TankAccessor
-  tanks: Rc<RefCell<VecDeque<TankState>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
 }
 
 impl TankPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    tanks: Rc<RefCell<VecDeque<TankState>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   ) -> Self {
     let fill_style: JsValue = JsValue::from_str(TANK_FILL_STYLE);
     let stroke_style: JsValue = JsValue::from_str(TANK_STROKE_STYLE);
@@ -138,9 +138,9 @@ impl Painter for TankPainter {
     let context = self.context.borrow();
     context.set_fill_style(&self.fill_style);
     context.set_stroke_style(&self.stroke_style);
-    let tanks: Ref<VecDeque<TankState>> = self.tanks.borrow();
+    let tanks: Ref<VecDeque<Rc<RefCell<TankState>>>> = self.tanks.borrow();
     for tank in tanks.iter() {
-      let _result = self.paint_tank(tank);
+      let _result = self.paint_tank(&tank.borrow());
     }
   }
 }

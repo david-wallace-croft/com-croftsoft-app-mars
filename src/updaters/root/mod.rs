@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-04-05
+//! - Updated: 2023-04-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,6 +17,7 @@ use super::overlay::{
   OverlayUpdater, OverlayUpdaterEvents, OverlayUpdaterInputs,
   OverlayUpdaterOptions,
 };
+use super::tank::TankUpdater;
 use crate::engine::collision_detector::CollisionDetector;
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
@@ -278,9 +279,11 @@ impl RootUpdater {
       root_updater_inputs_adapter,
       metronome,
     );
+    let tank_updater = TankUpdater::new(root_state.borrow().tanks.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),
+      Box::new(tank_updater),
       Box::new(obstacles_updater),
       Box::new(frame_rater_updater),
       Box::new(overlay_updater),

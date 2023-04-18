@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-04-05
+//! - Updated: 2023-04-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,14 +19,14 @@ use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankUpdater {
-  tanks: Rc<RefCell<VecDeque<TankState>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
 }
 
 impl TankUpdater {
   pub fn new(
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    tanks: Rc<RefCell<VecDeque<TankState>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {
@@ -52,7 +52,8 @@ impl Updater for TankUpdater {
     let length = self.tanks.borrow().len();
     for _index in 0..length {
       let mut tank = self.tanks.borrow_mut().pop_front().unwrap();
-      tank.update(TIME_DELTA);
+      // log("TankUpdater.update()");
+      tank.borrow_mut().update(TIME_DELTA);
       self.tanks.borrow_mut().push_back(tank);
     }
   }
