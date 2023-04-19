@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-17
+//! - Updated: 2023-04-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -42,7 +42,7 @@ pub struct TankState {
   dry_firing: bool,
   firing: bool,
   sparking: bool,
-  tank_operator: Option<Rc<RefCell<dyn TankOperator>>>,
+  // tank_operator: Option<Rc<RefCell<dyn TankOperator>>>,
   target_point: Point2DD,
   test_circle: Circle,
   turret_heading: f64,
@@ -91,7 +91,7 @@ impl TankState {
       dry_firing: false,
       firing: false,
       sparking: false,
-      tank_operator: None,
+      // tank_operator: None,
       target_point: Point2DD::default(),
       test_circle,
       turret_heading: 0.,
@@ -113,10 +113,10 @@ impl TankState {
     &mut self,
     time_delta: f64,
   ) {
-    if let Some(tank_operator) = &self.tank_operator {
-      log("TankState.update()");
-      tank_operator.borrow_mut().update(time_delta);
-    }
+    // if let Some(tank_operator) = &self.tank_operator {
+    //   log("TankState.update()");
+    //   tank_operator.borrow_mut().update(time_delta);
+    // }
     self.update_ammo();
     self.update_position(time_delta);
     self.update_turret_heading(time_delta);
@@ -289,8 +289,8 @@ impl Model for TankState {
     if !self.active {
       return;
     }
-    let Some(tank_operator) = &self.tank_operator else { return; };
-    tank_operator.borrow_mut().update(time_delta);
+    // let Some(tank_operator) = &self.tank_operator else { return; };
+    // tank_operator.borrow_mut().update(time_delta);
     self.update_ammo();
     self.update_position(time_delta);
     self.update_turret_heading(time_delta);
@@ -333,9 +333,9 @@ impl SpaceTester for TankState {
 }
 
 impl Tank for TankState {
-  fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
-    todo!()
-  }
+  // fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
+  //   todo!()
+  // }
 
   fn initialize(
     &mut self,
@@ -345,12 +345,12 @@ impl Tank for TankState {
     todo!()
   }
 
-  fn set_tank_operator(
-    &mut self,
-    tank_operator: Rc<RefCell<dyn TankOperator>>,
-  ) {
-    self.tank_operator = Some(tank_operator);
-  }
+  // fn set_tank_operator(
+  //   &mut self,
+  //   tank_operator: Rc<RefCell<dyn TankOperator>>,
+  // ) {
+  //   self.tank_operator = Some(tank_operator);
+  // }
 }
 
 impl TankAccessor for TankState {
@@ -427,11 +427,15 @@ impl TankConsole for TankState {
   }
 
   fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
-    todo!()
+    // todo!()
+    None
   }
 
   fn get_closest_enemy_tank_center(&self) -> Option<Point2DD> {
-    todo!()
+    // todo!()
+    // TODO
+    // Some(Point2DD::default())
+    None
   }
 
   fn get_tank_speed(&self) -> f64 {

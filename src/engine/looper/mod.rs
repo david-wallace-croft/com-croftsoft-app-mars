@@ -5,13 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-17
+//! - Updated: 2023-04-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::traits::Color;
+use crate::ai::tank_operator::default::DefaultTankOperator;
+use crate::ai::tank_operator::TankOperator;
 use crate::components::root::RootComponent;
 use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
@@ -73,19 +75,27 @@ impl Looper {
       obstacles_vecdeque.push_back(obstacle);
     }
     let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
+    let mut tank_operators_vecdeque =
+      VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();
     let mut tanks_vecdeque = VecDeque::<Rc<RefCell<TankState>>>::new();
     for i in 1..=5 {
       let center_x: f64 = (600 - (i * 100)) as f64;
       let center_y: f64 = (i * 100) as f64;
       let color = Color {};
-      let tank = Root::make_tank(center_x, center_y, color);
+      let tank: Rc<RefCell<TankState>> =
+        Root::make_tank(center_x, center_y, color);
       // let mut tank = TankState::new(center_x, center_y, color);
       tank.borrow_mut().set_body_heading(((i - 1) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((i - 1) as f64) * TAU / 4.);
-      tanks_vecdeque.push_back(tank);
+      tanks_vecdeque.push_back(tank.clone());
+      let mut tank_operator = DefaultTankOperator::default();
+      tank_operator.set_tank_console(tank);
+      tank_operators_vecdeque.push_back(Rc::new(RefCell::new(tank_operator)));
     }
+    let tank_operators = Rc::new(RefCell::new(tank_operators_vecdeque));
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));
-    let root_state = Rc::new(RefCell::new(Root::new(obstacles, tanks)));
+    let root_state =
+      Rc::new(RefCell::new(Root::new(obstacles, tank_operators, tanks)));
     let root_component = RootComponent::new(
       events.clone(),
       "root",

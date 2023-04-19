@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-17
+//! - Updated: 2023-04-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,7 +22,7 @@ pub mod state;
 
 // trait TankConsole
 pub trait Tank: Damageable + Impassable + Model + TankMutator {
-  fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
+  // fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
 
   fn initialize(
     &mut self,
@@ -30,10 +30,10 @@ pub trait Tank: Damageable + Impassable + Model + TankMutator {
     center_y: f64,
   );
 
-  fn set_tank_operator(
-    &mut self,
-    tank_operator: Rc<RefCell<dyn TankOperator>>,
-  );
+  // fn set_tank_operator(
+  //   &mut self,
+  //   tank_operator: Rc<RefCell<dyn TankOperator>>,
+  // );
 }
 
 pub trait TankAccessor: ModelAccessor {

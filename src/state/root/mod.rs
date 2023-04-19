@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-17
+//! - Updated: 2023-04-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -25,6 +25,7 @@ use std::rc::Rc;
 pub struct Root {
   pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub overlay: Rc<RefCell<Overlay>>,
+  pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
 }
 
@@ -36,20 +37,22 @@ impl Root {
   ) -> Rc<RefCell<TankState>> {
     let tank_state =
       Rc::new(RefCell::new(TankState::new(center_x, center_y, color)));
-    let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::default()));
-    tank_state.borrow_mut().set_tank_operator(tank_operator.clone());
-    tank_operator.borrow_mut().set_tank_console(tank_state.clone());
+    // let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::default()));
+    // tank_state.borrow_mut().set_tank_operator(tank_operator.clone());
+    // tank_operator.borrow_mut().set_tank_console(tank_state.clone());
     // TODO: model_array_keep.insert(seriTank) was in the old code here
     tank_state
   }
 
   pub fn new(
     obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+    tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   ) -> Self {
     Self {
       obstacles,
       overlay: Rc::new(RefCell::new(Overlay::default())),
+      tank_operators,
       tanks,
     }
   }
