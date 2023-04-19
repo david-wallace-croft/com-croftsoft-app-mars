@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-18
+//! - Updated: 2023-04-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -129,7 +129,7 @@ impl TankState {
     target_heading: f64,
     rotation_speed: f64,
   ) -> f64 {
-    let mut new_heading = 0.;
+    let mut new_heading;
     let delta_heading = target_heading - current_heading;
     if delta_heading < -PI {
       new_heading = current_heading + rotation_speed;
@@ -165,6 +165,7 @@ impl TankState {
     &mut self,
     time_delta: f64,
   ) {
+    // log(&format!("destination {:?}", self.destination));
     if self.destination.is_none() {
       return;
     }
@@ -216,6 +217,7 @@ impl TankState {
     //     self.updated = true;
     //   }
     // } else {
+    // log(&format!("center updated {:?}", self.circle));
     self.updated = true;
     // }
   }
