@@ -13,6 +13,7 @@
 
 use crate::ai::tank_operator::TankOperator;
 use crate::constants::TIME_DELTA;
+use crate::models::tank::state::TankState;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -20,6 +21,7 @@ use std::rc::Rc;
 
 pub struct TankOperatorUpdater {
   tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
 }
 
 impl TankOperatorUpdater {
@@ -27,6 +29,7 @@ impl TankOperatorUpdater {
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {
@@ -34,6 +37,7 @@ impl TankOperatorUpdater {
       // inputs,
       tank_operators,
       // options,
+      tanks,
     }
   }
 }
@@ -52,8 +56,10 @@ impl Updater for TankOperatorUpdater {
     let length = self.tank_operators.borrow().len();
     for _index in 0..length {
       let tank_operator = self.tank_operators.borrow_mut().pop_front().unwrap();
-      tank_operator.borrow_mut().update(TIME_DELTA);
+      let tank = self.tanks.borrow_mut().pop_front().unwrap();
+      tank_operator.borrow_mut().update(TIME_DELTA, self.tanks.clone());
       self.tank_operators.borrow_mut().push_back(tank_operator);
+      self.tanks.borrow_mut().push_back(tank);
     }
   }
 }

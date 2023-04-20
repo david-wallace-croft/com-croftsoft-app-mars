@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-04-18
+//! - Updated: 2023-04-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -280,8 +280,10 @@ impl RootUpdater {
       root_updater_inputs_adapter,
       metronome,
     );
-    let tank_operator_updater =
-      TankOperatorUpdater::new(root_state.borrow().tank_operators.clone());
+    let tank_operator_updater = TankOperatorUpdater::new(
+      root_state.borrow().tank_operators.clone(),
+      root_state.borrow().tanks.clone(),
+    );
     let tank_updater = TankUpdater::new(root_state.borrow().tanks.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),

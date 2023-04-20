@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-04-18
+//! - Updated: 2023-04-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,12 +19,14 @@ use crate::constants::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
+use crate::models::tank::state::TankState;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use rand::rngs::ThreadRng;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct DefaultTankOperator {
@@ -115,13 +117,14 @@ impl TankOperator for DefaultTankOperator {
   fn update(
     &mut self,
     time_delta: f64,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   ) {
     // log("DefaultTankOperator.update");
     let Some(tank_console) = &self.tank_console else { return; };
     let tank_console: Rc<RefCell<dyn TankConsole>> = tank_console.clone();
     let mut tank_console: RefMut<dyn TankConsole> = tank_console.borrow_mut();
     tank_console.get_center(&mut self.center);
-    self.enemy_center = tank_console.get_closest_enemy_tank_center();
+    self.enemy_center = tank_console.get_closest_enemy_tank_center(tanks);
     tank_console.rotate_turret(&self.enemy_center);
     if tank_console.get_ammo() < 1 {
       let closest_ammo_dump_center_option: Option<Point2DD> =

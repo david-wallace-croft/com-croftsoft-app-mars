@@ -5,19 +5,17 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-18
+//! - Updated: 2023-04-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::overlay::Overlay;
-use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::ai::tank_operator::TankOperator;
 use crate::engine::traits::Color;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
-use crate::models::tank::Tank;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;

@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{Tank, TankAccessor, TankMutator, TankOperator};
+use super::{Tank, TankAccessor, TankMutator};
 use crate::ai::tank_console::TankConsole;
 use crate::constants::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
@@ -26,13 +26,14 @@ use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_animation::web_sys::log;
 use core::f64::consts::{PI, TAU};
+use core::f64::INFINITY;
 use std::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankState {
   active: bool,
   ammo: usize,
-  // ammo_dumps: Vec<AmmoDump>,
   body_heading: f64,
   circle: Circle,
   color: Color,
@@ -42,12 +43,10 @@ pub struct TankState {
   dry_firing: bool,
   firing: bool,
   sparking: bool,
-  // tank_operator: Option<Rc<RefCell<dyn TankOperator>>>,
   target_point: Point2DD,
   test_circle: Circle,
   turret_heading: f64,
   updated: bool,
-  // world: World,
 }
 
 impl TankState {
@@ -433,10 +432,35 @@ impl TankConsole for TankState {
     None
   }
 
-  fn get_closest_enemy_tank_center(&self) -> Option<Point2DD> {
-    // todo!()
-    // TODO
-    // Some(Point2DD::default())
+  fn get_closest_enemy_tank_center(
+    &self,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  ) -> Option<Point2DD> {
+    let mut closest_distance: f64 = INFINITY;
+    let mut found = false;
+    let tanks = tanks.borrow();
+    let length = tanks.len();
+    let tank_center = Point2DD::new(self.circle.center_x, self.circle.center_y);
+    let mut enemy_tank_center = Point2DD::default();
+    let mut closest_enemy_tank_center = Point2DD::default();
+    for i in 0..length {
+      let tank = tanks[i].borrow();
+      if !tank.is_active() {
+        continue;
+      }
+      // TODO: check for enemy color
+      tank.get_center(&mut enemy_tank_center);
+      let distance = tank_center.distance_to(&enemy_tank_center);
+      if distance < closest_distance {
+        found = true;
+        closest_distance = distance;
+        closest_enemy_tank_center.x = enemy_tank_center.x;
+        closest_enemy_tank_center.y = enemy_tank_center.y;
+      }
+    }
+    if found {
+      return Some(closest_enemy_tank_center);
+    }
     None
   }
 

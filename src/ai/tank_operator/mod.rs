@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-04
-//! - Updated: 2023-04-13
+//! - Updated: 2023-04-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,9 @@
 
 use super::state_space_node::StateSpaceNode;
 use super::tank_console::TankConsole;
+use crate::models::tank::state::TankState;
 use core::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub mod default;
@@ -37,5 +39,6 @@ pub trait TankOperator {
   fn update(
     &mut self,
     time_delta: f64,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   );
 }
