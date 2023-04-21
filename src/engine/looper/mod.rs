@@ -78,17 +78,18 @@ impl Looper {
     let mut tank_operators_vecdeque =
       VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();
     let mut tanks_vecdeque = VecDeque::<Rc<RefCell<TankState>>>::new();
-    for i in 1..=5 {
-      let center_x: f64 = (600 - (i * 100)) as f64;
-      let center_y: f64 = (i * 100) as f64;
+    for index in 0..5 {
+      let offset = ((index + 1) * 100) as f64;
+      let center_x: f64 = 600. - offset;
+      let center_y: f64 = offset;
       let color = Color {};
       let tank: Rc<RefCell<TankState>> =
-        Root::make_tank(center_x, center_y, color);
+        Root::make_tank(center_x, center_y, color, index);
       // let mut tank = TankState::new(center_x, center_y, color);
-      tank.borrow_mut().set_body_heading(((i - 1) as f64) * TAU / 8.);
-      tank.borrow_mut().set_turret_heading(((i - 1) as f64) * TAU / 4.);
+      tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
+      tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
       tanks_vecdeque.push_back(tank.clone());
-      let mut tank_operator = DefaultTankOperator::default();
+      let mut tank_operator = DefaultTankOperator::new(index);
       tank_operator.set_tank_console(tank);
       tank_operators_vecdeque.push_back(Rc::new(RefCell::new(tank_operator)));
     }

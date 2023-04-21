@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-04-19
+//! - Updated: 2023-04-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,6 +35,7 @@ pub struct DefaultTankOperator {
   destination: Point2DD,
   // TODO: was PointXY
   enemy_center: Option<Point2DD>,
+  id: usize,
   start_state_space_node: StateSpaceNode,
   tank_cartographer: Rc<RefCell<TankCartographer>>,
   tank_console: Option<Rc<RefCell<dyn TankConsole>>>,
@@ -64,11 +65,10 @@ impl DefaultTankOperator {
       *destination
     }
   }
-}
 
-impl Default for DefaultTankOperator {
-  fn default() -> Self {
+  pub fn new(id: usize) -> Self {
     let tank_cartographer = Rc::new(RefCell::new(TankCartographer::new(
+      id,
       A_STAR_STEP_SIZE,
       A_STAR_DIRECTIONS,
     )));
@@ -83,6 +83,7 @@ impl Default for DefaultTankOperator {
       center,
       destination,
       enemy_center,
+      id,
       start_state_space_node,
       tank_cartographer,
       tank_console,
@@ -95,6 +96,10 @@ impl TankOperator for DefaultTankOperator {
     // was empty in the old code
   }
 
+  fn get_id(&self) -> usize {
+    self.id
+  }
+
   // TODO: was iterator
   fn get_path(&self) -> Vec<StateSpaceNode> {
     self.a_star.get_path()
@@ -104,13 +109,8 @@ impl TankOperator for DefaultTankOperator {
     &mut self,
     tank_console: Rc<RefCell<dyn TankConsole>>,
   ) {
-    // TODO: old code would delegate to the existing tank cartographer
-    let tank_cartographer = Rc::new(RefCell::new(TankCartographer::new(
-      A_STAR_STEP_SIZE,
-      A_STAR_DIRECTIONS,
-    )));
-    tank_cartographer.borrow_mut().set_tank_console(tank_console.clone());
-    self.a_star = AStar::new(tank_cartographer);
+    self.tank_cartographer.borrow_mut().set_tank_console(tank_console.clone());
+    self.a_star = AStar::new(self.tank_cartographer.clone());
     self.tank_console = Some(tank_console);
   }
 

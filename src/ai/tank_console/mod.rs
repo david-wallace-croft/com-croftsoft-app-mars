@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-19
+//! - Updated: 2023-04-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -34,6 +34,7 @@ pub trait TankConsole: TankAccessor + SpaceTester {
     &self,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   ) -> Option<Point2DD>;
+  fn get_id(&self) -> usize;
   fn get_tank_speed(&self) -> f64;
   fn go(
     &mut self,

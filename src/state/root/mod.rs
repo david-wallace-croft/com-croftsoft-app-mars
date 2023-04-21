@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-19
+//! - Updated: 2023-04-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -32,9 +32,10 @@ impl Root {
     center_x: f64,
     center_y: f64,
     color: Color,
+    id: usize,
   ) -> Rc<RefCell<TankState>> {
     let tank_state =
-      Rc::new(RefCell::new(TankState::new(center_x, center_y, color)));
+      Rc::new(RefCell::new(TankState::new(center_x, center_y, color, id)));
     // let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::default()));
     // tank_state.borrow_mut().set_tank_operator(tank_operator.clone());
     // tank_operator.borrow_mut().set_tank_console(tank_state.clone());

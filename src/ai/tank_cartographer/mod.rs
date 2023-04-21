@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-19
+//! - Updated: 2023-04-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use super::state_space_node::StateSpaceNode;
 use crate::ai::tank_console::TankConsole;
+use crate::constants::TANK_SPEED_METERS_PER_SECOND;
 use com_croftsoft_core::ai::astar::traits::Cartographer;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
@@ -24,6 +25,7 @@ use std::rc::Rc;
 pub struct TankCartographer {
   directions: usize,
   goal_state_space_node: StateSpaceNode,
+  id: usize,
   init_step_size: f64,
   start_state_space_node: StateSpaceNode,
   tank_console: Option<Rc<RefCell<dyn TankConsole>>>,
@@ -37,14 +39,20 @@ impl TankCartographer {
   ) -> f64 {
     let distance: f64 = from_node.distance(to_node);
     if let Some(tank_console) = &self.tank_console {
-      distance / 1. // TODO: tank_console.borrow().get_tank_speed()
+      // TODO: tank_console.borrow().get_tank_speed()
+      distance / TANK_SPEED_METERS_PER_SECOND
     } else {
       // TODO: what if tank_console is None?
       INFINITY
     }
   }
 
+  pub fn get_id(&self) -> usize {
+    self.id
+  }
+
   pub fn new(
+    id: usize,
     init_step_size: f64,
     directions: usize,
   ) -> Self {
@@ -54,6 +62,7 @@ impl TankCartographer {
     TankCartographer {
       directions,
       goal_state_space_node,
+      id,
       init_step_size,
       start_state_space_node,
       tank_console,

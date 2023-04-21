@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-19
+//! - Updated: 2023-04-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -42,6 +42,7 @@ pub struct TankState {
   destination: Option<Point2DD>,
   dry_firing: bool,
   firing: bool,
+  id: usize,
   sparking: bool,
   target_point: Point2DD,
   test_circle: Circle,
@@ -68,6 +69,7 @@ impl TankState {
     center_x: f64,
     center_y: f64,
     color: Color,
+    id: usize,
   ) -> Self {
     let circle: Circle = Circle {
       center_x: 0.,
@@ -89,6 +91,7 @@ impl TankState {
       destination: None,
       dry_firing: false,
       firing: false,
+      id,
       sparking: false,
       // tank_operator: None,
       target_point: Point2DD::default(),
@@ -462,6 +465,10 @@ impl TankConsole for TankState {
       return Some(closest_enemy_tank_center);
     }
     None
+  }
+
+  fn get_id(&self) -> usize {
+    self.id
   }
 
   fn get_tank_speed(&self) -> f64 {
