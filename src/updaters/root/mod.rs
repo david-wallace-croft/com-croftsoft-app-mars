@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-04-19
+//! - Updated: 2023-04-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -284,7 +284,9 @@ impl RootUpdater {
       root_state.borrow().tank_operators.clone(),
       root_state.borrow().tanks.clone(),
     );
-    let tank_updater = TankUpdater::new(root_state.borrow().tanks.clone());
+    // TODO: maybe just pass in root_state by itself
+    let tank_updater =
+      TankUpdater::new(root_state.clone(), root_state.borrow().tanks.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),

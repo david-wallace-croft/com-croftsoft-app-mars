@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-20
+//! - Updated: 2023-04-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,6 +22,7 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor, SpaceTester,
 };
+use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_animation::web_sys::log;
@@ -113,6 +114,7 @@ impl TankState {
 
   pub fn update(
     &mut self,
+    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     // if let Some(tank_operator) = &self.tank_operator {
@@ -120,7 +122,7 @@ impl TankState {
     //   tank_operator.borrow_mut().update(time_delta);
     // }
     self.update_ammo();
-    self.update_position(time_delta);
+    self.update_position(root, time_delta);
     self.update_turret_heading(time_delta);
   }
 
@@ -165,6 +167,7 @@ impl TankState {
 
   fn update_position(
     &mut self,
+    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     // log(&format!("destination {:?}", self.destination));
@@ -205,23 +208,25 @@ impl TankState {
     if move_y.abs() > delta_y.abs() {
       move_y = delta_y;
     }
+    let old_x = self.circle.center_x;
+    let old_y = self.circle.center_y;
     let new_x = self.circle.center_x + move_x;
     let new_y = self.circle.center_y + move_y;
     self.circle.center_x = new_x;
     self.circle.center_y = new_y;
     // TODO
-    // if world.is_blocked(this) {
-    //   self.circle.center_x = center_x;
-    //   self.circle.center_y = center_y;
-    //   if world.is_blocked(this) {
-    //     self.circle.center_x = new_x;
-    //     self.circle.center_y = new_y;
-    //     self.updated = true;
-    //   }
-    // } else {
-    // log(&format!("center updated {:?}", self.circle));
-    self.updated = true;
-    // }
+    if root.borrow().is_blocked(&self.circle) {
+      self.circle.center_x = old_x;
+      self.circle.center_y = old_y;
+      if root.borrow().is_blocked(&self.circle) {
+        self.circle.center_x = new_x;
+        self.circle.center_y = new_y;
+        self.updated = true;
+      }
+    } else {
+      // log(&format!("center updated {:?}", self.circle));
+      self.updated = true;
+    }
   }
 
   fn update_turret_heading(
@@ -287,6 +292,7 @@ impl Model for TankState {
 
   fn update(
     &mut self,
+    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     log("TankState.update()");
@@ -296,7 +302,7 @@ impl Model for TankState {
     // let Some(tank_operator) = &self.tank_operator else { return; };
     // tank_operator.borrow_mut().update(time_delta);
     self.update_ammo();
-    self.update_position(time_delta);
+    self.update_position(root, time_delta);
     self.update_turret_heading(time_delta);
   }
 }

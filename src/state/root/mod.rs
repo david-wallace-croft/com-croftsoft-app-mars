@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-20
+//! - Updated: 2023-04-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,9 +13,10 @@
 
 use super::overlay::Overlay;
 use crate::ai::tank_operator::TankOperator;
-use crate::engine::traits::Color;
+use crate::engine::traits::{Color, ModelAccessor};
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -28,6 +29,28 @@ pub struct Root {
 }
 
 impl Root {
+  // TODO: argument was Model in old code; could be Shape
+  pub fn is_blocked(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    // TODO: Use CollisionDetector
+    // TODO: Old code iterated over array of Impassable
+    for obstacle in self.obstacles.borrow().iter() {
+      if circle.intersects_circle(&obstacle.circle) {
+        return true;
+      }
+    }
+    let mut tank_circle = Circle::default();
+    for tank in self.tanks.borrow().iter() {
+      tank_circle = tank.borrow().get_shape(tank_circle);
+      if circle.intersects_circle(&tank_circle) {
+        return true;
+      }
+    }
+    false
+  }
+
   pub fn make_tank(
     center_x: f64,
     center_y: f64,

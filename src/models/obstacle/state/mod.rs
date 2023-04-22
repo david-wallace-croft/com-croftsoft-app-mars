@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-04-05
+//! - Updated: 2023-04-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,10 +17,13 @@ use crate::constants::{
 };
 use crate::engine::collision_detector::CollisionDetector;
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
+use core::cell::RefCell;
 use rand::rngs::ThreadRng;
 use rand::Rng;
+use std::rc::Rc;
 
 pub struct ObstacleState {
   pub active: bool,
@@ -82,6 +85,7 @@ impl Model for ObstacleState {
 
   fn update(
     &mut self,
+    _root: Rc<RefCell<Root>>,
     _time_delta: f64,
   ) {
     // TODO: Move this to the updater
