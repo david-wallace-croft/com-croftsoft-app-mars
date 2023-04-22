@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-04-21
+//! - Updated: 2023-04-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,6 @@ use super::{Obstacle, ObstacleAccessor};
 use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
-use crate::engine::collision_detector::CollisionDetector;
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
@@ -134,8 +133,8 @@ impl Obstacle for ObstacleState {
 
   fn update(
     &mut self,
-    collision_detector: &CollisionDetector,
     drift_bounds: &Rectangle,
+    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     if !self.active {
@@ -183,7 +182,7 @@ impl Obstacle for ObstacleState {
     self.velocity_x = velocity_x;
     self.velocity_y = velocity_y;
     if new_center_x != old_center_x || new_center_y != old_center_y {
-      if collision_detector.detect_collision(&self.circle) {
+      if root.borrow().is_blocked(&self.circle) {
         self.circle.center_x = new_center_x;
         self.circle.center_y = new_center_y;
         // TODO: updated event
@@ -193,7 +192,7 @@ impl Obstacle for ObstacleState {
           center_y: new_center_y,
           radius,
         };
-        if !collision_detector.detect_collision(&new_circle) {
+        if !root.borrow().is_blocked(&new_circle) {
           self.circle.center_x = new_center_x;
           self.circle.center_y = new_center_y;
         } else {

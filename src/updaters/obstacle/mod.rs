@@ -5,19 +5,19 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-04-05
+//! - Updated: 2023-04-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::constants::TIME_DELTA;
-use crate::engine::collision_detector::CollisionDetector;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::obstacle::Obstacle;
+use crate::state::root::Root;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Updater;
-use core::cell::{Ref, RefCell};
+use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -35,30 +35,30 @@ use std::rc::Rc;
 // }
 
 pub struct ObstacleUpdater {
-  collision_detector: Rc<RefCell<CollisionDetector>>,
   drift_bounds: Rectangle,
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
   obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
+  root: Rc<RefCell<Root>>,
 }
 
 impl ObstacleUpdater {
   pub fn new(
-    collision_detector: Rc<RefCell<CollisionDetector>>,
     drift_bounds: Rectangle,
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
+    root: Rc<RefCell<Root>>,
   ) -> Self {
     Self {
-      collision_detector,
       drift_bounds,
       // events,
       // inputs,
       obstacles,
       // options,
+      root,
     }
   }
 }
@@ -74,13 +74,11 @@ impl Updater for ObstacleUpdater {
     // if !inputs.get_time_to_update() || self.options.borrow().get_pause() {
     //   return;
     // }
-    let collision_detector: &Ref<CollisionDetector> =
-      &self.collision_detector.borrow();
     let drift_bounds: &Rectangle = &self.drift_bounds;
     let length: usize = self.obstacles.borrow().len();
     for _index in 0..length {
       let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
-      obstacle.update(collision_detector, drift_bounds, TIME_DELTA);
+      obstacle.update(drift_bounds, self.root.clone(), TIME_DELTA);
       self.obstacles.borrow_mut().push_back(obstacle);
     }
   }

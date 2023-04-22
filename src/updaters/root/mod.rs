@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-04-21
+//! - Updated: 2023-04-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,7 +19,6 @@ use super::overlay::{
 };
 use super::tank::TankUpdater;
 use super::tank_operator::TankOperatorUpdater;
-use crate::engine::collision_detector::CollisionDetector;
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
 use crate::state::root::Root;
@@ -256,13 +255,11 @@ impl RootUpdater {
     );
     let options_updater =
       OptionsUpdater::new(root_updater_inputs_adapter.clone(), options);
-    let collision_detector = Rc::new(RefCell::new(CollisionDetector::new(
-      root_state.borrow().obstacles.clone(),
-    )));
     let obstacles_updater = ObstacleUpdater::new(
-      collision_detector,
       drift_bounds,
+      // TODO: probably do not need both obstacles and root; just root is good
       root_state.borrow().obstacles.clone(),
+      root_state.clone(),
     );
     let overlay_updater = OverlayUpdater::new(
       root_updater_events_adapter.clone(),
