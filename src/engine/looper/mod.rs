@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-18
+//! - Updated: 2023-04-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,14 +18,12 @@ use crate::components::root::RootComponent;
 use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
-use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankMutator;
 use crate::state::configuration::Configuration;
 use crate::state::options::Options;
 use crate::state::root::Root;
 use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
-use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
@@ -64,16 +62,8 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-    let mut obstacles_vecdeque = VecDeque::<ObstacleState>::new();
-    for i in 1..=5 {
-      let circle = Circle {
-        center_x: (i * 100) as f64,
-        center_y: (i * 100) as f64,
-        radius: (i * i * 4) as f64,
-      };
-      let obstacle = ObstacleState::new(circle);
-      obstacles_vecdeque.push_back(obstacle);
-    }
+
+    let obstacles_vecdeque = Root::make_obstacles();
     let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
     let mut tank_operators_vecdeque =
       VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-21
+//! - Updated: 2023-04-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,11 +13,14 @@
 
 use super::overlay::Overlay;
 use crate::ai::tank_operator::TankOperator;
+use crate::constants::{OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN};
 use crate::engine::traits::{Color, ModelAccessor};
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
+use rand::distributions::Uniform;
+use rand::prelude::Distribution;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -49,6 +52,23 @@ impl Root {
       }
     }
     false
+  }
+
+  pub fn make_obstacles() -> VecDeque<ObstacleState> {
+    let mut obstacles_vecdeque = VecDeque::<ObstacleState>::new();
+    let mut rng = rand::thread_rng();
+    let uniform = Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
+    for i in 0..6 {
+      let radius = uniform.sample(&mut rng);
+      let circle = Circle {
+        center_x: (i * 100) as f64,
+        center_y: (i * 100) as f64,
+        radius,
+      };
+      let obstacle = ObstacleState::new(circle);
+      obstacles_vecdeque.push_back(obstacle);
+    }
+    obstacles_vecdeque
   }
 
   pub fn make_tank(
