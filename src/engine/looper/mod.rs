@@ -62,9 +62,12 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-
-    let obstacles_vecdeque = Root::make_obstacles();
-    let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
+    let drift_bounds = Rectangle {
+      x_max: 600.,
+      x_min: 0.,
+      y_max: 600.,
+      y_min: 0.,
+    };
     let mut tank_operators_vecdeque =
       VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();
     let mut tanks_vecdeque = VecDeque::<Rc<RefCell<TankState>>>::new();
@@ -85,6 +88,8 @@ impl Looper {
     }
     let tank_operators = Rc::new(RefCell::new(tank_operators_vecdeque));
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));
+    let obstacles_vecdeque = Root::make_obstacles(drift_bounds, tanks.clone());
+    let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
     let root_state =
       Rc::new(RefCell::new(Root::new(obstacles, tank_operators, tanks)));
     let root_component = RootComponent::new(

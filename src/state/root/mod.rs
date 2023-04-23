@@ -15,11 +15,13 @@ use super::overlay::Overlay;
 use crate::ai::tank_operator::TankOperator;
 use crate::constants::{
   OBSTACLE_COUNT, OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
+  OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
 use crate::engine::traits::{Color, ModelAccessor};
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
+use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
@@ -46,8 +48,15 @@ impl Root {
         return true;
       }
     }
+    Root::is_blocked_by_tank(circle, self.tanks.clone())
+  }
+
+  fn is_blocked_by_tank(
+    circle: &dyn CircleAccessor,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  ) -> bool {
     let mut tank_circle = Circle::default();
-    for tank in self.tanks.borrow().iter() {
+    for tank in tanks.borrow().iter() {
       tank_circle = tank.borrow().get_shape(tank_circle);
       if circle.intersects_circle(&tank_circle) {
         return true;
@@ -56,18 +65,33 @@ impl Root {
     false
   }
 
-  pub fn make_obstacles() -> VecDeque<ObstacleState> {
+  pub fn make_obstacles(
+    drift_bounds: Rectangle,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  ) -> VecDeque<ObstacleState> {
     let mut obstacles_vecdeque = VecDeque::<ObstacleState>::new();
     let mut rng = rand::thread_rng();
-    let uniform = Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
-    for i in 0..OBSTACLE_COUNT {
-      let radius = uniform.sample(&mut rng);
+    let center_uniform = Uniform::from(drift_bounds.x_min..=drift_bounds.x_max);
+    let radius_uniform =
+      Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
+    for _ in 0..OBSTACLE_COUNT {
+      let center_x = center_uniform.sample(&mut rng);
+      let center_y = center_uniform.sample(&mut rng);
+      let radius = radius_uniform.sample(&mut rng);
       let circle = Circle {
-        center_x: (i * 100) as f64,
-        center_y: (i * 100) as f64,
+        center_x,
+        center_y,
         radius,
       };
-      let obstacle = ObstacleState::new(circle);
+      let mut obstacle =
+        ObstacleState::new(circle, drift_bounds, OBSTACLE_RADIUS_MIN);
+      for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
+        if !Root::is_blocked_by_tank(&circle, tanks.clone()) {
+          continue;
+        }
+        obstacle.circle.center_x = center_uniform.sample(&mut rng);
+        obstacle.circle.center_y = center_uniform.sample(&mut rng);
+      }
       obstacles_vecdeque.push_back(obstacle);
     }
     obstacles_vecdeque

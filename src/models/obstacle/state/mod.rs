@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-04-22
+//! - Updated: 2023-04-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -27,7 +27,7 @@ use std::rc::Rc;
 pub struct ObstacleState {
   pub active: bool,
   pub circle: Circle,
-  pub draft_bounds: Rectangle,
+  pub drift_bounds: Rectangle,
   pub radius_min: f64,
   pub updated: bool,
   pub velocity_x: f64,
@@ -35,12 +35,16 @@ pub struct ObstacleState {
 }
 
 impl ObstacleState {
-  pub fn new(circle: Circle) -> Self {
+  pub fn new(
+    circle: Circle,
+    drift_bounds: Rectangle,
+    radius_min: f64,
+  ) -> Self {
     Self {
       active: true,
       circle,
-      draft_bounds: Rectangle::default(),
-      radius_min: 0.,
+      drift_bounds,
+      radius_min,
       updated: false,
       velocity_x: 0.,
       velocity_y: 0.,
