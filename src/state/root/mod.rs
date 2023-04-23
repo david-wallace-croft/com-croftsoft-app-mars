@@ -13,7 +13,9 @@
 
 use super::overlay::Overlay;
 use crate::ai::tank_operator::TankOperator;
-use crate::constants::{OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN};
+use crate::constants::{
+  OBSTACLE_COUNT, OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
+};
 use crate::engine::traits::{Color, ModelAccessor};
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
@@ -58,7 +60,7 @@ impl Root {
     let mut obstacles_vecdeque = VecDeque::<ObstacleState>::new();
     let mut rng = rand::thread_rng();
     let uniform = Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
-    for i in 0..6 {
+    for i in 0..OBSTACLE_COUNT {
       let radius = uniform.sample(&mut rng);
       let circle = Circle {
         center_x: (i * 100) as f64,

@@ -27,6 +27,7 @@ pub static INFO: &str = "CroftSoft Mars \
   Copyright 2023 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
+pub const OBSTACLE_COUNT: usize = 6;
 pub const OBSTACLE_FILL_STYLE: &str = "#40826D";
 pub const OBSTACLE_JERK_MAGNITUDE_MAX: f64 = 100.;
 pub const OBSTACLE_RADIUS_MAX: f64 = 60.;
