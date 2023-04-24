@@ -5,18 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-18
+//! - Updated: 2023-04-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::{
-  ai::tank_operator::TankOperator,
-  engine::traits::{Color, Damageable, Impassable, Model, ModelAccessor},
+use crate::engine::traits::{
+  Color, Damageable, Impassable, Model, ModelAccessor,
 };
-use core::cell::RefCell;
-use std::rc::Rc;
 
 pub mod state;
 
@@ -39,10 +36,7 @@ pub trait Tank: Damageable + Impassable + Model + TankMutator {
 pub trait TankAccessor: ModelAccessor {
   fn get_ammo(&self) -> usize;
   fn get_body_heading(&self) -> f64;
-  fn get_color(
-    &self,
-    color: Color,
-  ) -> Color;
+  fn get_color(&self) -> Color;
   fn get_damage(&self) -> f64;
   fn get_radius(&self) -> f64;
   fn get_turret_heading(&self) -> f64;

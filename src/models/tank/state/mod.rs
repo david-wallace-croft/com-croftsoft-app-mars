@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-21
+//! - Updated: 2023-04-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -372,12 +372,8 @@ impl TankAccessor for TankState {
     self.body_heading
   }
 
-  fn get_color(
-    &self,
-    color: Color,
-  ) -> Color {
-    // TODO
-    color
+  fn get_color(&self) -> Color {
+    self.color
   }
 
   fn get_damage(&self) -> f64 {

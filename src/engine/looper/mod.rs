@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-23
+//! - Updated: 2023-04-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -75,7 +75,11 @@ impl Looper {
       let offset = ((index + 1) * 100) as f64;
       let center_x: f64 = 600. - offset;
       let center_y: f64 = offset;
-      let color = Color {};
+      let color = if index >= 2 {
+        Color::ENEMY
+      } else {
+        Color::FRIEND
+      };
       let tank: Rc<RefCell<TankState>> =
         Root::make_tank(center_x, center_y, color, index);
       // let mut tank = TankState::new(center_x, center_y, color);

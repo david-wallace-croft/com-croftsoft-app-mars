@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-23
+//! - Updated: 2023-04-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -86,8 +86,9 @@ impl Root {
       let mut obstacle =
         ObstacleState::new(circle, drift_bounds, OBSTACLE_RADIUS_MIN);
       for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
-        if !Root::is_blocked_by_tank(&circle, tanks.clone()) {
-          continue;
+        // TODO: Also check to see if blocked by something else
+        if !Root::is_blocked_by_tank(&obstacle.circle, tanks.clone()) {
+          break;
         }
         obstacle.circle.center_x = center_uniform.sample(&mut rng);
         obstacle.circle.center_y = center_uniform.sample(&mut rng);

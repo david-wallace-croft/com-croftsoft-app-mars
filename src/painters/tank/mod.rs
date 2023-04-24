@@ -5,14 +5,16 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-04-17
+//! - Updated: 2023-04-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{TANK_FILL_STYLE, TANK_STROKE_STYLE};
-use crate::engine::traits::ModelAccessor;
+use crate::constants::{
+  TANK_FILL_STYLE_ENEMY, TANK_FILL_STYLE_FRIEND, TANK_STROKE_STYLE,
+};
+use crate::engine::traits::{Color, ModelAccessor};
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankAccessor;
 use com_croftsoft_core::math::geom::circle::Circle;
@@ -26,7 +28,8 @@ use web_sys::CanvasRenderingContext2d;
 
 pub struct TankPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
-  fill_style: JsValue,
+  fill_style_enemy: JsValue,
+  fill_style_friend: JsValue,
   stroke_style: JsValue,
   // TODO: change this to dyn TankAccessor
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
@@ -37,11 +40,13 @@ impl TankPainter {
     context: Rc<RefCell<CanvasRenderingContext2d>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   ) -> Self {
-    let fill_style: JsValue = JsValue::from_str(TANK_FILL_STYLE);
+    let fill_style_enemy: JsValue = JsValue::from_str(TANK_FILL_STYLE_ENEMY);
+    let fill_style_friend: JsValue = JsValue::from_str(TANK_FILL_STYLE_FRIEND);
     let stroke_style: JsValue = JsValue::from_str(TANK_STROKE_STYLE);
     Self {
       context,
-      fill_style,
+      fill_style_enemy,
+      fill_style_friend,
       stroke_style,
       tanks,
     }
@@ -59,7 +64,11 @@ impl TankPainter {
     context.save();
     let _result = context.translate(center_x, center_y);
     let _result = context.rotate(tank.get_body_heading());
-    context.set_fill_style(&self.fill_style);
+    let fill_style = match tank.get_color() {
+      Color::ENEMY => &self.fill_style_enemy,
+      Color::FRIEND => &self.fill_style_friend,
+    };
+    context.set_fill_style(fill_style);
     context.set_stroke_style(&self.stroke_style);
     // TODO: rescale this in terms of TANK_RADIUS
     // tank treads
@@ -122,7 +131,7 @@ impl TankPainter {
     context.begin_path();
     context.rect(10., -2., 4., 4.);
     context.stroke();
-    context.set_fill_style(&self.fill_style);
+    context.set_fill_style(fill_style);
     // tank cannon
     context.begin_path();
     context.rect(14., -1., 11., 2.);
@@ -135,9 +144,6 @@ impl TankPainter {
 
 impl Painter for TankPainter {
   fn paint(&mut self) {
-    let context = self.context.borrow();
-    context.set_fill_style(&self.fill_style);
-    context.set_stroke_style(&self.stroke_style);
     let tanks: Ref<VecDeque<Rc<RefCell<TankState>>>> = self.tanks.borrow();
     for tank in tanks.iter() {
       let _result = self.paint_tank(&tank.borrow());
