@@ -134,12 +134,13 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
         ),
       );
       if let Some(tank_console) = &self.tank_console {
-        if tank_console.borrow().is_space_available(
-          adjacent_state_space_node.get_point_xy().get_x(),
-          adjacent_state_space_node.get_point_xy().get_y(),
-        ) {
-          adjacent_list.push(adjacent_state_space_node);
-        }
+        // TODO
+        // if tank_console.borrow().is_space_available(
+        //   adjacent_state_space_node.get_point_xy().get_x(),
+        //   adjacent_state_space_node.get_point_xy().get_y(),
+        // ) {
+        adjacent_list.push(adjacent_state_space_node);
+        // }
       }
     }
     adjacent_list

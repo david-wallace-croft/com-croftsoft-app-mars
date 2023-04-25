@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-24
+//! - Updated: 2023-04-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -71,12 +71,19 @@ impl Looper {
     let mut tank_operators_vecdeque =
       VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();
     let mut tanks_vecdeque = VecDeque::<Rc<RefCell<TankState>>>::new();
-    for index in 0..5 {
-      let offset = ((index + 1) * 100) as f64;
-      let center_x: f64 = 600. - offset;
-      let center_y: f64 = offset;
-      let color = if index >= 2 {
-        Color::ENEMY
+    for index in 0..6 {
+      let center_x: f64 = if index >= 3 {
+        (index * 200 - 500) as f64
+      } else {
+        (index * 200 + 100) as f64
+      };
+      let center_y: f64 = if index >= 3 {
+        100.
+      } else {
+        500.
+      };
+      let color = if index >= 3 {
+        Color::FOE
       } else {
         Color::FRIEND
       };

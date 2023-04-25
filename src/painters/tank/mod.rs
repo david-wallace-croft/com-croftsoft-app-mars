@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-04-24
+//! - Updated: 2023-04-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -65,7 +65,7 @@ impl TankPainter {
     let _result = context.translate(center_x, center_y);
     let _result = context.rotate(tank.get_body_heading());
     let fill_style = match tank.get_color() {
-      Color::ENEMY => &self.fill_style_enemy,
+      Color::FOE => &self.fill_style_enemy,
       Color::FRIEND => &self.fill_style_friend,
     };
     context.set_fill_style(fill_style);
