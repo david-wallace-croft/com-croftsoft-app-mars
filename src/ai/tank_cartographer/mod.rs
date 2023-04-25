@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-20
+//! - Updated: 2023-04-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -134,13 +134,12 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
         ),
       );
       if let Some(tank_console) = &self.tank_console {
-        // TODO
-        // if tank_console.borrow().is_space_available(
-        //   adjacent_state_space_node.get_point_xy().get_x(),
-        //   adjacent_state_space_node.get_point_xy().get_y(),
-        // ) {
-        adjacent_list.push(adjacent_state_space_node);
-        // }
+        if tank_console.borrow().is_space_available(
+          adjacent_state_space_node.get_point_xy().get_x(),
+          adjacent_state_space_node.get_point_xy().get_y(),
+        ) {
+          adjacent_list.push(adjacent_state_space_node);
+        }
       }
     }
     adjacent_list

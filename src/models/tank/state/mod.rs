@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-24
+//! - Updated: 2023-04-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -450,10 +450,9 @@ impl TankConsole for TankState {
     let mut closest_enemy_tank_center = Point2DD::default();
     for i in 0..length {
       let tank = tanks[i].borrow();
-      if !tank.is_active() {
+      if !tank.is_active() || tank.color == self.color {
         continue;
       }
-      // TODO: check for enemy color
       tank.get_center(&mut enemy_tank_center);
       let distance = tank_center.distance_to(&enemy_tank_center);
       if distance < closest_distance {
