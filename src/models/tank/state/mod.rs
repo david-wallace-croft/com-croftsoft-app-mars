@@ -338,7 +338,8 @@ impl SpaceTester for TankState {
     x: f64,
     y: f64,
   ) -> bool {
-    todo!()
+    // TODO
+    true
   }
 }
 
@@ -422,7 +423,7 @@ impl TankConsole for TankState {
   }
 
   fn get_body_rotation_speed(&self) -> f64 {
-    todo!()
+    TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND
   }
 
   fn get_center(
@@ -473,7 +474,7 @@ impl TankConsole for TankState {
   }
 
   fn get_tank_speed(&self) -> f64 {
-    todo!()
+    TANK_SPEED_METERS_PER_SECOND
   }
 
   fn go(
