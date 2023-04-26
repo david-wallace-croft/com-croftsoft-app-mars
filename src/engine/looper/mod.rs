@@ -12,6 +12,7 @@
 // =============================================================================
 
 use super::traits::Color;
+use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::ai::tank_operator::TankOperator;
 use crate::components::root::RootComponent;
@@ -93,14 +94,27 @@ impl Looper {
       tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
       tanks_vecdeque.push_back(tank.clone());
-      let mut tank_operator = DefaultTankOperator::new(index);
-      tank_operator.set_tank_console(tank);
+      let tank_operator = DefaultTankOperator::new(index);
       tank_operators_vecdeque.push_back(Rc::new(RefCell::new(tank_operator)));
     }
     let tank_operators = Rc::new(RefCell::new(tank_operators_vecdeque));
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));
     let obstacles_vecdeque = Root::make_obstacles(drift_bounds, tanks.clone());
     let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
+    let length = tanks.borrow().len();
+    for index in 0..length {
+      let tank = tanks.borrow()[index].clone();
+      let obstacles = obstacles.clone();
+      let tanks = tanks.clone();
+      let tank_console = Rc::new(RefCell::new(DefaultTankConsole {
+        obstacles,
+        tank,
+        tanks,
+      }));
+      tank_operators.borrow()[index]
+        .borrow_mut()
+        .set_tank_console(tank_console);
+    }
     let root_state =
       Rc::new(RefCell::new(Root::new(obstacles, tank_operators, tanks)));
     let root_component = RootComponent::new(

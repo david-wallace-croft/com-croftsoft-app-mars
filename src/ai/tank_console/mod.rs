@@ -19,6 +19,8 @@ use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+pub mod default;
+
 pub trait TankConsole: TankAccessor + SpaceTester {
   fn fire(&mut self);
   fn get_body_rotation_speed(&self) -> f64;

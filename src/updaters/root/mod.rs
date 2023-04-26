@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-04-22
+//! - Updated: 2023-04-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -278,6 +278,7 @@ impl RootUpdater {
       metronome,
     );
     let tank_operator_updater = TankOperatorUpdater::new(
+      root_state.borrow().obstacles.clone(),
       root_state.borrow().tank_operators.clone(),
       root_state.borrow().tanks.clone(),
     );

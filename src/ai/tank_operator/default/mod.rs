@@ -19,6 +19,7 @@ use crate::constants::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
+use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -116,8 +117,9 @@ impl TankOperator for DefaultTankOperator {
 
   fn update(
     &mut self,
-    time_delta: f64,
+    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+    time_delta: f64,
   ) {
     // log("DefaultTankOperator.update");
     let Some(tank_console) = &self.tank_console else { return; };
