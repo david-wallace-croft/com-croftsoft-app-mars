@@ -20,8 +20,8 @@ use std::rc::Rc;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Color {
   // TODO: Support more than two colors
-  FOE,
-  FRIEND,
+  BLUE,
+  RED,
 }
 
 pub trait Component: Initializer + Updater {

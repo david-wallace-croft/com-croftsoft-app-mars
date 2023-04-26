@@ -84,9 +84,9 @@ impl Looper {
         500.
       };
       let color = if index >= 3 {
-        Color::FOE
+        Color::RED
       } else {
-        Color::FRIEND
+        Color::BLUE
       };
       let tank: Rc<RefCell<TankState>> =
         Root::make_tank(center_x, center_y, color, index);

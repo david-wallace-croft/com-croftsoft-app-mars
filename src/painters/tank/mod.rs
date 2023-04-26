@@ -12,7 +12,7 @@
 // =============================================================================
 
 use crate::constants::{
-  TANK_FILL_STYLE_ENEMY, TANK_FILL_STYLE_FRIEND, TANK_STROKE_STYLE,
+  TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_STROKE_STYLE,
 };
 use crate::engine::traits::{Color, ModelAccessor};
 use crate::models::tank::state::TankState;
@@ -28,8 +28,8 @@ use web_sys::CanvasRenderingContext2d;
 
 pub struct TankPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
-  fill_style_enemy: JsValue,
-  fill_style_friend: JsValue,
+  fill_style_blue: JsValue,
+  fill_style_red: JsValue,
   stroke_style: JsValue,
   // TODO: change this to dyn TankAccessor
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
@@ -40,13 +40,13 @@ impl TankPainter {
     context: Rc<RefCell<CanvasRenderingContext2d>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   ) -> Self {
-    let fill_style_enemy: JsValue = JsValue::from_str(TANK_FILL_STYLE_ENEMY);
-    let fill_style_friend: JsValue = JsValue::from_str(TANK_FILL_STYLE_FRIEND);
+    let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
+    let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
     let stroke_style: JsValue = JsValue::from_str(TANK_STROKE_STYLE);
     Self {
       context,
-      fill_style_enemy,
-      fill_style_friend,
+      fill_style_blue,
+      fill_style_red,
       stroke_style,
       tanks,
     }
@@ -65,8 +65,8 @@ impl TankPainter {
     let _result = context.translate(center_x, center_y);
     let _result = context.rotate(tank.get_body_heading());
     let fill_style = match tank.get_color() {
-      Color::FOE => &self.fill_style_enemy,
-      Color::FRIEND => &self.fill_style_friend,
+      Color::RED => &self.fill_style_red,
+      Color::BLUE => &self.fill_style_blue,
     };
     context.set_fill_style(fill_style);
     context.set_stroke_style(&self.stroke_style);
