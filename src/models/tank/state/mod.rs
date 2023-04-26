@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-25
+//! - Updated: 2023-04-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -45,7 +45,6 @@ pub struct TankState {
   id: usize,
   sparking: bool,
   target_point: Point2DD,
-  test_circle: Circle,
   turret_heading: f64,
   updated: bool,
 }
@@ -76,11 +75,6 @@ impl TankState {
       center_y: 0.,
       radius: TANK_RADIUS,
     };
-    let test_circle: Circle = Circle {
-      center_x: 0.,
-      center_y: 0.,
-      radius: TANK_RADIUS,
-    };
     let mut tank: TankState = Self {
       active: false,
       ammo: 0,
@@ -95,7 +89,6 @@ impl TankState {
       sparking: false,
       // tank_operator: None,
       target_point: Point2DD::default(),
-      test_circle,
       turret_heading: 0.,
       updated: false,
     };

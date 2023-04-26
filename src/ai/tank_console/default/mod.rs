@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-25
-//! - Updated: 2023-04-25
+//! - Updated: 2023-04-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -51,27 +51,33 @@ impl ModelAccessor for DefaultTankConsole {
 impl SpaceTester for DefaultTankConsole {
   fn is_space_available(
     &self,
-    // TODO: this was PointXY
+    // TODO: this was PointXY; could be a Circle
     x: f64,
     y: f64,
   ) -> bool {
     let test_circle = Circle::default();
-    let mut test_circle = self.tank.borrow().get_shape(test_circle);
+    let self_tank = self.tank.borrow();
+    let mut test_circle = self_tank.get_shape(test_circle);
     test_circle.center_x = x;
     test_circle.center_y = y;
+    // TODO: previously operated on an array of Impassable
     for obstacle in self.obstacles.borrow().iter() {
       if obstacle.circle.intersects_circle(&test_circle) {
         return false;
       }
     }
-    // TODO
-    // let mut tank_circle = Circle::default();
-    // for tank in self.tanks.borrow().iter() {
-    //   tank.get_shape(tank_circle);
-    //   if tank_circle.intersects_circle(&test_circle) {
-    //     return false;
-    //   }
-    // }
+    let self_tank_color = self_tank.get_color();
+    let mut tank_circle = Circle::default();
+    for other_tank in self.tanks.borrow().iter() {
+      let other_tank = other_tank.borrow();
+      if self_tank_color != other_tank.get_color() && self_tank.get_ammo() > 0 {
+        continue;
+      }
+      tank_circle = other_tank.get_shape(tank_circle);
+      if tank_circle.intersects_circle(&test_circle) {
+        return false;
+      }
+    }
     true
   }
 }
