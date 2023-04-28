@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-24
+//! - Updated: 2023-04-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,6 +17,10 @@ use core::f64::consts::TAU;
 pub const A_STAR_DIRECTIONS: usize = 8;
 pub const A_STAR_LOOPS: usize = 100;
 pub const A_STAR_STEP_SIZE: f64 = 10.;
+pub const AMMO_DUMP_AMMO_GROWTH_RATE: f64 = 0.5;
+pub const AMMO_DUMP_AMMO_MAX: f64 = 30.;
+pub const AMMO_DUMP_EXPLOSION_FACTOR: f64 = 3.;
+pub const AMMO_DUMP_Z: f64 = 0.1;
 pub const BACKGROUND_FILL_STYLE: &str = "rgb(255, 152, 109)";
 pub const CONFIGURATION: Configuration = Configuration {
   update_period_millis_initial: UPDATE_PERIOD_MILLIS,

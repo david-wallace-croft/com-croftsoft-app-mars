@@ -5,13 +5,17 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-04-27
+//! - Updated: 2023-04-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::{AmmoDump, AmmoDumpAccessor};
+use crate::constants::{
+  AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
+  AMMO_DUMP_Z,
+};
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
@@ -33,12 +37,8 @@ pub struct DefaultAmmoDump {
 impl DefaultAmmoDump {
   pub fn new(
     ammo: f64,
-    ammo_growth_rate: f64,
-    ammo_max: f64,
     center_x: f64,
     center_y: f64,
-    explosion_factor: f64,
-    z: f64,
   ) -> Self {
     let circle = Circle {
       center_x,
@@ -50,14 +50,14 @@ impl DefaultAmmoDump {
     let updated = false;
     Self {
       ammo,
-      ammo_growth_rate,
-      ammo_max,
+      ammo_growth_rate: AMMO_DUMP_AMMO_GROWTH_RATE,
+      ammo_max: AMMO_DUMP_AMMO_MAX,
       circle,
       exploding,
       explosion_circle,
-      explosion_factor,
+      explosion_factor: AMMO_DUMP_EXPLOSION_FACTOR,
       updated,
-      z,
+      z: AMMO_DUMP_Z,
     }
   }
 }
@@ -97,9 +97,17 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
 impl Damageable for DefaultAmmoDump {
   fn add_damage(
     &mut self,
-    damage: f64,
+    _damage: f64,
   ) {
-    todo!()
+    if self.exploding {
+      return;
+    }
+    self.updated = true;
+    self.exploding = true;
+    self.explosion_circle.set_center_from_circle(&self.circle);
+    self.explosion_circle.radius = self.explosion_factor * self.ammo;
+    // TODO: get damageables from root and add damage equal to ammo
+    self.set_ammo(0.);
   }
 }
 
