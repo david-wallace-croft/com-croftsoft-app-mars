@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-04-28
+//! - Updated: 2023-04-29
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,6 +17,7 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::models::world::World;
 use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
@@ -31,6 +32,7 @@ pub struct DefaultAmmoDump {
   explosion_circle: Circle,
   explosion_factor: f64,
   updated: bool,
+  world: Rc<RefCell<World>>,
   z: f64,
 }
 
@@ -39,6 +41,7 @@ impl DefaultAmmoDump {
     ammo: f64,
     center_x: f64,
     center_y: f64,
+    world: Rc<RefCell<World>>,
   ) -> Self {
     let circle = Circle {
       center_x,
@@ -57,6 +60,7 @@ impl DefaultAmmoDump {
       explosion_circle,
       explosion_factor: AMMO_DUMP_EXPLOSION_FACTOR,
       updated,
+      world,
       z: AMMO_DUMP_Z,
     }
   }
@@ -107,6 +111,7 @@ impl Damageable for DefaultAmmoDump {
     self.explosion_circle.set_center_from_circle(&self.circle);
     self.explosion_circle.radius = self.explosion_factor * self.ammo;
     // TODO: get damageables from root and add damage equal to ammo
+    // TODO: use self.world.borrow() here
     self.set_ammo(0.);
   }
 }

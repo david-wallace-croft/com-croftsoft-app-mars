@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-25
+//! - Updated: 2023-04-29
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,6 +21,7 @@ use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankMutator;
+use crate::models::world::WorldBuilder;
 use crate::state::configuration::Configuration;
 use crate::state::options::Options;
 use crate::state::root::Root;
@@ -69,6 +70,9 @@ impl Looper {
       y_max: 600.,
       y_min: 0.,
     };
+    let world_builder = WorldBuilder::default();
+    world_builder.build_ammo_dump(300., 300.);
+    // TODO: left off here
     let mut tank_operators_vecdeque =
       VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();
     let mut tanks_vecdeque = VecDeque::<Rc<RefCell<TankState>>>::new();
