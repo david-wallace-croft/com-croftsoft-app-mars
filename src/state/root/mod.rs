@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-24
+//! - Updated: 2023-04-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,6 +20,7 @@ use crate::constants::{
 use crate::engine::traits::{Color, ModelAccessor};
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
+use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
@@ -33,6 +34,7 @@ pub struct Root {
   pub overlay: Rc<RefCell<Overlay>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  pub world: Rc<RefCell<World>>,
 }
 
 impl Root {
@@ -117,12 +119,14 @@ impl Root {
     obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+    world: Rc<RefCell<World>>,
   ) -> Self {
     Self {
       obstacles,
       overlay: Rc::new(RefCell::new(Overlay::default())),
       tank_operators,
       tanks,
+      world,
     }
   }
 }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-29
+//! - Updated: 2023-04-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -71,7 +71,10 @@ impl Looper {
       y_min: 0.,
     };
     let world_builder = WorldBuilder::default();
-    world_builder.build_ammo_dump(300., 300.);
+    for index in 0..5 {
+      let offset = ((index + 1) * 100) as f64;
+      world_builder.build_ammo_dump(offset, offset, index);
+    }
     // TODO: left off here
     let mut tank_operators_vecdeque =
       VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();
@@ -119,8 +122,12 @@ impl Looper {
         .borrow_mut()
         .set_tank_console(tank_console);
     }
-    let root_state =
-      Rc::new(RefCell::new(Root::new(obstacles, tank_operators, tanks)));
+    let root_state = Rc::new(RefCell::new(Root::new(
+      obstacles,
+      tank_operators,
+      tanks,
+      world_builder.world,
+    )));
     let root_component = RootComponent::new(
       events.clone(),
       "root",

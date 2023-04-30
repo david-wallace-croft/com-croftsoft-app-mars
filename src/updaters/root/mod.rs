@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-04-25
+//! - Updated: 2023-04-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,6 +19,7 @@ use super::overlay::{
 };
 use super::tank::TankUpdater;
 use super::tank_operator::TankOperatorUpdater;
+use super::world::WorldUpdater;
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
 use crate::state::root::Root;
@@ -285,9 +286,11 @@ impl RootUpdater {
     // TODO: maybe just pass in root_state by itself
     let tank_updater =
       TankUpdater::new(root_state.clone(), root_state.borrow().tanks.clone());
+    let world_updater = WorldUpdater::new(root_state.borrow().world.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),
+      Box::new(world_updater),
       Box::new(tank_operator_updater),
       Box::new(tank_updater),
       Box::new(obstacles_updater),

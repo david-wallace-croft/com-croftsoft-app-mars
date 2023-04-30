@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-04-29
+//! - Updated: 2023-04-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -31,16 +31,22 @@ pub struct DefaultAmmoDump {
   exploding: bool,
   explosion_circle: Circle,
   explosion_factor: f64,
+  id: usize,
   updated: bool,
   world: Rc<RefCell<World>>,
   z: f64,
 }
 
 impl DefaultAmmoDump {
+  pub fn get_id(&self) -> usize {
+    self.id
+  }
+
   pub fn new(
     ammo: f64,
     center_x: f64,
     center_y: f64,
+    id: usize,
     world: Rc<RefCell<World>>,
   ) -> Self {
     let circle = Circle {
@@ -51,18 +57,38 @@ impl DefaultAmmoDump {
     let exploding = false;
     let explosion_circle = Circle::default();
     let updated = false;
-    Self {
-      ammo,
+    let mut ammo_dump = Self {
+      ammo: 0.,
       ammo_growth_rate: AMMO_DUMP_AMMO_GROWTH_RATE,
       ammo_max: AMMO_DUMP_AMMO_MAX,
       circle,
       exploding,
       explosion_circle,
       explosion_factor: AMMO_DUMP_EXPLOSION_FACTOR,
+      id,
       updated,
       world,
       z: AMMO_DUMP_Z,
+    };
+    ammo_dump.set_ammo(ammo);
+    ammo_dump
+  }
+
+  pub fn update2(
+    &mut self,
+    time_delta: f64,
+  ) {
+    // TODO: Move this to the updater
+    if self.exploding {
+      return;
     }
+    let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
+    if new_ammo > self.ammo_max {
+      new_ammo = self.ammo_max;
+    } else {
+      new_ammo = 0.;
+    }
+    self.set_ammo(new_ammo);
   }
 }
 
@@ -138,17 +164,8 @@ impl Model for DefaultAmmoDump {
     _root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
-    // TODO: Move this to the updater
-    if self.exploding {
-      return;
-    }
-    let mut new_ammo = self.ammo + time_delta + self.ammo_growth_rate;
-    if new_ammo > self.ammo_max {
-      new_ammo = self.ammo_max;
-    } else {
-      new_ammo = 0.;
-    }
-    self.set_ammo(new_ammo);
+    // TODO: moved to an update() with different arguments
+    todo!()
   }
 }
 

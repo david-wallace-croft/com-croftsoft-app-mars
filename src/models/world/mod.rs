@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-04-29
+//! - Updated: 2023-04-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -36,11 +36,13 @@ impl WorldBuilder {
     &self,
     center_x: f64,
     center_y: f64,
+    id: usize,
   ) {
     let ammo_dump = DefaultAmmoDump::new(
       AMMO_DUMP_AMMO_MAX,
       center_x,
       center_y,
+      id,
       self.world.clone(),
     );
     self.world.borrow().ammo_dumps.borrow_mut().push_back(ammo_dump);
