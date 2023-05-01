@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-30
+//! - Updated: 2023-05-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -96,8 +96,7 @@ impl Looper {
         Color::BLUE
       };
       let tank: Rc<RefCell<TankState>> =
-        Root::make_tank(center_x, center_y, color, index);
-      // let mut tank = TankState::new(center_x, center_y, color);
+        world_builder.build_tank(center_x, center_y, color, index);
       tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
       tanks_vecdeque.push_back(tank.clone());

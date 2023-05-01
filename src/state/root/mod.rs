@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-04-30
+//! - Updated: 2023-05-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -38,6 +38,7 @@ pub struct Root {
 }
 
 impl Root {
+  // TODO: Move this to World
   // TODO: argument was Model in old code; could be Shape
   pub fn is_blocked(
     &self,
@@ -53,6 +54,7 @@ impl Root {
     Root::is_blocked_by_tank(circle, self.tanks.clone())
   }
 
+  // TODO: Move this to World
   fn is_blocked_by_tank(
     circle: &dyn CircleAccessor,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
@@ -67,6 +69,7 @@ impl Root {
     false
   }
 
+  // TODO: Move this to WorldBuilder
   pub fn make_obstacles(
     drift_bounds: Rectangle,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
@@ -98,21 +101,6 @@ impl Root {
       obstacles_vecdeque.push_back(obstacle);
     }
     obstacles_vecdeque
-  }
-
-  pub fn make_tank(
-    center_x: f64,
-    center_y: f64,
-    color: Color,
-    id: usize,
-  ) -> Rc<RefCell<TankState>> {
-    let tank_state =
-      Rc::new(RefCell::new(TankState::new(center_x, center_y, color, id)));
-    // let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::default()));
-    // tank_state.borrow_mut().set_tank_operator(tank_operator.clone());
-    // tank_operator.borrow_mut().set_tank_console(tank_state.clone());
-    // TODO: model_array_keep.insert(seriTank) was in the old code here
-    tank_state
   }
 
   pub fn new(

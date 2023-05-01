@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-26
+//! - Updated: 2023-05-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,6 +21,7 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor,
 };
+use crate::models::world::World;
 use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -47,6 +48,7 @@ pub struct TankState {
   target_point: Point2DD,
   turret_heading: f64,
   updated: bool,
+  world: Rc<RefCell<World>>,
 }
 
 impl TankState {
@@ -69,6 +71,7 @@ impl TankState {
     center_y: f64,
     color: Color,
     id: usize,
+    world: Rc<RefCell<World>>,
   ) -> Self {
     let circle: Circle = Circle {
       center_x: 0.,
@@ -91,6 +94,7 @@ impl TankState {
       target_point: Point2DD::default(),
       turret_heading: 0.,
       updated: false,
+      world,
     };
     tank.initialize(center_x, center_y);
     // TODO: self.ammo_dumps = [];

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-04-30
+//! - Updated: 2023-05-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -136,6 +136,7 @@ impl Damageable for DefaultAmmoDump {
     self.exploding = true;
     self.explosion_circle.set_center_from_circle(&self.circle);
     self.explosion_circle.radius = self.explosion_factor * self.ammo;
+    // TODO: left off here
     // TODO: get damageables from root and add damage equal to ammo
     // TODO: use self.world.borrow() here
     self.set_ammo(0.);
