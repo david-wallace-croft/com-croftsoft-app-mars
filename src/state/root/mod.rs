@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-05-01
+//! - Updated: 2023-05-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,19 +13,12 @@
 
 use super::overlay::Overlay;
 use crate::ai::tank_operator::TankOperator;
-use crate::constants::{
-  OBSTACLE_COUNT, OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
-  OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
-};
-use crate::engine::traits::{Color, ModelAccessor};
+use crate::engine::traits::ModelAccessor;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
-use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
-use rand::distributions::Uniform;
-use rand::prelude::Distribution;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -54,8 +47,8 @@ impl Root {
     Root::is_blocked_by_tank(circle, self.tanks.clone())
   }
 
-  // TODO: Move this to World
-  fn is_blocked_by_tank(
+  // TODO: Move this to Game or World
+  pub fn is_blocked_by_tank(
     circle: &dyn CircleAccessor,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
   ) -> bool {
@@ -67,40 +60,6 @@ impl Root {
       }
     }
     false
-  }
-
-  // TODO: Move this to WorldBuilder
-  pub fn make_obstacles(
-    drift_bounds: Rectangle,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
-  ) -> VecDeque<ObstacleState> {
-    let mut obstacles_vecdeque = VecDeque::<ObstacleState>::new();
-    let mut rng = rand::thread_rng();
-    let center_uniform = Uniform::from(drift_bounds.x_min..=drift_bounds.x_max);
-    let radius_uniform =
-      Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
-    for _ in 0..OBSTACLE_COUNT {
-      let center_x = center_uniform.sample(&mut rng);
-      let center_y = center_uniform.sample(&mut rng);
-      let radius = radius_uniform.sample(&mut rng);
-      let circle = Circle {
-        center_x,
-        center_y,
-        radius,
-      };
-      let mut obstacle =
-        ObstacleState::new(circle, drift_bounds, OBSTACLE_RADIUS_MIN);
-      for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
-        // TODO: Also check to see if blocked by something else
-        if !Root::is_blocked_by_tank(&obstacle.circle, tanks.clone()) {
-          break;
-        }
-        obstacle.circle.center_x = center_uniform.sample(&mut rng);
-        obstacle.circle.center_y = center_uniform.sample(&mut rng);
-      }
-      obstacles_vecdeque.push_back(obstacle);
-    }
-    obstacles_vecdeque
   }
 
   pub fn new(

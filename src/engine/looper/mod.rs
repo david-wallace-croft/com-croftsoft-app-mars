@@ -5,13 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-01
+//! - Updated: 2023-05-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::game::Game;
 use super::traits::Color;
+use super::world_builder::WorldBuilder;
 use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::ai::tank_operator::TankOperator;
@@ -21,7 +23,6 @@ use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankMutator;
-use crate::models::world::WorldBuilder;
 use crate::state::configuration::Configuration;
 use crate::state::options::Options;
 use crate::state::root::Root;
@@ -105,7 +106,7 @@ impl Looper {
     }
     let tank_operators = Rc::new(RefCell::new(tank_operators_vecdeque));
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));
-    let obstacles_vecdeque = Root::make_obstacles(drift_bounds, tanks.clone());
+    let obstacles_vecdeque = Game::make_obstacles(drift_bounds, tanks.clone());
     let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
     let length = tanks.borrow().len();
     for index in 0..length {
