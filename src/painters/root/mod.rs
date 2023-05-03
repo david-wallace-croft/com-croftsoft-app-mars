@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-30
+//! - Updated: 2023-05-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -59,8 +59,10 @@ impl RootPainter {
       context.clone(),
       root_state.world.borrow().ammo_dumps.clone(),
     );
-    let obstacle_painter =
-      ObstaclePainter::new(context.clone(), root_state.obstacles.clone());
+    let obstacle_painter = ObstaclePainter::new(
+      context.clone(),
+      root_state.world.borrow().obstacles.clone(),
+    );
     let overlay_painter =
       OverlayPainter::new(context.clone(), options, root_state.overlay.clone());
     let tank_painter = TankPainter::new(context, root_state.tanks.clone());

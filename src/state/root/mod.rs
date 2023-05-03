@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-03-11
-//! - Updated: 2023-05-02
+//! - Updated: 2023-05-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,6 @@
 use super::overlay::Overlay;
 use crate::ai::tank_operator::TankOperator;
 use crate::engine::traits::ModelAccessor;
-use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
@@ -22,8 +21,8 @@ use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+// TODO: move others to world like obstacles was then replace Root with World
 pub struct Root {
-  pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub overlay: Rc<RefCell<Overlay>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
@@ -39,7 +38,7 @@ impl Root {
   ) -> bool {
     // TODO: Use CollisionDetector
     // TODO: Old code iterated over array of Impassable
-    for obstacle in self.obstacles.borrow().iter() {
+    for obstacle in self.world.borrow().obstacles.borrow().iter() {
       if circle.intersects_circle(&obstacle.circle) {
         return true;
       }
@@ -63,13 +62,11 @@ impl Root {
   }
 
   pub fn new(
-    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
     world: Rc<RefCell<World>>,
   ) -> Self {
     Self {
-      obstacles,
       overlay: Rc::new(RefCell::new(Overlay::default())),
       tank_operators,
       tanks,

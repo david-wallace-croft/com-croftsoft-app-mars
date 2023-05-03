@@ -122,7 +122,6 @@ impl Looper {
         .set_tank_console(tank_console);
     }
     let root_state = Rc::new(RefCell::new(Root::new(
-      obstacles,
       tank_operators,
       tanks,
       world_builder.world,
