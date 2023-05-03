@@ -106,9 +106,7 @@ impl Looper {
     }
     let tank_operators = Rc::new(RefCell::new(tank_operators_vecdeque));
     let tanks = Rc::new(RefCell::new(tanks_vecdeque));
-    let obstacles_vecdeque =
-      WorldDirector::make_obstacles(drift_bounds, tanks.clone());
-    let obstacles = Rc::new(RefCell::new(obstacles_vecdeque));
+    let obstacles = WorldDirector::make_obstacles(drift_bounds, &world_builder);
     let length = tanks.borrow().len();
     for index in 0..length {
       let tank = tanks.borrow()[index].clone();

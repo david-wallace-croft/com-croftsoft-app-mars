@@ -11,12 +11,12 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::builder::WorldBuilder;
 use crate::constants::{
   OBSTACLE_COUNT, OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
 use crate::models::obstacle::state::ObstacleState;
-use crate::models::tank::state::TankState;
 use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -36,11 +36,11 @@ impl WorldDirector {
   }
 
   // TODO: make this private and call from make_level()
+  // TODO: remove the return value
   pub fn make_obstacles(
     drift_bounds: Rectangle,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
-  ) -> VecDeque<ObstacleState> {
-    let mut obstacles_vecdeque = VecDeque::<ObstacleState>::new();
+    world_builder: &WorldBuilder,
+  ) -> Rc<RefCell<VecDeque<ObstacleState>>> {
     let mut rng = rand::thread_rng();
     let center_uniform = Uniform::from(drift_bounds.x_min..=drift_bounds.x_max);
     let radius_uniform =
@@ -54,20 +54,24 @@ impl WorldDirector {
         center_y,
         radius,
       };
-      // TODO: make this using WorldBuilder
-      let mut obstacle =
-        ObstacleState::new(circle, drift_bounds, OBSTACLE_RADIUS_MIN);
+      world_builder.build_obstacle(circle, drift_bounds);
+    }
+    for mut obstacle in
+      world_builder.world.borrow().obstacles.borrow_mut().iter_mut()
+    {
       for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
         // TODO: Also check to see if blocked by something else
-        if !Root::is_blocked_by_tank(&obstacle.circle, tanks.clone()) {
+        if !Root::is_blocked_by_tank(
+          &obstacle.circle,
+          world_builder.world.borrow().tanks.clone(),
+        ) {
           break;
         }
         obstacle.circle.center_x = center_uniform.sample(&mut rng);
         obstacle.circle.center_y = center_uniform.sample(&mut rng);
       }
-      obstacles_vecdeque.push_back(obstacle);
     }
-    obstacles_vecdeque
+    world_builder.world.borrow().obstacles.clone()
   }
 
   pub fn update(&self) {
