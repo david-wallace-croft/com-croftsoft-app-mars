@@ -5,11 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-02
+//! - Updated: 2023-05-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
+
+pub mod builder;
+pub mod director;
 
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;

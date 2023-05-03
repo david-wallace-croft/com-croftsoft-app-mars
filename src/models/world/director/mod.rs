@@ -1,11 +1,11 @@
 // =============================================================================
-//! - Game for CroftSoft Mars
+//! - World Director for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2022-05-02
-//! - Updated: 2023-05-02
+//! - Created: 2022-05-03
+//! - Updated: 2023-05-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,11 +26,11 @@ use rand::prelude::Distribution;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
-pub struct Game {
+pub struct WorldDirector {
   // TODO
 }
 
-impl Game {
+impl WorldDirector {
   fn make_level(&self) {
     todo!()
   }
