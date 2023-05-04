@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-04-23
+//! - Updated: 2023-05-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,6 +16,7 @@ use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::models::world::World;
 use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -32,6 +33,7 @@ pub struct ObstacleState {
   pub updated: bool,
   pub velocity_x: f64,
   pub velocity_y: f64,
+  world: Rc<RefCell<World>>,
 }
 
 impl ObstacleState {
@@ -39,6 +41,7 @@ impl ObstacleState {
     circle: Circle,
     drift_bounds: Rectangle,
     radius_min: f64,
+    world: Rc<RefCell<World>>,
   ) -> Self {
     Self {
       active: true,
@@ -48,6 +51,7 @@ impl ObstacleState {
       updated: false,
       velocity_x: 0.,
       velocity_y: 0.,
+      world,
     }
   }
 }
@@ -186,7 +190,7 @@ impl Obstacle for ObstacleState {
     self.velocity_x = velocity_x;
     self.velocity_y = velocity_y;
     if new_center_x != old_center_x || new_center_y != old_center_y {
-      if root.borrow().is_blocked(&self.circle) {
+      if self.world.borrow().is_blocked(&self.circle) {
         self.circle.center_x = new_center_x;
         self.circle.center_y = new_center_y;
         // TODO: updated event
@@ -196,7 +200,7 @@ impl Obstacle for ObstacleState {
           center_y: new_center_y,
           radius,
         };
-        if !root.borrow().is_blocked(&new_circle) {
+        if !self.world.borrow().is_blocked(&new_circle) {
           self.circle.center_x = new_center_x;
           self.circle.center_y = new_center_y;
         } else {

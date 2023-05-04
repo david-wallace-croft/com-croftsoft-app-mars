@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-04-21
+//! - Updated: 2023-05-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -57,7 +57,7 @@ impl Updater for TankUpdater {
     for _index in 0..length {
       let tank = self.tanks.borrow_mut().pop_front().unwrap();
       // log("TankUpdater.update()");
-      tank.borrow_mut().update(self.root.clone(), TIME_DELTA);
+      tank.borrow_mut().update(TIME_DELTA);
       self.tanks.borrow_mut().push_back(tank);
     }
   }

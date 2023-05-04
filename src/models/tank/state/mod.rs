@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-01
+//! - Updated: 2023-05-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -110,7 +110,6 @@ impl TankState {
 
   pub fn update(
     &mut self,
-    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     // if let Some(tank_operator) = &self.tank_operator {
@@ -118,7 +117,7 @@ impl TankState {
     //   tank_operator.borrow_mut().update(time_delta);
     // }
     self.update_ammo();
-    self.update_position(root, time_delta);
+    self.update_position(time_delta);
     self.update_turret_heading(time_delta);
   }
 
@@ -163,7 +162,6 @@ impl TankState {
 
   fn update_position(
     &mut self,
-    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     // log(&format!("destination {:?}", self.destination));
@@ -211,10 +209,10 @@ impl TankState {
     self.circle.center_x = new_x;
     self.circle.center_y = new_y;
     // TODO
-    if root.borrow().is_blocked(&self.circle) {
+    if self.world.borrow().is_blocked(&self.circle) {
       self.circle.center_x = old_x;
       self.circle.center_y = old_y;
-      if root.borrow().is_blocked(&self.circle) {
+      if self.world.borrow().is_blocked(&self.circle) {
         self.circle.center_x = new_x;
         self.circle.center_y = new_y;
         self.updated = true;
@@ -381,6 +379,7 @@ impl Model for TankState {
 
   fn update(
     &mut self,
+    // TODO: remove the root argument
     root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
@@ -391,7 +390,7 @@ impl Model for TankState {
     // let Some(tank_operator) = &self.tank_operator else { return; };
     // tank_operator.borrow_mut().update(time_delta);
     self.update_ammo();
-    self.update_position(root, time_delta);
+    self.update_position(time_delta);
     self.update_turret_heading(time_delta);
   }
 }

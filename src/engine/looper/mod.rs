@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-03
+//! - Updated: 2023-05-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -105,7 +105,7 @@ impl Looper {
       tank_operators_vecdeque.push_back(Rc::new(RefCell::new(tank_operator)));
     }
     let tank_operators = Rc::new(RefCell::new(tank_operators_vecdeque));
-    let tanks = Rc::new(RefCell::new(tanks_vecdeque));
+    let tanks = world_builder.world.borrow().tanks.clone();
     let obstacles = WorldDirector::make_obstacles(drift_bounds, &world_builder);
     let length = tanks.borrow().len();
     for index in 0..length {

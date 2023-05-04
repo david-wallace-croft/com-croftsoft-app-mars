@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-03
-//! - Updated: 2023-05-03
+//! - Updated: 2023-05-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,6 @@ use crate::constants::{
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
 use crate::models::obstacle::state::ObstacleState;
-use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
@@ -61,10 +60,7 @@ impl WorldDirector {
     {
       for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
         // TODO: Also check to see if blocked by something else
-        if !Root::is_blocked_by_tank(
-          &obstacle.circle,
-          world_builder.world.borrow().tanks.clone(),
-        ) {
+        if world_builder.world.borrow().is_blocked_by_tank(&obstacle.circle) {
           break;
         }
         obstacle.circle.center_x = center_uniform.sample(&mut rng);

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-02
-//! - Updated: 2023-05-03
+//! - Updated: 2023-05-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -49,8 +49,12 @@ impl WorldBuilder {
     circle: Circle,
     drift_bounds: Rectangle,
   ) {
-    let obstacle =
-      ObstacleState::new(circle, drift_bounds, OBSTACLE_RADIUS_MIN);
+    let obstacle = ObstacleState::new(
+      circle,
+      drift_bounds,
+      OBSTACLE_RADIUS_MIN,
+      self.world.clone(),
+    );
     self.world.borrow().obstacles.borrow_mut().push_back(obstacle);
   }
 
