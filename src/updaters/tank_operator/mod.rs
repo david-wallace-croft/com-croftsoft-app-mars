@@ -5,43 +5,34 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-04-25
+//! - Updated: 2023-05-05
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::ai::tank_operator::TankOperator;
 use crate::constants::TIME_DELTA;
-use crate::models::obstacle::state::ObstacleState;
-use crate::models::tank::state::TankState;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
-use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankOperatorUpdater {
-  obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
-  tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  world: Rc<RefCell<World>>,
 }
 
 impl TankOperatorUpdater {
   pub fn new(
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
-    tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
+    world: Rc<RefCell<World>>,
   ) -> Self {
     Self {
       // events,
       // inputs,
-      obstacles,
-      tank_operators,
       // options,
-      tanks,
+      world,
     }
   }
 }
@@ -57,17 +48,19 @@ impl Updater for TankOperatorUpdater {
     // if !inputs.get_time_to_update() || self.options.borrow().get_pause() {
     //   return;
     // }
-    let length = self.tank_operators.borrow().len();
+    let world = self.world.borrow();
+    let mut tank_operators = world.tank_operators.borrow_mut();
+    let length = tank_operators.len();
     for _index in 0..length {
-      let tank_operator = self.tank_operators.borrow_mut().pop_front().unwrap();
-      let tank = self.tanks.borrow_mut().pop_front().unwrap();
+      let tank_operator = tank_operators.pop_front().unwrap();
+      let tank = world.tanks.borrow_mut().pop_front().unwrap();
       tank_operator.borrow_mut().update(
-        self.obstacles.clone(),
-        self.tanks.clone(),
+        self.world.borrow().obstacles.clone(),
+        world.tanks.clone(),
         TIME_DELTA,
       );
-      self.tank_operators.borrow_mut().push_back(tank_operator);
-      self.tanks.borrow_mut().push_back(tank);
+      tank_operators.push_back(tank_operator);
+      world.tanks.borrow_mut().push_back(tank);
     }
   }
 }

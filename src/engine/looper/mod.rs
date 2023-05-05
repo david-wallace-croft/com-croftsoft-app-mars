@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-04
+//! - Updated: 2023-05-05
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,8 +13,6 @@
 
 use super::traits::Color;
 use crate::ai::tank_console::default::DefaultTankConsole;
-use crate::ai::tank_operator::default::DefaultTankOperator;
-use crate::ai::tank_operator::TankOperator;
 use crate::components::root::RootComponent;
 use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
@@ -34,7 +32,6 @@ use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
 use core::cell::RefCell;
 use core::f64::consts::TAU;
-use std::collections::VecDeque;
 use std::rc::Rc;
 
 // TODO: rename this
@@ -76,10 +73,6 @@ impl Looper {
       let offset = ((index + 1) * 100) as f64;
       world_builder.build_ammo_dump(offset, offset, index);
     }
-    // TODO: left off here
-    let mut tank_operators_vecdeque =
-      VecDeque::<Rc<RefCell<dyn TankOperator>>>::new();
-    let mut tanks_vecdeque = VecDeque::<Rc<RefCell<TankState>>>::new();
     for index in 0..6 {
       let center_x: f64 = if index >= 3 {
         (index * 200 - 500) as f64
@@ -100,11 +93,8 @@ impl Looper {
         world_builder.build_tank(center_x, center_y, color, index);
       tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
-      tanks_vecdeque.push_back(tank.clone());
-      let tank_operator = DefaultTankOperator::new(index);
-      tank_operators_vecdeque.push_back(Rc::new(RefCell::new(tank_operator)));
+      world_builder.build_tank_operator(index);
     }
-    let tank_operators = Rc::new(RefCell::new(tank_operators_vecdeque));
     let tanks = world_builder.world.borrow().tanks.clone();
     let obstacles = WorldDirector::make_obstacles(drift_bounds, &world_builder);
     let length = tanks.borrow().len();
@@ -117,15 +107,12 @@ impl Looper {
         tank,
         tanks,
       }));
-      tank_operators.borrow()[index]
+      world_builder.world.borrow().tank_operators.borrow()[index]
         .borrow_mut()
         .set_tank_console(tank_console);
     }
-    let root_state = Rc::new(RefCell::new(Root::new(
-      tank_operators,
-      tanks,
-      world_builder.world,
-    )));
+    let root_state =
+      Rc::new(RefCell::new(Root::new(tanks, world_builder.world)));
     let root_component = RootComponent::new(
       events.clone(),
       "root",
