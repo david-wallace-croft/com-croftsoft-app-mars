@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-03
+//! - Updated: 2023-05-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -65,7 +65,8 @@ impl RootPainter {
     );
     let overlay_painter =
       OverlayPainter::new(context.clone(), options, root_state.overlay.clone());
-    let tank_painter = TankPainter::new(context, root_state.tanks.clone());
+    let tank_painter =
+      TankPainter::new(context, root_state.world.borrow().tanks.clone());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
       // TODO: maybe wrap in a world painter

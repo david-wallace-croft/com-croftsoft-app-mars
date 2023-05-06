@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-05
+//! - Updated: 2023-05-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -111,8 +111,7 @@ impl Looper {
         .borrow_mut()
         .set_tank_console(tank_console);
     }
-    let root_state =
-      Rc::new(RefCell::new(Root::new(tanks, world_builder.world)));
+    let root_state = Rc::new(RefCell::new(Root::new(world_builder.world)));
     let root_component = RootComponent::new(
       events.clone(),
       "root",
