@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-04-22
+//! - Updated: 2023-05-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,6 @@
 use crate::constants::TIME_DELTA;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::obstacle::Obstacle;
-use crate::state::root::Root;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
@@ -40,7 +39,7 @@ pub struct ObstacleUpdater {
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
   obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-  root: Rc<RefCell<Root>>,
+  // root: Rc<RefCell<Root>>,
 }
 
 impl ObstacleUpdater {
@@ -50,7 +49,6 @@ impl ObstacleUpdater {
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-    root: Rc<RefCell<Root>>,
   ) -> Self {
     Self {
       drift_bounds,
@@ -58,7 +56,6 @@ impl ObstacleUpdater {
       // inputs,
       obstacles,
       // options,
-      root,
     }
   }
 }
@@ -78,7 +75,7 @@ impl Updater for ObstacleUpdater {
     let length: usize = self.obstacles.borrow().len();
     for _index in 0..length {
       let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
-      obstacle.update(drift_bounds, self.root.clone(), TIME_DELTA);
+      obstacle.update(drift_bounds, TIME_DELTA);
       self.obstacles.borrow_mut().push_back(obstacle);
     }
   }

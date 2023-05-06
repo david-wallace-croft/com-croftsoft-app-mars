@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-04
+//! - Updated: 2023-05-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -142,7 +142,6 @@ impl Obstacle for ObstacleState {
   fn update(
     &mut self,
     drift_bounds: &Rectangle,
-    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     if !self.active {

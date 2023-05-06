@@ -258,9 +258,7 @@ impl RootUpdater {
       OptionsUpdater::new(root_updater_inputs_adapter.clone(), options);
     let obstacles_updater = ObstacleUpdater::new(
       drift_bounds,
-      // TODO: probably do not need both obstacles and root; just root is good
       root_state.borrow().world.borrow().obstacles.clone(),
-      root_state.clone(),
     );
     let overlay_updater = OverlayUpdater::new(
       root_updater_events_adapter.clone(),
