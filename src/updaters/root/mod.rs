@@ -11,14 +11,11 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::obstacle::ObstacleUpdater;
 use super::options::{OptionsUpdater, OptionsUpdaterInputs};
 use super::overlay::{
   OverlayUpdater, OverlayUpdaterEvents, OverlayUpdaterInputs,
   OverlayUpdaterOptions,
 };
-use super::tank::TankUpdater;
-use super::tank_operator::TankOperatorUpdater;
 use super::world::WorldUpdater;
 use crate::state::options::Options;
 use crate::state::overlay::Overlay;
@@ -256,10 +253,6 @@ impl RootUpdater {
     );
     let options_updater =
       OptionsUpdater::new(root_updater_inputs_adapter.clone(), options);
-    let obstacles_updater = ObstacleUpdater::new(
-      drift_bounds,
-      root_state.borrow().world.borrow().obstacles.clone(),
-    );
     let overlay_updater = OverlayUpdater::new(
       root_updater_events_adapter.clone(),
       frame_rater,
@@ -276,19 +269,12 @@ impl RootUpdater {
       root_updater_inputs_adapter,
       metronome,
     );
-    let tank_operator_updater =
-      TankOperatorUpdater::new(root_state.borrow().world.clone());
-    // TODO: maybe just pass in root_state by itself
-    let tank_updater =
-      TankUpdater::new(root_state.borrow().world.borrow().tanks.clone());
-    let world_updater = WorldUpdater::new(root_state.borrow().world.clone());
+    let world_updater =
+      WorldUpdater::new(drift_bounds, root_state.borrow().world.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),
       Box::new(world_updater),
-      Box::new(tank_operator_updater),
-      Box::new(tank_updater),
-      Box::new(obstacles_updater),
       Box::new(frame_rater_updater),
       Box::new(overlay_updater),
     ];
