@@ -279,10 +279,8 @@ impl RootUpdater {
     let tank_operator_updater =
       TankOperatorUpdater::new(root_state.borrow().world.clone());
     // TODO: maybe just pass in root_state by itself
-    let tank_updater = TankUpdater::new(
-      root_state.clone(),
-      root_state.borrow().world.borrow().tanks.clone(),
-    );
+    let tank_updater =
+      TankUpdater::new(root_state.borrow().world.borrow().tanks.clone());
     let world_updater = WorldUpdater::new(root_state.borrow().world.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-05-04
+//! - Updated: 2023-05-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,14 +13,12 @@
 
 use crate::constants::TIME_DELTA;
 use crate::models::tank::state::TankState;
-use crate::state::root::Root;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankUpdater {
-  root: Rc<RefCell<Root>>,
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
 }
 
@@ -28,14 +26,12 @@ impl TankUpdater {
   pub fn new(
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    root: Rc<RefCell<Root>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {
       // events,
       // inputs,
-      root,
       tanks,
       // options,
     }
