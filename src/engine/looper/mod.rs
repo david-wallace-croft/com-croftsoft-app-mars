@@ -18,7 +18,7 @@ use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::options::Options;
 use crate::models::root::Root;
-use crate::models::world::director::WorldSeed;
+use crate::models::world::seed::WorldSeed;
 use crate::models::world::World;
 use crate::painters::root::updater::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;

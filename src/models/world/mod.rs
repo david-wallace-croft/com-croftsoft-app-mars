@@ -23,6 +23,7 @@ use std::rc::Rc;
 
 pub mod builder;
 pub mod director;
+pub mod seed;
 pub mod updater;
 
 #[derive(Default)]

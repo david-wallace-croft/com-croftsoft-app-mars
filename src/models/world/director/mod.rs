@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::builder::WorldBuilder;
-use super::World;
+use super::seed::WorldSeed;
 use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::constants::{
   OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
@@ -22,38 +22,19 @@ use crate::engine::traits::Color;
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankMutator;
 use com_croftsoft_core::math::geom::circle::Circle;
-use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
 use core::f64::consts::TAU;
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use std::rc::Rc;
 
-#[derive(Clone, Copy)]
-pub struct WorldSeed {
-  pub ammo_dump_count: usize,
-  pub bounds: Rectangle,
-  pub obstacle_count: usize,
-}
-
-impl WorldSeed {
-  pub fn grow_world(&self) -> Rc<RefCell<World>> {
-    let world_director = WorldBuilderDirector {
-      seed: *self,
-      world_builder: WorldBuilder::default(),
-    };
-    world_director.direct();
-    world_director.world_builder.world
-  }
-}
-
-struct WorldBuilderDirector {
-  seed: WorldSeed,
-  world_builder: WorldBuilder,
+pub struct WorldBuilderDirector {
+  pub seed: WorldSeed,
+  pub world_builder: WorldBuilder,
 }
 
 impl WorldBuilderDirector {
-  fn direct(&self) {
+  pub fn direct(&self) {
     self.direct_ammo_dumps();
     self.direct_tanks();
     self.direct_tank_operators();
