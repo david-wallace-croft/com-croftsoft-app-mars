@@ -29,11 +29,22 @@ use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use std::rc::Rc;
 
-pub struct WorldBuilderDirectorConfiguration {
+pub struct WorldSeed {
   pub bounds: Rectangle,
 }
 
-pub struct WorldBuilderDirector {
+impl WorldSeed {
+  pub fn make_world(&self) -> Rc<RefCell<World>> {
+    let world_director = WorldBuilderDirector {
+      bounds: self.bounds,
+      world_builder: WorldBuilder::default(),
+    };
+    world_director.direct();
+    world_director.world_builder.world
+  }
+}
+
+struct WorldBuilderDirector {
   bounds: Rectangle,
   world_builder: WorldBuilder,
 }
@@ -139,21 +150,6 @@ impl WorldBuilderDirector {
       tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
     }
-  }
-
-  pub fn direct_world_builder(
-    configuration: WorldBuilderDirectorConfiguration
-  ) -> Rc<RefCell<World>> {
-    let WorldBuilderDirectorConfiguration {
-      bounds,
-    } = configuration;
-    let world_builder = WorldBuilder::default();
-    let world_director = WorldBuilderDirector {
-      bounds,
-      world_builder,
-    };
-    world_director.direct();
-    world_director.world_builder.world
   }
 
   // pub fn update(&self) {

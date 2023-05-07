@@ -18,9 +18,7 @@ use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::options::Options;
 use crate::models::root::Root;
-use crate::models::world::director::{
-  WorldBuilderDirector, WorldBuilderDirectorConfiguration,
-};
+use crate::models::world::director::WorldSeed;
 use crate::models::world::World;
 use crate::painters::root::updater::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
@@ -59,11 +57,10 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-    let world: Rc<RefCell<World>> = WorldBuilderDirector::direct_world_builder(
-      WorldBuilderDirectorConfiguration {
-        bounds,
-      },
-    );
+    let world_seed = WorldSeed {
+      bounds,
+    };
+    let world: Rc<RefCell<World>> = world_seed.make_world();
     let root_state = Rc::new(RefCell::new(Root::new(world)));
     let root_component = RootComponent::new(
       events.clone(),
