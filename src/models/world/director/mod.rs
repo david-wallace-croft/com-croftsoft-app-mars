@@ -1,5 +1,5 @@
 // =============================================================================
-//! - World Director for CroftSoft Mars
+//! - World Builder Director for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
