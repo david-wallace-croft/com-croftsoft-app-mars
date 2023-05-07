@@ -29,28 +29,32 @@ use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use std::rc::Rc;
 
-pub struct WorldDirector {
+pub struct WorldBuilderDirectorConfiguration {
+  pub bounds: Rectangle,
+}
+
+pub struct WorldBuilderDirector {
   bounds: Rectangle,
   world_builder: WorldBuilder,
 }
 
-impl WorldDirector {
-  fn make_ammo_dumps(&self) {
+impl WorldBuilderDirector {
+  fn direct(&self) {
+    self.direct_ammo_dumps();
+    self.direct_tanks();
+    self.direct_tank_operators();
+    self.direct_obstacles();
+    self.direct_tank_consoles();
+  }
+
+  fn direct_ammo_dumps(&self) {
     for index in 0..5 {
       let offset = ((index + 1) * 100) as f64;
       self.world_builder.build_ammo_dump(offset, offset, index);
     }
   }
 
-  pub fn make_level(&self) -> Rc<RefCell<World>> {
-    self.make_ammo_dumps();
-    self.make_tanks();
-    self.make_obstacles();
-    self.make_tank_consoles();
-    self.world_builder.world.clone()
-  }
-
-  fn make_obstacles(&self) {
+  fn direct_obstacles(&self) {
     let mut rng = rand::thread_rng();
     let center_uniform = Uniform::from(self.bounds.x_min..=self.bounds.x_max);
     let radius_uniform =
@@ -85,7 +89,7 @@ impl WorldDirector {
     }
   }
 
-  fn make_tank_consoles(&self) {
+  fn direct_tank_consoles(&self) {
     let world = self.world_builder.world.borrow();
     let tanks = world.tanks.borrow();
     let length = tanks.len();
@@ -101,7 +105,19 @@ impl WorldDirector {
     }
   }
 
-  fn make_tanks(&self) {
+  fn direct_tank_operators(&self) {
+    self
+      .world_builder
+      .world
+      .borrow()
+      .tanks
+      .borrow_mut()
+      .iter_mut()
+      .enumerate()
+      .for_each(|(index, _tank)| self.world_builder.build_tank_operator(index));
+  }
+
+  fn direct_tanks(&self) {
     for index in 0..6 {
       let center_x: f64 = if index >= 3 {
         (index * 200 - 500) as f64
@@ -122,16 +138,22 @@ impl WorldDirector {
         self.world_builder.build_tank(center_x, center_y, color, index);
       tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
-      self.world_builder.build_tank_operator(index);
     }
   }
 
-  pub fn new(bounds: Rectangle) -> Self {
+  pub fn direct_world_builder(
+    configuration: WorldBuilderDirectorConfiguration
+  ) -> Rc<RefCell<World>> {
+    let WorldBuilderDirectorConfiguration {
+      bounds,
+    } = configuration;
     let world_builder = WorldBuilder::default();
-    Self {
+    let world_director = WorldBuilderDirector {
       bounds,
       world_builder,
-    }
+    };
+    world_director.direct();
+    world_director.world_builder.world
   }
 
   // pub fn update(&self) {
