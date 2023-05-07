@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-25
-//! - Updated: 2023-04-26
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,18 +13,16 @@
 
 use super::TankConsole;
 use crate::engine::traits::{ModelAccessor, SpaceTester};
-use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankAccessor;
+use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
-use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct DefaultTankConsole {
-  pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub tank: Rc<RefCell<TankState>>,
-  pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  pub world: Rc<RefCell<World>>,
 }
 
 impl ModelAccessor for DefaultTankConsole {
@@ -61,14 +59,14 @@ impl SpaceTester for DefaultTankConsole {
     test_circle.center_x = x;
     test_circle.center_y = y;
     // TODO: previously operated on an array of Impassable
-    for obstacle in self.obstacles.borrow().iter() {
+    for obstacle in self.world.borrow().obstacles.borrow().iter() {
       if obstacle.circle.intersects_circle(&test_circle) {
         return false;
       }
     }
     let self_tank_color = self_tank.get_color();
     let mut tank_circle = Circle::default();
-    for other_tank in self.tanks.borrow().iter() {
+    for other_tank in self.world.borrow().tanks.borrow().iter() {
       let other_tank = other_tank.borrow();
       if self_tank_color != other_tank.get_color() && self_tank.get_ammo() > 0 {
         continue;

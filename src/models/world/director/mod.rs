@@ -5,24 +5,23 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-03
-//! - Updated: 2023-05-04
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::builder::WorldBuilder;
+use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::constants::{
   OBSTACLE_COUNT, OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
-use crate::models::obstacle::state::ObstacleState;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
-use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct WorldDirector {
@@ -35,11 +34,10 @@ impl WorldDirector {
   }
 
   // TODO: make this private and call from make_level()
-  // TODO: remove the return value
   pub fn make_obstacles(
     drift_bounds: Rectangle,
     world_builder: &WorldBuilder,
-  ) -> Rc<RefCell<VecDeque<ObstacleState>>> {
+  ) {
     let mut rng = rand::thread_rng();
     let center_uniform = Uniform::from(drift_bounds.x_min..=drift_bounds.x_max);
     let radius_uniform =
@@ -67,7 +65,22 @@ impl WorldDirector {
         obstacle.circle.center_y = center_uniform.sample(&mut rng);
       }
     }
-    world_builder.world.borrow().obstacles.clone()
+  }
+
+  pub fn make_tank_consoles(world_builder: &WorldBuilder) {
+    let world = world_builder.world.borrow();
+    let tanks = world.tanks.borrow();
+    let length = tanks.len();
+    for index in 0..length {
+      let tank = tanks[index].clone();
+      let tank_console = Rc::new(RefCell::new(DefaultTankConsole {
+        tank,
+        world: world_builder.world.clone(),
+      }));
+      world_builder.world.borrow().tank_operators.borrow()[index]
+        .borrow_mut()
+        .set_tank_console(tank_console);
+    }
   }
 
   pub fn update(&self) {

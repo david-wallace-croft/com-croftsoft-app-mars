@@ -96,21 +96,9 @@ impl Looper {
       world_builder.build_tank_operator(index);
     }
     let tanks = world_builder.world.borrow().tanks.clone();
-    let obstacles = WorldDirector::make_obstacles(drift_bounds, &world_builder);
-    let length = tanks.borrow().len();
-    for index in 0..length {
-      let tank = tanks.borrow()[index].clone();
-      let obstacles = obstacles.clone();
-      let tanks = tanks.clone();
-      let tank_console = Rc::new(RefCell::new(DefaultTankConsole {
-        obstacles,
-        tank,
-        tanks,
-      }));
-      world_builder.world.borrow().tank_operators.borrow()[index]
-        .borrow_mut()
-        .set_tank_console(tank_console);
-    }
+    // TODO: Can these be methods instead of functions?
+    WorldDirector::make_obstacles(drift_bounds, &world_builder);
+    WorldDirector::make_tank_consoles(&world_builder);
     let root_state = Rc::new(RefCell::new(Root::new(world_builder.world)));
     let root_component = RootComponent::new(
       events.clone(),
