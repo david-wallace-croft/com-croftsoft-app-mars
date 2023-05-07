@@ -5,26 +5,26 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-06
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::configuration::Configuration;
 use super::traits::Color;
 use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::components::root::RootComponent;
 use crate::constants::CONFIGURATION;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
+use crate::models::options::Options;
+use crate::models::root::Root;
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankMutator;
 use crate::models::world::builder::WorldBuilder;
 use crate::models::world::director::WorldDirector;
-use crate::state::configuration::Configuration;
-use crate::state::options::Options;
-use crate::state::root::Root;
-use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
+use crate::painters::root::updater::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;

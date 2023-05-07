@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-04
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,8 +21,8 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor,
 };
+use crate::models::root::Root;
 use crate::models::world::World;
-use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_animation::web_sys::log;

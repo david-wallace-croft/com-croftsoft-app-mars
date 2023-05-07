@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-30
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::state::configuration::Configuration;
+use crate::engine::configuration::Configuration;
 use core::f64::consts::TAU;
 
 pub const A_STAR_DIRECTIONS: usize = 8;

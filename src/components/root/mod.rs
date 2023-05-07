@@ -5,13 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-03-13
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::engine::traits::Component;
+use crate::models::options::Options;
+use crate::models::root::Root;
 // use super::canvas::CanvasComponent;
 // use super::frame_rate::FrameRateComponent;
 // use super::pause::PauseComponent;
@@ -26,8 +28,6 @@ use super::canvas::CanvasComponent;
 use super::update_rate::UpdateRateComponent;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
-use crate::state::options::Options;
-use crate::state::root::Root;
 use com_croftsoft_lib_animation::web_sys::{get_window, log};
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
 use core::cell::RefCell;

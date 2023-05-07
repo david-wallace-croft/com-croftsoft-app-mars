@@ -5,14 +5,11 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-05
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
-
-pub mod builder;
-pub mod director;
 
 use crate::ai::tank_operator::TankOperator;
 use crate::engine::traits::ModelAccessor;
@@ -23,6 +20,10 @@ use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
+
+pub mod builder;
+pub mod director;
+pub mod updater;
 
 #[derive(Default)]
 pub struct World {

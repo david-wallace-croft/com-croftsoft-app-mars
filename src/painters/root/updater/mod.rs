@@ -5,21 +5,22 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-05-06
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::options::{OptionsUpdater, OptionsUpdaterInputs};
-use super::overlay::{
-  OverlayUpdater, OverlayUpdaterEvents, OverlayUpdaterInputs,
-  OverlayUpdaterOptions,
-};
-use super::world::WorldUpdater;
-use crate::state::options::Options;
-use crate::state::overlay::Overlay;
-use crate::state::root::Root;
+use crate::models::options::updater::OptionsUpdater;
+use crate::models::options::updater::OptionsUpdaterInputs;
+use crate::models::options::Options;
+use crate::models::overlay::updater::OverlayUpdater;
+use crate::models::overlay::updater::OverlayUpdaterEvents;
+use crate::models::overlay::updater::OverlayUpdaterInputs;
+use crate::models::overlay::updater::OverlayUpdaterOptions;
+use crate::models::overlay::Overlay;
+use crate::models::root::Root;
+use crate::models::world::updater::WorldUpdater;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-04-07
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -24,8 +24,6 @@ pub mod engine;
 pub mod messages;
 pub mod models;
 pub mod painters;
-pub mod state;
-pub mod updaters;
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-27
-//! - Updated: 2023-05-06
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,6 +16,7 @@ use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 
 pub mod state;
+pub mod updater;
 
 pub trait Obstacle: Damageable + Impassable + ObstacleAccessor {
   fn set_active(

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-06
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,8 +16,8 @@ use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::models::root::Root;
 use crate::models::world::World;
-use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;

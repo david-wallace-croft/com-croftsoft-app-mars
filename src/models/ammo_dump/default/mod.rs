@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-01
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,8 +17,8 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::models::root::Root;
 use crate::models::world::World;
-use crate::state::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
 use std::rc::Rc;

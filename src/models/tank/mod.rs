@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-04-24
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,6 +16,7 @@ use crate::engine::traits::{
 };
 
 pub mod state;
+pub mod updater;
 
 // trait TankConsole
 pub trait Tank: Damageable + Impassable + Model + TankMutator {

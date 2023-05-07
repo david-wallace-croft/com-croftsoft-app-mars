@@ -5,16 +5,16 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-05-06
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::obstacle::ObstacleUpdater;
-use super::tank::TankUpdater;
-use super::tank_operator::TankOperatorUpdater;
 use crate::constants::TIME_DELTA;
+use crate::models::obstacle::updater::ObstacleUpdater;
+use crate::models::tank::updater::TankUpdater;
+use crate::models::tank_operator::updater::TankOperatorUpdater;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Updater;

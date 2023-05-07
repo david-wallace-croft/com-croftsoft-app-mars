@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-06
+//! - Updated: 2023-05-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,8 +16,8 @@ use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use super::tank::TankPainter;
 use crate::constants::BACKGROUND_FILL_STYLE;
-use crate::state::options::Options;
-use crate::state::root::Root;
+use crate::models::options::Options;
+use crate::models::root::Root;
 use com_croftsoft_lib_animation::painter::background::BackgroundPainter;
 use com_croftsoft_lib_role::Painter;
 use core::cell::RefCell;
@@ -27,6 +27,8 @@ use wasm_bindgen::JsCast;
 use web_sys::{
   window, CanvasRenderingContext2d, Document, Element, HtmlCanvasElement,
 };
+
+pub mod updater;
 
 pub struct RootPainter {
   painters: Vec<Box<dyn Painter>>,
