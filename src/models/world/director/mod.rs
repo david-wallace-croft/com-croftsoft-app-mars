@@ -15,7 +15,7 @@ use super::builder::WorldBuilder;
 use super::World;
 use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::constants::{
-  OBSTACLE_COUNT, OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
+  OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
 use crate::engine::traits::Color;
@@ -29,14 +29,17 @@ use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use std::rc::Rc;
 
+#[derive(Clone, Copy)]
 pub struct WorldSeed {
+  pub ammo_dump_count: usize,
   pub bounds: Rectangle,
+  pub obstacle_count: usize,
 }
 
 impl WorldSeed {
-  pub fn make_world(&self) -> Rc<RefCell<World>> {
+  pub fn grow_world(&self) -> Rc<RefCell<World>> {
     let world_director = WorldBuilderDirector {
-      bounds: self.bounds,
+      seed: *self,
       world_builder: WorldBuilder::default(),
     };
     world_director.direct();
@@ -45,7 +48,7 @@ impl WorldSeed {
 }
 
 struct WorldBuilderDirector {
-  bounds: Rectangle,
+  seed: WorldSeed,
   world_builder: WorldBuilder,
 }
 
@@ -59,7 +62,7 @@ impl WorldBuilderDirector {
   }
 
   fn direct_ammo_dumps(&self) {
-    for index in 0..5 {
+    for index in 0..self.seed.ammo_dump_count {
       let offset = ((index + 1) * 100) as f64;
       self.world_builder.build_ammo_dump(offset, offset, index);
     }
@@ -67,10 +70,11 @@ impl WorldBuilderDirector {
 
   fn direct_obstacles(&self) {
     let mut rng = rand::thread_rng();
-    let center_uniform = Uniform::from(self.bounds.x_min..=self.bounds.x_max);
+    let center_uniform =
+      Uniform::from(self.seed.bounds.x_min..=self.seed.bounds.x_max);
     let radius_uniform =
       Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
-    for _ in 0..OBSTACLE_COUNT {
+    for _ in 0..self.seed.obstacle_count {
       let center_x = center_uniform.sample(&mut rng);
       let center_y = center_uniform.sample(&mut rng);
       let radius = radius_uniform.sample(&mut rng);
@@ -79,7 +83,7 @@ impl WorldBuilderDirector {
         center_y,
         radius,
       };
-      self.world_builder.build_obstacle(circle, self.bounds);
+      self.world_builder.build_obstacle(circle, self.seed.bounds);
     }
     for mut obstacle in
       self.world_builder.world.borrow().obstacles.borrow_mut().iter_mut()
@@ -151,9 +155,4 @@ impl WorldBuilderDirector {
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
     }
   }
-
-  // pub fn update(&self) {
-  //   // TODO: copy in the rest of the old code
-  //   self.make_level();
-  // }
 }

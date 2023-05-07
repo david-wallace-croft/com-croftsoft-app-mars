@@ -20,6 +20,7 @@ pub const A_STAR_LOOPS: usize = 100;
 pub const A_STAR_STEP_SIZE: f64 = 10.;
 pub const AMMO_DUMP_AMMO_GROWTH_RATE: f64 = 0.5;
 pub const AMMO_DUMP_AMMO_MAX: f64 = 30.;
+pub const AMMO_DUMP_COUNT: usize = 5;
 pub const AMMO_DUMP_EXPLOSION_FACTOR: f64 = 3.;
 pub const AMMO_DUMP_FILL_STYLE: &str = "#b5a642";
 pub const AMMO_DUMP_STROKE_STYLE: &str = "black";

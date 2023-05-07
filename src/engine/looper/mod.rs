@@ -13,7 +13,7 @@
 
 use super::configuration::Configuration;
 use crate::components::root::RootComponent;
-use crate::constants::CONFIGURATION;
+use crate::constants::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::options::Options;
@@ -58,9 +58,11 @@ impl Looper {
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
     let world_seed = WorldSeed {
+      ammo_dump_count: AMMO_DUMP_COUNT,
       bounds,
+      obstacle_count: OBSTACLE_COUNT,
     };
-    let world: Rc<RefCell<World>> = world_seed.make_world();
+    let world: Rc<RefCell<World>> = world_seed.grow_world();
     let root_state = Rc::new(RefCell::new(Root::new(world)));
     let root_component = RootComponent::new(
       events.clone(),
