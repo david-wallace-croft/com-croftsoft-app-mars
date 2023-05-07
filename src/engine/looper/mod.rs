@@ -119,15 +119,8 @@ impl Looper {
       options.clone(),
       root_state.clone(),
     );
-    let drift_bounds = Rectangle {
-      x_max: 600.,
-      x_min: 0.,
-      y_max: 600.,
-      y_min: 0.,
-    };
     let root_updater = RootUpdater::new(
       root_updater_configuration,
-      drift_bounds,
       events.clone(),
       frame_rater,
       inputs.clone(),

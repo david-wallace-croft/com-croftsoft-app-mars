@@ -21,7 +21,6 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor,
 };
-use crate::models::root::Root;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -380,7 +379,6 @@ impl Model for TankState {
   fn update(
     &mut self,
     // TODO: remove the root argument
-    root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
     log("TankState.update()");

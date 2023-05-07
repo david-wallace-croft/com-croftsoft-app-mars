@@ -11,11 +11,8 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::models::root::Root;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::{Initializer, Updater};
-use core::cell::RefCell;
-use std::rc::Rc;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Color {
@@ -46,7 +43,6 @@ pub trait Model: ModelAccessor {
   );
   fn update(
     &mut self,
-    root: Rc<RefCell<Root>>,
     time_delta: f64,
   );
 }

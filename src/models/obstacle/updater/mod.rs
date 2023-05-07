@@ -12,9 +12,9 @@
 // =============================================================================
 
 use crate::constants::TIME_DELTA;
+use crate::engine::traits::Model;
 use crate::models::obstacle::state::ObstacleState;
-use crate::models::obstacle::Obstacle;
-use com_croftsoft_core::math::geom::rectangle::Rectangle;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -34,7 +34,6 @@ use std::rc::Rc;
 // }
 
 pub struct ObstacleUpdater {
-  drift_bounds: Rectangle,
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
   obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
@@ -44,14 +43,13 @@ pub struct ObstacleUpdater {
 
 impl ObstacleUpdater {
   pub fn new(
-    drift_bounds: Rectangle,
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
+    world: Rc<RefCell<World>>,
   ) -> Self {
+    let obstacles = world.borrow().obstacles.clone();
     Self {
-      drift_bounds,
       // events,
       // inputs,
       obstacles,
@@ -71,11 +69,10 @@ impl Updater for ObstacleUpdater {
     // if !inputs.get_time_to_update() || self.options.borrow().get_pause() {
     //   return;
     // }
-    let drift_bounds: &Rectangle = &self.drift_bounds;
     let length: usize = self.obstacles.borrow().len();
     for _index in 0..length {
       let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
-      obstacle.update(drift_bounds, TIME_DELTA);
+      obstacle.update(TIME_DELTA);
       self.obstacles.borrow_mut().push_back(obstacle);
     }
   }

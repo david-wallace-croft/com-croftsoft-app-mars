@@ -17,7 +17,6 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
-use crate::models::root::Root;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
@@ -72,23 +71,6 @@ impl DefaultAmmoDump {
     };
     ammo_dump.set_ammo(ammo);
     ammo_dump
-  }
-
-  pub fn update2(
-    &mut self,
-    time_delta: f64,
-  ) {
-    // TODO: Move this to the updater
-    if self.exploding {
-      return;
-    }
-    let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
-    if new_ammo > self.ammo_max {
-      new_ammo = self.ammo_max;
-    } else {
-      new_ammo = 0.;
-    }
-    self.set_ammo(new_ammo);
   }
 }
 
@@ -162,11 +144,18 @@ impl Model for DefaultAmmoDump {
 
   fn update(
     &mut self,
-    _root: Rc<RefCell<Root>>,
     time_delta: f64,
   ) {
-    // TODO: moved to an update() with different arguments
-    todo!()
+    if self.exploding {
+      return;
+    }
+    let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
+    if new_ammo > self.ammo_max {
+      new_ammo = self.ammo_max;
+    } else {
+      new_ammo = 0.;
+    }
+    self.set_ammo(new_ammo);
   }
 }
 

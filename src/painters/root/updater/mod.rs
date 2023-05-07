@@ -21,7 +21,6 @@ use crate::models::overlay::updater::OverlayUpdaterOptions;
 use crate::models::overlay::Overlay;
 use crate::models::root::Root;
 use crate::models::world::updater::WorldUpdater;
-use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
@@ -231,7 +230,6 @@ pub struct RootUpdater {
 impl RootUpdater {
   pub fn new(
     configuration: RootUpdaterConfiguration,
-    drift_bounds: Rectangle,
     events: Rc<RefCell<dyn RootUpdaterEvents>>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
@@ -270,8 +268,7 @@ impl RootUpdater {
       root_updater_inputs_adapter,
       metronome,
     );
-    let world_updater =
-      WorldUpdater::new(drift_bounds, root_state.borrow().world.clone());
+    let world_updater = WorldUpdater::new(root_state.borrow().world.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),

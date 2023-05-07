@@ -13,7 +13,6 @@
 
 use crate::engine::traits::{Damageable, Impassable, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::Circle;
-use com_croftsoft_core::math::geom::rectangle::Rectangle;
 
 pub mod state;
 pub mod updater;
@@ -27,12 +26,6 @@ pub trait Obstacle: Damageable + Impassable + ObstacleAccessor {
   fn set_radius(
     &mut self,
     radius: f64,
-  );
-
-  fn update(
-    &mut self,
-    drift_bounds: &Rectangle,
-    time_delta: f64,
   );
 }
 
