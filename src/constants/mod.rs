@@ -12,6 +12,7 @@
 // =============================================================================
 
 use crate::engine::configuration::Configuration;
+use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::f64::consts::TAU;
 
 pub const A_STAR_DIRECTIONS: usize = 8;
@@ -24,7 +25,14 @@ pub const AMMO_DUMP_FILL_STYLE: &str = "#b5a642";
 pub const AMMO_DUMP_STROKE_STYLE: &str = "black";
 pub const AMMO_DUMP_Z: f64 = 0.1;
 pub const BACKGROUND_FILL_STYLE: &str = "rgb(255, 152, 109)";
+pub const BOUNDS: Rectangle = Rectangle {
+  x_max: 600.,
+  x_min: 0.,
+  y_max: 600.,
+  y_min: 0.,
+};
 pub const CONFIGURATION: Configuration = Configuration {
+  bounds: BOUNDS,
   update_period_millis_initial: UPDATE_PERIOD_MILLIS,
 };
 pub static FONT: &str = "bold 17px monospace";

@@ -11,6 +11,9 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use com_croftsoft_core::math::geom::rectangle::Rectangle;
+
 pub struct Configuration {
+  pub bounds: Rectangle,
   pub update_period_millis_initial: f64,
 }
