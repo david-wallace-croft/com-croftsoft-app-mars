@@ -45,15 +45,16 @@ impl WorldBuilder {
     self.world.borrow().ammo_dumps.borrow_mut().push_back(ammo_dump);
   }
 
-  // TODO: id input
   pub fn build_obstacle(
     &self,
     circle: Circle,
     drift_bounds: Rectangle,
+    id: usize,
   ) {
     let obstacle = ObstacleState::new(
       circle,
       drift_bounds,
+      id,
       OBSTACLE_RADIUS_MIN,
       self.world.clone(),
     );

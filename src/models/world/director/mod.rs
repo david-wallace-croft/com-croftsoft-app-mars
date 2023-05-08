@@ -55,33 +55,20 @@ impl WorldBuilderDirector {
       Uniform::from(self.seed.bounds.x_min..=self.seed.bounds.x_max);
     let radius_uniform =
       Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
-    for _ in 0..self.seed.obstacle_count {
-      let center_x = center_uniform.sample(&mut rng);
-      let center_y = center_uniform.sample(&mut rng);
-      let radius = radius_uniform.sample(&mut rng);
-      let circle = Circle {
-        center_x,
-        center_y,
-        radius,
+    for index in 0..self.seed.obstacle_count {
+      let mut circle = Circle {
+        center_x: 0.,
+        center_y: 0.,
+        radius: radius_uniform.sample(&mut rng),
       };
-      self.world_builder.build_obstacle(circle, self.seed.bounds);
-    }
-    for mut obstacle in
-      self.world_builder.world.borrow().obstacles.borrow_mut().iter_mut()
-    {
       for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
-        // TODO: Also check to see if blocked by something else
-        if self
-          .world_builder
-          .world
-          .borrow()
-          .is_blocked_by_tank(&obstacle.circle)
-        {
+        circle.center_x = center_uniform.sample(&mut rng);
+        circle.center_y = center_uniform.sample(&mut rng);
+        if !self.world_builder.world.borrow().is_blocked(&circle) {
           break;
         }
-        obstacle.circle.center_x = center_uniform.sample(&mut rng);
-        obstacle.circle.center_y = center_uniform.sample(&mut rng);
       }
+      self.world_builder.build_obstacle(circle, self.seed.bounds, index);
     }
   }
 

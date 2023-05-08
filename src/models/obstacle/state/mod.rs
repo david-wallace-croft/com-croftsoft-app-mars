@@ -28,6 +28,8 @@ pub struct ObstacleState {
   pub active: bool,
   pub circle: Circle,
   pub drift_bounds: Rectangle,
+  // TODO: make this read-only
+  pub id: usize,
   pub radius_min: f64,
   pub updated: bool,
   pub velocity_x: f64,
@@ -39,6 +41,7 @@ impl ObstacleState {
   pub fn new(
     circle: Circle,
     drift_bounds: Rectangle,
+    id: usize,
     radius_min: f64,
     world: Rc<RefCell<World>>,
   ) -> Self {
@@ -46,6 +49,7 @@ impl ObstacleState {
       active: true,
       circle,
       drift_bounds,
+      id,
       radius_min,
       updated: false,
       velocity_x: 0.,
