@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -36,7 +36,7 @@ pub struct World {
 
 impl World {
   // TODO: argument was Model in old code; could be Shape
-  pub fn is_blocked(
+  pub fn is_blocked_by_impassable(
     &self,
     circle: &dyn CircleAccessor,
   ) -> bool {
@@ -48,6 +48,20 @@ impl World {
       }
     }
     self.is_blocked_by_tank(circle)
+  }
+
+  pub fn is_blocked_by_ammo_dump(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    let mut ammo_dump_circle = Circle::default();
+    for ammo_dump in self.ammo_dumps.borrow().iter() {
+      ammo_dump_circle = ammo_dump.get_shape(ammo_dump_circle);
+      if circle.intersects_circle(&ammo_dump_circle) {
+        return true;
+      }
+    }
+    false
   }
 
   pub fn is_blocked_by_tank(

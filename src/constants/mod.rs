@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,6 +23,7 @@ pub const AMMO_DUMP_AMMO_MAX: f64 = 30.;
 pub const AMMO_DUMP_COUNT: usize = 5;
 pub const AMMO_DUMP_EXPLOSION_FACTOR: f64 = 3.;
 pub const AMMO_DUMP_FILL_STYLE: &str = "#b5a642";
+pub const AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX: usize = 100;
 pub const AMMO_DUMP_STROKE_STYLE: &str = "black";
 pub const AMMO_DUMP_Z: f64 = 0.1;
 pub const BACKGROUND_FILL_STYLE: &str = "rgb(255, 152, 109)";
@@ -42,12 +43,12 @@ pub static INFO: &str = "CroftSoft Mars \
   Copyright 2023 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
-pub const OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX: usize = 10;
 pub const OBSTACLE_COUNT: usize = 6;
 pub const OBSTACLE_FILL_STYLE: &str = "#40826D";
 pub const OBSTACLE_JERK_MAGNITUDE_MAX: f64 = 100.;
 pub const OBSTACLE_RADIUS_MAX: f64 = 60.;
 pub const OBSTACLE_RADIUS_MIN: f64 = 10.;
+pub const OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX: usize = 100;
 pub const OBSTACLE_SPEED_MAX: f64 = 1_000.;
 pub const OBSTACLE_STROKE_STYLE: &str = "black";
 pub const OBSTACLE_Z: f64 = 0.2;

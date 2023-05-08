@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -208,10 +208,10 @@ impl TankState {
     self.circle.center_x = new_x;
     self.circle.center_y = new_y;
     // TODO
-    if self.world.borrow().is_blocked(&self.circle) {
+    if self.world.borrow().is_blocked_by_impassable(&self.circle) {
       self.circle.center_x = old_x;
       self.circle.center_y = old_y;
-      if self.world.borrow().is_blocked(&self.circle) {
+      if self.world.borrow().is_blocked_by_impassable(&self.circle) {
         self.circle.center_x = new_x;
         self.circle.center_y = new_y;
         self.updated = true;
