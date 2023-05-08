@@ -51,8 +51,6 @@ impl WorldBuilderDirector {
 
   fn direct_obstacles(&self) {
     let mut rng = rand::thread_rng();
-    let center_uniform =
-      Uniform::from(self.seed.bounds.x_min..=self.seed.bounds.x_max);
     let radius_uniform =
       Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
     for index in 0..self.seed.obstacle_count {
@@ -61,6 +59,9 @@ impl WorldBuilderDirector {
         center_y: 0.,
         radius: radius_uniform.sample(&mut rng),
       };
+      let x_min = self.seed.bounds.x_min + circle.radius + 1.;
+      let x_max = self.seed.bounds.x_max - circle.radius - 1.;
+      let center_uniform = Uniform::from(x_min..=x_max);
       for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
         circle.center_x = center_uniform.sample(&mut rng);
         circle.center_y = center_uniform.sample(&mut rng);
