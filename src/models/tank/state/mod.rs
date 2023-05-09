@@ -21,6 +21,7 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor,
 };
+use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -155,8 +156,26 @@ impl TankState {
     if self.ammo >= TANK_AMMO_MAX {
       return;
     }
-    let ammo_needed: usize = TANK_AMMO_MAX - self.ammo;
-    // TODO
+    let mut ammo_needed: usize = TANK_AMMO_MAX - self.ammo;
+    let world = self.world.borrow();
+    let mut ammo_dumps = world.ammo_dumps.borrow_mut();
+    let circle = Circle::default();
+    for ammo_dump in ammo_dumps.iter_mut() {
+      ammo_dump.get_shape(circle);
+      if !circle.contains(self.circle.center_x, self.circle.center_y) {
+        continue;
+      }
+      let dump_ammo = ammo_dump.get_ammo();
+      if ammo_needed as f64 <= dump_ammo {
+        self.ammo = TANK_AMMO_MAX;
+        ammo_dump.set_ammo(dump_ammo - ammo_needed as f64);
+        break;
+      } else {
+        self.ammo += dump_ammo as usize;
+        ammo_dump.set_ammo(dump_ammo - (dump_ammo as usize) as f64);
+        ammo_needed = TANK_AMMO_MAX - self.ammo;
+      }
+    }
   }
 
   fn update_position(
