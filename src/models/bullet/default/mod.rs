@@ -13,9 +13,9 @@
 
 use super::{Bullet, BulletAccessor};
 use crate::constants::{
-  BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
+  BULLET_DAMAGE, BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
 };
-use crate::engine::traits::{Model, ModelAccessor};
+use crate::engine::traits::{Damageable, Model, ModelAccessor};
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
@@ -118,11 +118,28 @@ impl Model for DefaultBullet {
     let mut obstacles = world.obstacles.borrow_mut();
     for obstacle in obstacles.iter_mut() {
       if obstacle.contains(center_x, center_y) {
-        // TODO: left off here
-        todo!();
+        self.active = false;
+        obstacle.add_damage(BULLET_DAMAGE);
+        return;
       }
     }
-    todo!()
+    let mut tanks = world.tanks.borrow_mut();
+    for tank in tanks.iter_mut() {
+      let mut tank = tank.borrow_mut();
+      if tank.contains(center_x, center_y) {
+        self.active = false;
+        tank.add_damage(BULLET_DAMAGE);
+        return;
+      }
+    }
+    let mut ammo_dumps = world.ammo_dumps.borrow_mut();
+    for ammo_dump in ammo_dumps.iter_mut() {
+      if ammo_dump.contains(center_x, center_y) {
+        self.active = false;
+        ammo_dump.add_damage(BULLET_DAMAGE);
+        return;
+      }
+    }
   }
 }
 
