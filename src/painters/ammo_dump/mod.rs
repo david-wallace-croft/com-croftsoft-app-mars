@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-04-30
+//! - Updated: 2023-05-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -54,9 +54,8 @@ impl Painter for AmmoDumpPainter {
     context.set_fill_style(&self.fill_style);
     context.set_stroke_style(&self.stroke_style);
     let ammo_dumps = self.ammo_dumps.borrow();
-    let mut circle = Circle::default();
     ammo_dumps.iter().for_each(|ammo_dump| {
-      circle = ammo_dump.get_shape(circle);
+      let circle: Circle = ammo_dump.get_circle();
       context.begin_path();
       let _result =
         context.arc(circle.center_x, circle.center_y, circle.radius, 0., TAU);

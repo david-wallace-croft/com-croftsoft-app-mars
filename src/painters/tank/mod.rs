@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-04-25
+//! - Updated: 2023-05-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -56,8 +56,7 @@ impl TankPainter {
     &self,
     tank: &TankState,
   ) -> Result<(), JsValue> {
-    let mut circle: Circle = Circle::default();
-    circle = tank.get_shape(circle);
+    let circle: Circle = tank.get_circle();
     let center_x: f64 = circle.center_x;
     let center_y: f64 = circle.center_y;
     let context = self.context.borrow();

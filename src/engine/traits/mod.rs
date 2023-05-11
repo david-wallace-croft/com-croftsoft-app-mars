@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use com_croftsoft_core::math::geom::circle::Circle;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::{Initializer, Updater};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -54,13 +54,17 @@ pub trait ModelAccessor {
     y: f64,
   ) -> bool;
 
-  // TODO: return Shape instead of Circle
-  fn get_shape(
-    &self,
-    circle: Circle,
-  ) -> Circle;
+  fn get_circle(&self) -> Circle;
+
   fn get_z(&self) -> f64;
+
+  fn intersects_circle(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool;
+
   fn is_active(&self) -> bool;
+
   fn is_updated(&self) -> bool;
 }
 

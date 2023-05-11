@@ -11,17 +11,15 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use com_croftsoft_core::math::geom::circle::Circle;
-
+use super::{Bullet, BulletAccessor};
 use crate::constants::{
   BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
 };
 use crate::engine::traits::{Model, ModelAccessor};
 use crate::models::world::World;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
 use std::rc::Rc;
-
-use super::{Bullet, BulletAccessor};
 
 pub struct DefaultBullet {
   active: bool,
@@ -137,18 +135,19 @@ impl ModelAccessor for DefaultBullet {
     self.circle.contains(x, y)
   }
 
-  fn get_shape(
-    &self,
-    mut circle: Circle,
-  ) -> Circle {
-    circle.center_x = self.circle.center_x;
-    circle.center_y = self.circle.center_y;
-    circle.radius = self.circle.radius;
-    circle
+  fn get_circle(&self) -> Circle {
+    self.circle
   }
 
   fn get_z(&self) -> f64 {
     BULLET_Z
+  }
+
+  fn intersects_circle(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    self.circle.intersects_circle(circle)
   }
 
   fn is_active(&self) -> bool {

@@ -18,7 +18,7 @@ use crate::constants::{
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use crate::models::world::World;
-use com_croftsoft_core::math::geom::circle::Circle;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
 use std::rc::Rc;
 
@@ -168,18 +168,19 @@ impl ModelAccessor for DefaultAmmoDump {
     self.circle.contains(x, y)
   }
 
-  fn get_shape(
-    &self,
-    mut circle: Circle,
-  ) -> Circle {
-    circle.center_x = self.circle.center_x;
-    circle.center_y = self.circle.center_y;
-    circle.radius = self.circle.radius;
-    circle
+  fn get_circle(&self) -> Circle {
+    self.circle
   }
 
   fn get_z(&self) -> f64 {
     self.z
+  }
+
+  fn intersects_circle(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    self.circle.intersects_circle(circle)
   }
 
   fn is_active(&self) -> bool {

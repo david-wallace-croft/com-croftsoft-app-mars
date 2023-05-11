@@ -34,15 +34,19 @@ impl ModelAccessor for DefaultTankConsole {
     self.tank.borrow().contains(x, y)
   }
 
-  fn get_shape(
-    &self,
-    circle: com_croftsoft_core::math::geom::circle::Circle,
-  ) -> com_croftsoft_core::math::geom::circle::Circle {
-    self.tank.borrow().get_shape(circle)
+  fn get_circle(&self) -> Circle {
+    self.tank.borrow().get_circle()
   }
 
   fn get_z(&self) -> f64 {
     self.tank.borrow().get_z()
+  }
+
+  fn intersects_circle(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    self.tank.borrow().intersects_circle(circle)
   }
 
   fn is_active(&self) -> bool {
@@ -61,26 +65,24 @@ impl SpaceTester for DefaultTankConsole {
     x: f64,
     y: f64,
   ) -> bool {
-    let test_circle = Circle::default();
     let self_tank = self.tank.borrow();
-    let mut test_circle = self_tank.get_shape(test_circle);
-    test_circle.center_x = x;
-    test_circle.center_y = y;
+    let mut tank_circle = self_tank.get_circle();
+    tank_circle.center_x = x;
+    tank_circle.center_y = y;
     // TODO: previously operated on an array of Impassable
     for obstacle in self.world.borrow().obstacles.borrow().iter() {
-      if obstacle.circle.intersects_circle(&test_circle) {
+      if obstacle.circle.intersects_circle(&tank_circle) {
         return false;
       }
     }
     let self_tank_color = self_tank.get_color();
-    let mut tank_circle = Circle::default();
     for other_tank in self.world.borrow().tanks.borrow().iter() {
       let other_tank = other_tank.borrow();
       if self_tank_color != other_tank.get_color() && self_tank.get_ammo() > 0 {
         continue;
       }
-      tank_circle = other_tank.get_shape(tank_circle);
-      if tank_circle.intersects_circle(&test_circle) {
+      let other_tank_circle = other_tank.get_circle();
+      if other_tank_circle.intersects_circle(&tank_circle) {
         return false;
       }
     }

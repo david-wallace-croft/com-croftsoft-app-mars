@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-08
+//! - Updated: 2023-05-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
-use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
+use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -54,10 +54,9 @@ impl World {
     &self,
     circle: &dyn CircleAccessor,
   ) -> bool {
-    let mut ammo_dump_circle = Circle::default();
     for ammo_dump in self.ammo_dumps.borrow().iter() {
-      ammo_dump_circle = ammo_dump.get_shape(ammo_dump_circle);
-      if circle.intersects_circle(&ammo_dump_circle) {
+      // TODO: use a function to determine if there is one
+      if ammo_dump.intersects_circle(circle) {
         return true;
       }
     }
@@ -68,10 +67,9 @@ impl World {
     &self,
     circle: &dyn CircleAccessor,
   ) -> bool {
-    let mut tank_circle = Circle::default();
+    // TODO: use a function to determine if there is one
     for tank in self.tanks.borrow().iter() {
-      tank_circle = tank.borrow().get_shape(tank_circle);
-      if circle.intersects_circle(&tank_circle) {
+      if tank.borrow().intersects_circle(circle) {
         return true;
       }
     }

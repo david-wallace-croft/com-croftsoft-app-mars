@@ -23,7 +23,7 @@ use crate::engine::traits::{
 };
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::world::World;
-use com_croftsoft_core::math::geom::circle::Circle;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_animation::web_sys::log;
 use core::f64::consts::{PI, TAU};
@@ -159,10 +159,8 @@ impl TankState {
     let mut ammo_needed: usize = TANK_AMMO_MAX - self.ammo;
     let world = self.world.borrow();
     let mut ammo_dumps = world.ammo_dumps.borrow_mut();
-    let circle = Circle::default();
     for ammo_dump in ammo_dumps.iter_mut() {
-      ammo_dump.get_shape(circle);
-      if !circle.contains(self.circle.center_x, self.circle.center_y) {
+      if !ammo_dump.contains(self.circle.center_x, self.circle.center_y) {
         continue;
       }
       let dump_ammo = ammo_dump.get_ammo();
@@ -421,18 +419,19 @@ impl ModelAccessor for TankState {
     self.circle.contains(x, y)
   }
 
-  fn get_shape(
-    &self,
-    mut circle: Circle,
-  ) -> Circle {
-    circle.center_x = self.circle.center_x;
-    circle.center_y = self.circle.center_y;
-    circle.radius = self.circle.radius;
-    circle
+  fn get_circle(&self) -> Circle {
+    self.circle
   }
 
   fn get_z(&self) -> f64 {
     TANK_Z
+  }
+
+  fn intersects_circle(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    self.circle.intersects_circle(circle)
   }
 
   fn is_active(&self) -> bool {
