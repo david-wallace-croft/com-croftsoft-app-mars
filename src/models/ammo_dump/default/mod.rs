@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -160,6 +160,14 @@ impl Model for DefaultAmmoDump {
 }
 
 impl ModelAccessor for DefaultAmmoDump {
+  fn contains(
+    &self,
+    x: f64,
+    y: f64,
+  ) -> bool {
+    self.circle.contains(x, y)
+  }
+
   fn get_shape(
     &self,
     mut circle: Circle,

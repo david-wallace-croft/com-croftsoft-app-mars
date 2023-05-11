@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-08
+//! - Updated: 2023-05-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -413,6 +413,14 @@ impl Model for TankState {
 }
 
 impl ModelAccessor for TankState {
+  fn contains(
+    &self,
+    x: f64,
+    y: f64,
+  ) -> bool {
+    self.circle.contains(x, y)
+  }
+
   fn get_shape(
     &self,
     mut circle: Circle,

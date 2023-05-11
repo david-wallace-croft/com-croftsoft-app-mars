@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-05-10
+//! - Updated: 2023-05-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -112,16 +112,31 @@ impl Model for DefaultBullet {
       self.active = false;
       return;
     }
-    self.circle.set_center(
-      self.origin_x + self.distance * self.heading.cos(),
-      self.origin_y + self.distance * self.heading.sin(),
-    );
-    // TODO: left off here
+    let center_x = self.origin_x + self.distance * self.heading.cos();
+    let center_y = self.origin_y + self.distance * self.heading.sin();
+    self.circle.set_center(center_x, center_y);
+    // TODO: old code fetched first damageable or impassable at point from World
+    let world = self.world.borrow();
+    let mut obstacles = world.obstacles.borrow_mut();
+    for obstacle in obstacles.iter_mut() {
+      if obstacle.contains(center_x, center_y) {
+        // TODO: left off here
+        todo!();
+      }
+    }
     todo!()
   }
 }
 
 impl ModelAccessor for DefaultBullet {
+  fn contains(
+    &self,
+    x: f64,
+    y: f64,
+  ) -> bool {
+    self.circle.contains(x, y)
+  }
+
   fn get_shape(
     &self,
     mut circle: Circle,

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -48,6 +48,12 @@ pub trait Model: ModelAccessor {
 }
 
 pub trait ModelAccessor {
+  fn contains(
+    &self,
+    x: f64,
+    y: f64,
+  ) -> bool;
+
   // TODO: return Shape instead of Circle
   fn get_shape(
     &self,
