@@ -12,6 +12,7 @@
 // =============================================================================
 
 use super::ammo_dump::AmmoDumpPainter;
+use super::bullet::BulletPainter;
 use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use super::tank::TankPainter;
@@ -61,6 +62,10 @@ impl RootPainter {
       context.clone(),
       root_state.world.borrow().ammo_dumps.clone(),
     );
+    let bullet_painter = BulletPainter::new(
+      root_state.world.borrow().bullets.clone(),
+      context.clone(),
+    );
     let obstacle_painter = ObstaclePainter::new(
       context.clone(),
       root_state.world.borrow().obstacles.clone(),
@@ -76,6 +81,7 @@ impl RootPainter {
       Box::new(tank_painter),
       Box::new(obstacle_painter),
       Box::new(overlay_painter),
+      Box::new(bullet_painter),
     ];
     Self {
       painters,

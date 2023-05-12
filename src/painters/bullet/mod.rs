@@ -17,12 +17,13 @@ use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
 use core::cell::RefCell;
 use core::f64::consts::TAU;
+use std::collections::VecDeque;
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
 use web_sys::CanvasRenderingContext2d;
 
 pub struct BulletPainter {
-  bullets: Rc<RefCell<Vec<Box<dyn Bullet>>>>,
+  bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style: JsValue,
   stroke_style: JsValue,
@@ -30,7 +31,7 @@ pub struct BulletPainter {
 
 impl BulletPainter {
   pub fn new(
-    bullets: Rc<RefCell<Vec<Box<dyn Bullet>>>>,
+    bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
     context: Rc<RefCell<CanvasRenderingContext2d>>,
   ) -> Self {
     let fill_style: JsValue = JsValue::from_str(BULLET_FILL_STYLE);
