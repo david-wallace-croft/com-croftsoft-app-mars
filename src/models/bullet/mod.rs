@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-05-10
+//! - Updated: 2023-05-12
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,6 +14,7 @@
 use crate::engine::traits::{Model, ModelAccessor};
 
 pub mod default;
+pub mod updater;
 
 pub trait Bullet: BulletAccessor + Model {
   fn fire(

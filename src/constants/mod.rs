@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-12
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -34,8 +34,10 @@ pub const BOUNDS: Rectangle = Rectangle {
   y_min: 0.,
 };
 pub const BULLET_DAMAGE: f64 = 1.;
+pub const BULLET_FILL_STYLE: &str = "black";
 pub const BULLET_RADIUS: f64 = 3.;
 pub const BULLET_RANGE: f64 = 200.;
+pub const BULLET_STROKE_STYLE: &str = "red";
 pub const BULLET_VELOCITY: f64 = 90.;
 pub const BULLET_Z: f64 = 2.;
 pub const CONFIGURATION: Configuration = Configuration {
