@@ -30,7 +30,7 @@ pub mod updater;
 #[derive(Default)]
 pub struct World {
   pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
-  pub bullets: Rc<RefCell<Vec<Box<dyn Bullet>>>>,
+  pub bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,

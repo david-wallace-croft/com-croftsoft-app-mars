@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-12
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,6 +22,7 @@ use crate::engine::traits::{
   Color, Damageable, Impassable, Model, ModelAccessor,
 };
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
+use crate::models::bullet::default::DefaultBullet;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -280,8 +281,15 @@ impl TankState {
       self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
     let bullet_origin_y: f64 =
       self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    // TODO: self.world.fire_bullet(
-    //   bullet_origin_x, bullet_origin_y, turret_heading);
+    let bullet = DefaultBullet::new(
+      self.turret_heading,
+      // TODO: Should this be something else?
+      self.id,
+      bullet_origin_x,
+      bullet_origin_y,
+      self.world.clone(),
+    );
+    self.world.borrow().bullets.borrow_mut().push_back(Box::new(bullet));
   }
 
   pub fn get_body_rotation_speed(&self) -> f64 {

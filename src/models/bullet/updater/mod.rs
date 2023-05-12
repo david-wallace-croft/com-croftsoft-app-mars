@@ -16,10 +16,11 @@ use crate::constants::TIME_DELTA;
 use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct BulletUpdater {
-  bullets: Rc<RefCell<Vec<Box<dyn Bullet>>>>,
+  bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
 }
 
 impl BulletUpdater {
@@ -33,10 +34,13 @@ impl BulletUpdater {
 
 impl Updater for BulletUpdater {
   fn update(&mut self) {
-    self
-      .bullets
-      .borrow_mut()
-      .iter_mut()
-      .for_each(|bullet| bullet.update(TIME_DELTA));
+    let length: usize = self.bullets.borrow().len();
+    for _index in 0..length {
+      let mut bullet = self.bullets.borrow_mut().pop_front().unwrap();
+      bullet.update(TIME_DELTA);
+      if bullet.is_active() {
+        self.bullets.borrow_mut().push_back(bullet);
+      }
+    }
   }
 }
