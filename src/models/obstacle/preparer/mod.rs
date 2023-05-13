@@ -33,10 +33,11 @@ impl ObstaclePreparer {
 
 impl Preparer for ObstaclePreparer {
   fn prepare(&mut self) {
-    self
-      .obstacles
-      .borrow_mut()
-      .iter_mut()
-      .for_each(|obstacle| obstacle.prepare());
+    let length: usize = self.obstacles.borrow().len();
+    for _index in 0..length {
+      let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
+      obstacle.prepare();
+      self.obstacles.borrow_mut().push_back(obstacle);
+    }
   }
 }

@@ -33,10 +33,11 @@ impl TankPreparer {
 
 impl Preparer for TankPreparer {
   fn prepare(&mut self) {
-    self
-      .tanks
-      .borrow_mut()
-      .iter_mut()
-      .for_each(|tank| tank.borrow_mut().prepare());
+    let length = self.tanks.borrow().len();
+    for _index in 0..length {
+      let tank = self.tanks.borrow_mut().pop_front().unwrap();
+      tank.borrow_mut().prepare();
+      self.tanks.borrow_mut().push_back(tank);
+    }
   }
 }

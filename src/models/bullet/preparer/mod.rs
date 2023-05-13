@@ -33,6 +33,11 @@ impl BulletPreparer {
 
 impl Preparer for BulletPreparer {
   fn prepare(&mut self) {
-    self.bullets.borrow_mut().iter_mut().for_each(|bullet| bullet.prepare());
+    let length: usize = self.bullets.borrow().len();
+    for _index in 0..length {
+      let mut bullet = self.bullets.borrow_mut().pop_front().unwrap();
+      bullet.prepare();
+      self.bullets.borrow_mut().push_back(bullet);
+    }
   }
 }

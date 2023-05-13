@@ -33,10 +33,11 @@ impl AmmoDumpPreparer {
 
 impl Preparer for AmmoDumpPreparer {
   fn prepare(&mut self) {
-    self
-      .ammo_dumps
-      .borrow_mut()
-      .iter_mut()
-      .for_each(|ammo_dump| ammo_dump.prepare());
+    let length = self.ammo_dumps.borrow().len();
+    for _ in 0..length {
+      let mut ammo_dump = self.ammo_dumps.borrow_mut().pop_front().unwrap();
+      ammo_dump.prepare();
+      self.ammo_dumps.borrow_mut().push_back(ammo_dump);
+    }
   }
 }
