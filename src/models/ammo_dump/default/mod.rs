@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,6 +19,7 @@ use crate::constants::{
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
+use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::rc::Rc;
 
@@ -128,11 +129,6 @@ impl Damageable for DefaultAmmoDump {
 impl Impassable for DefaultAmmoDump {}
 
 impl Model for DefaultAmmoDump {
-  fn prepare(&mut self) {
-    self.exploding = false;
-    self.updated = false;
-  }
-
   fn set_center(
     &mut self,
     x: f64,
@@ -189,5 +185,12 @@ impl ModelAccessor for DefaultAmmoDump {
 
   fn is_updated(&self) -> bool {
     self.updated
+  }
+}
+
+impl Preparer for DefaultAmmoDump {
+  fn prepare(&mut self) {
+    self.exploding = false;
+    self.updated = false;
   }
 }

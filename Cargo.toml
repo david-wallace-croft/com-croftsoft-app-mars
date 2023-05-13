@@ -19,8 +19,8 @@ com-croftsoft-core = { git = "https://github.com/david-wallace-croft/com-croftso
 # com-croftsoft-core = "0.9.0"
 # com-croftsoft-lib-animation = { path = "../../../crates/com-croftsoft-lib-animation" }
 # com-croftsoft-lib-animation = { git = "https://github.com/david-wallace-croft/com-croftsoft-lib-animation" }
-com-croftsoft-lib-animation = "0.0.5"
-com-croftsoft-lib-role = "0.2.0"
+com-croftsoft-lib-animation = "0.0.6"
+com-croftsoft-lib-role = "0.3.0"
 console_error_panic_hook = "0.1.7"
 futures = "0.3.28"
 js-sys = "0.3.61"

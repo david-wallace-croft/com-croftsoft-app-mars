@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-12
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -24,6 +24,7 @@ use std::rc::Rc;
 
 pub mod builder;
 pub mod director;
+pub mod preparer;
 pub mod seed;
 pub mod updater;
 

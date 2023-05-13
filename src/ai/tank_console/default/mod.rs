@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-25
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,9 @@ use crate::models::tank::state::TankState;
 use crate::models::tank::TankAccessor;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
+use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
+use core::f64::INFINITY;
 use std::rc::Rc;
 
 pub struct DefaultTankConsole {
@@ -141,13 +143,26 @@ impl TankConsole for DefaultTankConsole {
     &self,
     center: &mut com_croftsoft_core::math::geom::point_2dd::Point2DD,
   ) {
+    // TODO: change method signature
     self.tank.borrow().get_center(center)
   }
 
-  fn get_closest_ammo_dump_center(
-    &self
-  ) -> Option<com_croftsoft_core::math::geom::point_2dd::Point2DD> {
-    todo!()
+  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
+    let mut closest_ammo_dump_center: Option<Point2DD> = None;
+    let mut tank_center = Point2DD::default();
+    self.tank.borrow().get_center(&mut tank_center);
+    let mut closest_distance: f64 = INFINITY;
+    let world = self.world.borrow();
+    let ammo_dumps = world.ammo_dumps.borrow();
+    for ammo_dump in ammo_dumps.iter() {
+      let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();
+      let distance: f64 = tank_center.distance_to(&ammo_dump_center);
+      if distance < closest_distance {
+        closest_distance = distance;
+        closest_ammo_dump_center = Some(ammo_dump_center);
+      }
+    }
+    closest_ammo_dump_center
   }
 
   fn get_closest_enemy_tank_center(

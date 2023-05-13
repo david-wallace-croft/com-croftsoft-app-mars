@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-04-25
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,7 +19,6 @@ use crate::constants::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
-use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -117,7 +116,6 @@ impl TankOperator for DefaultTankOperator {
 
   fn update(
     &mut self,
-    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
     time_delta: f64,
   ) {
@@ -129,7 +127,8 @@ impl TankOperator for DefaultTankOperator {
       tank_console.get_center(&mut self.center);
       self.enemy_center = tank_console.get_closest_enemy_tank_center(tanks);
       tank_console.rotate_turret(&self.enemy_center);
-      if tank_console.get_ammo() < 1 {
+      let ammo: usize = tank_console.get_ammo();
+      if ammo < 1 {
         let closest_ammo_dump_center_option: Option<Point2DD> =
           tank_console.get_closest_ammo_dump_center();
         if let Some(closest_ammo_dump_center) = closest_ammo_dump_center_option

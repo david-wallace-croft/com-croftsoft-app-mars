@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,6 +19,7 @@ use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
+use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use rand::rngs::ThreadRng;
 use rand::Rng;
@@ -80,10 +81,6 @@ impl Damageable for ObstacleState {
 impl Impassable for ObstacleState {}
 
 impl Model for ObstacleState {
-  fn prepare(&mut self) {
-    self.updated = false;
-  }
-
   fn set_center(
     &mut self,
     x: f64,
@@ -223,5 +220,11 @@ impl ObstacleAccessor for ObstacleState {
     circle.center_y = self.circle.center_y;
     circle.radius = self.circle.radius;
     circle
+  }
+}
+
+impl Preparer for ObstacleState {
+  fn prepare(&mut self) {
+    self.updated = false;
   }
 }

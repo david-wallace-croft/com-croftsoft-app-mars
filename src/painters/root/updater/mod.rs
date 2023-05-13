@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,6 +20,7 @@ use crate::models::overlay::updater::OverlayUpdaterInputs;
 use crate::models::overlay::updater::OverlayUpdaterOptions;
 use crate::models::overlay::Overlay;
 use crate::models::root::Root;
+use crate::models::world::preparer::WorldPreparer;
 use crate::models::world::updater::WorldUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
@@ -28,6 +29,7 @@ use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
 use com_croftsoft_lib_animation::metronome::updater::{
   MetronomeUpdater, MetronomeUpdaterEvents, MetronomeUpdaterInputs,
 };
+use com_croftsoft_lib_role::Preparer;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -225,6 +227,7 @@ impl OverlayUpdaterOptions for RootUpdaterOptionsAdapter {
 
 pub struct RootUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
+  world_preparer: WorldPreparer,
 }
 
 impl RootUpdater {
@@ -276,14 +279,17 @@ impl RootUpdater {
       Box::new(frame_rater_updater),
       Box::new(overlay_updater),
     ];
+    let world_preparer = WorldPreparer::new(root_state.borrow().world.clone());
     Self {
       child_updaters,
+      world_preparer,
     }
   }
 }
 
 impl Updater for RootUpdater {
   fn update(&mut self) {
+    self.world_preparer.prepare();
     self.child_updaters.iter_mut().for_each(|updater| updater.update());
   }
 }

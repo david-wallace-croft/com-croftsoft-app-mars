@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use crate::constants::{
 use crate::engine::traits::{Damageable, Model, ModelAccessor};
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
+use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::rc::Rc;
 
@@ -85,10 +86,6 @@ impl Bullet for DefaultBullet {
 impl BulletAccessor for DefaultBullet {}
 
 impl Model for DefaultBullet {
-  fn prepare(&mut self) {
-    self.updated = false;
-  }
-
   fn set_center(
     &mut self,
     x: f64,
@@ -173,5 +170,11 @@ impl ModelAccessor for DefaultBullet {
 
   fn is_updated(&self) -> bool {
     self.updated
+  }
+}
+
+impl Preparer for DefaultBullet {
+  fn prepare(&mut self) {
+    self.updated = false;
   }
 }

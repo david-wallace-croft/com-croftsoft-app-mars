@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-12
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -27,6 +27,7 @@ use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_animation::web_sys::log;
+use com_croftsoft_lib_role::Preparer;
 use core::f64::consts::{PI, TAU};
 use core::f64::INFINITY;
 use std::cell::RefCell;
@@ -385,13 +386,6 @@ impl Damageable for TankState {
 impl Impassable for TankState {}
 
 impl Model for TankState {
-  fn prepare(&mut self) {
-    self.updated = false;
-    self.firing = false;
-    self.dry_firing = false;
-    self.sparking = false;
-  }
-
   fn set_center(
     &mut self,
     x: f64,
@@ -523,5 +517,14 @@ impl TankMutator for TankState {
     turret_heading: f64,
   ) {
     self.turret_heading = turret_heading;
+  }
+}
+
+impl Preparer for TankState {
+  fn prepare(&mut self) {
+    self.updated = false;
+    self.firing = false;
+    self.dry_firing = false;
+    self.sparking = false;
   }
 }

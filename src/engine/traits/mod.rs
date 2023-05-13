@@ -5,14 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
-use com_croftsoft_lib_role::{Initializer, Updater};
+use com_croftsoft_lib_role::{Initializer, Preparer, Updater};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Color {
@@ -34,8 +34,7 @@ pub trait Damageable: Model {
 
 pub trait Impassable: Model {}
 
-pub trait Model: ModelAccessor {
-  fn prepare(&mut self);
+pub trait Model: ModelAccessor + Preparer {
   fn set_center(
     &mut self,
     x: f64,
