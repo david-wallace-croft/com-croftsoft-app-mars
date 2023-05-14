@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,9 +13,6 @@
 
 use super::state_space_node::StateSpaceNode;
 use crate::ai::tank_console::TankConsole;
-use crate::constants::{
-  TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_SPEED_METERS_PER_SECOND,
-};
 use com_croftsoft_core::ai::astar::traits::Cartographer;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
@@ -41,9 +38,8 @@ impl TankCartographer {
   ) -> f64 {
     let distance: f64 = from_node.distance(to_node);
     if let Some(tank_console) = &self.tank_console {
-      // TODO
-      // let tank_speed = tank_console.borrow().get_tank_speed();
-      distance / TANK_SPEED_METERS_PER_SECOND
+      let tank_speed: f64 = tank_console.borrow().get_tank_speed();
+      distance / tank_speed
     } else {
       // TODO: what if tank_console is None?
       INFINITY
@@ -137,13 +133,12 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
         ),
       );
       if let Some(tank_console) = &self.tank_console {
-        // TODO
-        // if tank_console.borrow().is_space_available(
-        //   adjacent_state_space_node.get_point_xy().get_x(),
-        //   adjacent_state_space_node.get_point_xy().get_y(),
-        // ) {
-        adjacent_list.push(adjacent_state_space_node);
-        // }
+        if tank_console.borrow().is_space_available(
+          adjacent_state_space_node.get_point_xy().get_x(),
+          adjacent_state_space_node.get_point_xy().get_y(),
+        ) {
+          adjacent_list.push(adjacent_state_space_node);
+        }
       }
     }
     adjacent_list
@@ -157,11 +152,9 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
     let mut rotation: f64 = from_node.rotation(to_node);
     rotation = rotation.abs();
     if let Some(tank_console) = &self.tank_console {
-      // TODO
-      // let body_rotation_speed: f64 =
-      //   tank_console.borrow().get_body_rotation_speed();
-      let rotation_time: f64 =
-        rotation / TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND;
+      let body_rotation_speed: f64 =
+        tank_console.borrow().get_body_rotation_speed();
+      let rotation_time: f64 = rotation / body_rotation_speed;
       let travel_time: f64 = self.calculate_travel_time(from_node, to_node);
       let total_time: f64 = travel_time + rotation_time;
       total_time

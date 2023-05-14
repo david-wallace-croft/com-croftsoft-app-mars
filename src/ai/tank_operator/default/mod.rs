@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -127,17 +127,19 @@ impl TankOperator for DefaultTankOperator {
       tank_console.get_center(&mut self.center);
       self.enemy_center = tank_console.get_closest_enemy_tank_center(tanks);
       tank_console.rotate_turret(&self.enemy_center);
-      let ammo: usize = tank_console.get_ammo();
+    }
+    {
+      let ammo: usize = tank_console.borrow().get_ammo();
       if ammo < 1 {
         let closest_ammo_dump_center_option: Option<Point2DD> =
-          tank_console.get_closest_ammo_dump_center();
+          tank_console.borrow().get_closest_ammo_dump_center();
         if let Some(closest_ammo_dump_center) = closest_ammo_dump_center_option
         {
           let destination: Point2DD = self.get_first_step(
             &closest_ammo_dump_center,
-            tank_console.get_body_heading(),
+            tank_console.borrow().get_body_heading(),
           );
-          tank_console.go(&destination);
+          tank_console.borrow_mut().go(&destination);
         }
         return;
       }
