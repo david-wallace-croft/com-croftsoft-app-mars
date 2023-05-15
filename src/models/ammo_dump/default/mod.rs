@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,6 +17,7 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::models::explosion::default::DefaultExplosion;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
@@ -119,9 +120,10 @@ impl Damageable for DefaultAmmoDump {
     self.exploding = true;
     self.explosion_circle.set_center_from_circle(&self.circle);
     self.explosion_circle.radius = self.explosion_factor * self.ammo;
-    // TODO: left off here
-    // TODO: get damageables from root and add damage equal to ammo
-    // TODO: use self.world.borrow() here
+    // TODO: old code would get a list of Damageables from the World and damage
+    // TODO: use a Factory
+    let explosion = DefaultExplosion::new(self.circle, self.ammo, self.id);
+    self.world.borrow().explosions.borrow_mut().push_back(Box::new(explosion));
     self.set_ammo(0.);
   }
 }

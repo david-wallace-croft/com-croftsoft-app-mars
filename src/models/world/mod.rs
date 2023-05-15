@@ -5,13 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::bullet::Bullet;
+use super::explosion::Explosion;
 use crate::ai::tank_operator::TankOperator;
 use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
@@ -32,6 +33,7 @@ pub mod updater;
 pub struct World {
   pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
   pub bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
+  pub explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
   pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
