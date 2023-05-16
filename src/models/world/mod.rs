@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-15
+//! - Updated: 2023-05-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,11 +14,12 @@
 use super::bullet::Bullet;
 use super::explosion::Explosion;
 use crate::ai::tank_operator::TankOperator;
+use crate::engine::factory::Factory;
 use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
-use com_croftsoft_core::math::geom::circle::CircleAccessor;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -37,9 +38,19 @@ pub struct World {
   pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  factory: Rc<RefCell<Factory>>,
 }
 
 impl World {
+  pub fn add_explosion(
+    &self,
+    circle: Circle,
+    damage: f64,
+  ) {
+    let explosion = self.factory.borrow_mut().make_explosion(circle, damage);
+    self.explosions.borrow_mut().push_back(explosion);
+  }
+
   // TODO: argument was Model in old code; could be Shape
   pub fn is_blocked_by_impassable(
     &self,
