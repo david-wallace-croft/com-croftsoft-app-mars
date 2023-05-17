@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::options::Options;
 use crate::models::root::Root;
+use crate::models::world::factory::default::DefaultWorldFactory;
 use crate::models::world::seed::WorldSeed;
 use crate::models::world::World;
 use crate::painters::root::updater::{RootUpdater, RootUpdaterConfiguration};
@@ -60,6 +61,7 @@ impl Looper {
     let world_seed = WorldSeed {
       ammo_dump_count: AMMO_DUMP_COUNT,
       bounds,
+      factory: Rc::new(RefCell::new(DefaultWorldFactory::default())),
       obstacle_count: OBSTACLE_COUNT,
     };
     let world: Rc<RefCell<World>> = world_seed.grow_world();

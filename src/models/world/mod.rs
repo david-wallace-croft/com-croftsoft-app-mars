@@ -5,16 +5,16 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-16
+//! - Updated: 2023-05-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use self::factory::WorldFactory;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
 use crate::ai::tank_operator::TankOperator;
-use crate::engine::factory::Factory;
 use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
@@ -26,19 +26,19 @@ use std::rc::Rc;
 
 pub mod builder;
 pub mod director;
+pub mod factory;
 pub mod preparer;
 pub mod seed;
 pub mod updater;
 
-#[derive(Default)]
 pub struct World {
   pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
   pub bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   pub explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
+  pub factory: Rc<RefCell<dyn WorldFactory>>,
   pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
-  factory: Rc<RefCell<Factory>>,
 }
 
 impl World {
@@ -47,7 +47,7 @@ impl World {
     circle: Circle,
     damage: f64,
   ) {
-    let explosion = self.factory.borrow_mut().make_explosion(circle, damage);
+    let explosion = self.factory.borrow().make_explosion(circle, damage);
     self.explosions.borrow_mut().push_back(explosion);
   }
 
@@ -90,5 +90,17 @@ impl World {
       }
     }
     false
+  }
+
+  pub fn new(factory: Rc<RefCell<dyn WorldFactory>>) -> Self {
+    Self {
+      ammo_dumps: Default::default(),
+      bullets: Default::default(),
+      explosions: Default::default(),
+      factory,
+      obstacles: Default::default(),
+      tank_operators: Default::default(),
+      tanks: Default::default(),
+    }
   }
 }
