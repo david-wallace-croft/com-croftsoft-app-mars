@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-07
-//! - Updated: 2023-05-17
+//! - Updated: 2023-05-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,7 +35,7 @@ impl WorldSeed {
       obstacle_count: self.obstacle_count,
     };
     let world = Rc::new(RefCell::new(World::new(self.factory.clone())));
-    let world_builder = WorldBuilder::new(self.factory.clone(), world.clone());
+    let world_builder = WorldBuilder::new(world.clone());
     let world_director = WorldBuilderDirector {
       seed,
       world_builder,

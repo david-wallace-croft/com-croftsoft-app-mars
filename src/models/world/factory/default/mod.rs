@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-17
+//! - Updated: 2023-05-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,12 +23,13 @@ pub struct DefaultWorldFactory {
 
 impl WorldFactory for DefaultWorldFactory {
   fn make_explosion(
-    &self,
+    &mut self,
     circle: Circle,
     damage: f64,
   ) -> Box<dyn Explosion> {
-    let explosion =
-      DefaultExplosion::new(circle, damage, self.id_next_explosion);
+    let id = self.id_next_explosion;
+    self.id_next_explosion += 1;
+    let explosion = DefaultExplosion::new(circle, damage, id);
     Box::new(explosion)
   }
 }

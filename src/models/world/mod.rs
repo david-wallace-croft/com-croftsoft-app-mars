@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-17
+//! - Updated: 2023-05-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -47,7 +47,7 @@ impl World {
     circle: Circle,
     damage: f64,
   ) {
-    let explosion = self.factory.borrow().make_explosion(circle, damage);
+    let explosion = self.factory.borrow_mut().make_explosion(circle, damage);
     self.explosions.borrow_mut().push_back(explosion);
   }
 
