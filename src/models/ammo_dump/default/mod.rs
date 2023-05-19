@@ -17,6 +17,7 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::models::world::factory::WorldFactory;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
@@ -29,8 +30,7 @@ pub struct DefaultAmmoDump {
   ammo_max: f64,
   circle: Circle,
   exploding: bool,
-  explosion_circle: Circle,
-  explosion_factor: f64,
+  factory: Rc<RefCell<dyn WorldFactory>>,
   id: usize,
   updated: bool,
   world: Rc<RefCell<World>>,
@@ -46,6 +46,7 @@ impl DefaultAmmoDump {
     ammo: f64,
     center_x: f64,
     center_y: f64,
+    factory: Rc<RefCell<dyn WorldFactory>>,
     id: usize,
     world: Rc<RefCell<World>>,
   ) -> Self {
@@ -55,7 +56,6 @@ impl DefaultAmmoDump {
       radius: 0.,
     };
     let exploding = false;
-    let explosion_circle = Circle::default();
     let updated = false;
     let mut ammo_dump = Self {
       ammo: 0.,
@@ -63,8 +63,7 @@ impl DefaultAmmoDump {
       ammo_max: AMMO_DUMP_AMMO_MAX,
       circle,
       exploding,
-      explosion_circle,
-      explosion_factor: AMMO_DUMP_EXPLOSION_FACTOR,
+      factory,
       id,
       updated,
       world,
@@ -98,10 +97,6 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
     self.ammo
   }
 
-  fn get_explosion_shape(&self) -> Circle {
-    self.explosion_circle
-  }
-
   fn is_exploding(&self) -> bool {
     self.exploding
   }
@@ -117,9 +112,12 @@ impl Damageable for DefaultAmmoDump {
     }
     self.updated = true;
     self.exploding = true;
-    self.explosion_circle.set_center_from_circle(&self.circle);
-    self.explosion_circle.radius = self.explosion_factor * self.ammo;
-    self.world.borrow().add_explosion(self.circle, self.ammo);
+    let mut explosion_circle = Circle::default();
+    explosion_circle.set_center_from_circle(&self.circle);
+    explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
+    let explosion =
+      self.factory.borrow().make_explosion(explosion_circle, self.ammo);
+    self.world.borrow().explosions.borrow_mut().push_back(explosion);
     self.set_ammo(0.);
   }
 }

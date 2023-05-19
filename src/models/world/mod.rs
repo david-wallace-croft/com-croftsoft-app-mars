@@ -19,7 +19,7 @@ use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
-use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
+use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -42,15 +42,6 @@ pub struct World {
 }
 
 impl World {
-  pub fn add_explosion(
-    &self,
-    circle: Circle,
-    damage: f64,
-  ) {
-    let explosion = self.factory.borrow().make_explosion(circle, damage);
-    self.explosions.borrow_mut().push_back(explosion);
-  }
-
   // TODO: argument was Model in old code; could be Shape
   pub fn is_blocked_by_impassable(
     &self,

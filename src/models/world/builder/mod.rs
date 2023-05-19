@@ -5,12 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-02
-//! - Updated: 2023-05-18
+//! - Updated: 2023-05-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::factory::WorldFactory;
 use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::constants::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
 use crate::engine::traits::Color;
@@ -24,6 +25,7 @@ use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct WorldBuilder {
+  factory: Rc<RefCell<dyn WorldFactory>>,
   pub world: Rc<RefCell<World>>,
 }
 
@@ -38,6 +40,7 @@ impl WorldBuilder {
       AMMO_DUMP_AMMO_MAX,
       center_x,
       center_y,
+      self.factory.clone(),
       id,
       self.world.clone(),
     );
@@ -90,8 +93,12 @@ impl WorldBuilder {
     self.world.borrow().tank_operators.borrow_mut().push_back(tank_operator);
   }
 
-  pub fn new(world: Rc<RefCell<World>>) -> Self {
+  pub fn new(
+    factory: Rc<RefCell<dyn WorldFactory>>,
+    world: Rc<RefCell<World>>,
+  ) -> Self {
     Self {
+      factory,
       world,
     }
   }

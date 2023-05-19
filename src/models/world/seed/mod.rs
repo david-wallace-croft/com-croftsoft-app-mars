@@ -35,7 +35,7 @@ impl WorldSeed {
       obstacle_count: self.obstacle_count,
     };
     let world = Rc::new(RefCell::new(World::new(self.factory.clone())));
-    let world_builder = WorldBuilder::new(world.clone());
+    let world_builder = WorldBuilder::new(self.factory.clone(), world.clone());
     let world_director = WorldBuilderDirector {
       seed,
       world_builder,
