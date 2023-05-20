@@ -16,7 +16,7 @@ use crate::engine::traits::Color;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
-use crate::models::tank_operator::default::DefaultTankOperator;
+use crate::models::tank_operator::TankOperator;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -82,11 +82,9 @@ impl WorldBuilder {
     tank_state
   }
 
-  pub fn build_tank_operator(
-    &self,
-    id: usize,
-  ) {
-    let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::new(id)));
+  pub fn build_tank_operator(&self) {
+    let tank_operator: Rc<RefCell<dyn TankOperator>> =
+      self.world.borrow().factory.make_tank_operator();
     self.world.borrow().tank_operators.borrow_mut().push_back(tank_operator);
   }
 

@@ -16,6 +16,8 @@ use crate::models::bullet::default::DefaultBullet;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::default::DefaultExplosion;
 use crate::models::explosion::Explosion;
+use crate::models::tank_operator::default::DefaultTankOperator;
+use crate::models::tank_operator::TankOperator;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::{Cell, RefCell};
@@ -26,6 +28,7 @@ pub struct DefaultWorldFactory {
   // TODO: maybe use an atomic instead of Cell for interior mutability
   id_next_bullet: Cell<usize>,
   id_next_explosion: Cell<usize>,
+  id_next_tank_operator: Cell<usize>,
 }
 
 impl WorldFactory for DefaultWorldFactory {
@@ -51,5 +54,12 @@ impl WorldFactory for DefaultWorldFactory {
     self.id_next_explosion.set(id + 1);
     let explosion = DefaultExplosion::new(circle, damage, id);
     Box::new(explosion)
+  }
+
+  fn make_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
+    let id = self.id_next_tank_operator.get();
+    self.id_next_tank_operator.set(id + 1);
+    let tank_operator = DefaultTankOperator::new(id);
+    Rc::new(RefCell::new(tank_operator))
   }
 }

@@ -14,6 +14,7 @@
 use super::World;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
+use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -36,4 +37,6 @@ pub trait WorldFactory {
     circle: Circle,
     damage: f64,
   ) -> Box<dyn Explosion>;
+
+  fn make_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
 }

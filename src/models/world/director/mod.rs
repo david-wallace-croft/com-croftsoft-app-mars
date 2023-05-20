@@ -121,8 +121,8 @@ impl WorldBuilderDirector {
       .tanks
       .borrow_mut()
       .iter_mut()
-      .enumerate()
-      .for_each(|(index, _tank)| self.world_builder.build_tank_operator(index));
+      // TODO: Need some connection between tank and tank operator
+      .for_each(|(_tank)| self.world_builder.build_tank_operator());
   }
 
   fn direct_tanks(&self) {
