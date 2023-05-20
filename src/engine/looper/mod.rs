@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-17
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -61,7 +61,7 @@ impl Looper {
     let world_seed = WorldSeed {
       ammo_dump_count: AMMO_DUMP_COUNT,
       bounds,
-      factory: Rc::new(RefCell::new(DefaultWorldFactory::default())),
+      factory: Rc::new(DefaultWorldFactory::default()),
       obstacle_count: OBSTACLE_COUNT,
     };
     let world: Rc<RefCell<World>> = world_seed.grow_world();

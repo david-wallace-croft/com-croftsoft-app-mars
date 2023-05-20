@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-19
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,7 +35,7 @@ pub struct World {
   pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
   pub bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   pub explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
-  pub factory: Rc<RefCell<dyn WorldFactory>>,
+  pub factory: Rc<dyn WorldFactory>,
   pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
@@ -83,7 +83,7 @@ impl World {
     false
   }
 
-  pub fn new(factory: Rc<RefCell<dyn WorldFactory>>) -> Self {
+  pub fn new(factory: Rc<dyn WorldFactory>) -> Self {
     Self {
       ammo_dumps: Default::default(),
       bullets: Default::default(),

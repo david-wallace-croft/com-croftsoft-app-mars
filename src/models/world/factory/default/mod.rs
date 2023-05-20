@@ -5,24 +5,43 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-19
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::WorldFactory;
+use crate::models::bullet::default::DefaultBullet;
+use crate::models::bullet::Bullet;
 use crate::models::explosion::default::DefaultExplosion;
 use crate::models::explosion::Explosion;
+use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
-use core::cell::Cell;
+use core::cell::{Cell, RefCell};
+use std::rc::Rc;
 
 #[derive(Default)]
 pub struct DefaultWorldFactory {
+  // TODO: maybe use an atomic instead of Cell for interior mutability
+  id_next_bullet: Cell<usize>,
   id_next_explosion: Cell<usize>,
 }
 
 impl WorldFactory for DefaultWorldFactory {
+  fn make_bullet(
+    &self,
+    heading: f64,
+    origin_x: f64,
+    origin_y: f64,
+    world: Rc<RefCell<World>>,
+  ) -> Box<dyn Bullet> {
+    let id = self.id_next_bullet.get();
+    self.id_next_bullet.set(id + 1);
+    let bullet = DefaultBullet::new(heading, id, origin_x, origin_y, world);
+    Box::new(bullet)
+  }
+
   fn make_explosion(
     &self,
     circle: Circle,

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-16
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,6 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
-use crate::models::world::factory::WorldFactory;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
@@ -30,7 +29,6 @@ pub struct DefaultAmmoDump {
   ammo_max: f64,
   circle: Circle,
   exploding: bool,
-  factory: Rc<RefCell<dyn WorldFactory>>,
   id: usize,
   updated: bool,
   world: Rc<RefCell<World>>,
@@ -46,7 +44,6 @@ impl DefaultAmmoDump {
     ammo: f64,
     center_x: f64,
     center_y: f64,
-    factory: Rc<RefCell<dyn WorldFactory>>,
     id: usize,
     world: Rc<RefCell<World>>,
   ) -> Self {
@@ -63,7 +60,6 @@ impl DefaultAmmoDump {
       ammo_max: AMMO_DUMP_AMMO_MAX,
       circle,
       exploding,
-      factory,
       id,
       updated,
       world,
@@ -116,7 +112,7 @@ impl Damageable for DefaultAmmoDump {
     explosion_circle.set_center_from_circle(&self.circle);
     explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
     let explosion =
-      self.factory.borrow().make_explosion(explosion_circle, self.ammo);
+      self.world.borrow().factory.make_explosion(explosion_circle, self.ammo);
     self.world.borrow().explosions.borrow_mut().push_back(explosion);
     self.set_ammo(0.);
   }
