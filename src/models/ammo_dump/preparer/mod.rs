@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::default::DefaultAmmoDump;
-use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -23,8 +23,8 @@ pub struct AmmoDumpPreparer {
 }
 
 impl AmmoDumpPreparer {
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
-    let ammo_dumps = world.borrow().ammo_dumps.clone();
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
+    let ammo_dumps = world.borrow().get_ammo_dumps();
     Self {
       ammo_dumps,
     }

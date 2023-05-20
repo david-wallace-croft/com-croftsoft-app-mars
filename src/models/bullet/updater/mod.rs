@@ -13,7 +13,6 @@
 
 use super::Bullet;
 use crate::constants::TIME_DELTA;
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
@@ -25,7 +24,7 @@ pub struct BulletUpdater {
 }
 
 impl BulletUpdater {
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
     let bullets = world.borrow().get_bullets();
     Self {
       bullets,

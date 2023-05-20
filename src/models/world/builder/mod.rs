@@ -11,6 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::World;
 use crate::constants::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
 use crate::engine::traits::Color;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
@@ -57,7 +58,7 @@ impl WorldBuilder {
       OBSTACLE_RADIUS_MIN,
       self.world.clone(),
     );
-    self.world.borrow().obstacles.borrow_mut().push_back(obstacle);
+    self.world.borrow().get_obstacles().borrow_mut().push_back(obstacle);
   }
 
   pub fn build_tank(
@@ -78,14 +79,19 @@ impl WorldBuilder {
     // tank_state.borrow_mut().set_tank_operator(tank_operator.clone());
     // tank_operator.borrow_mut().set_tank_console(tank_state.clone());
     // TODO: model_array_keep.insert(seriTank) was in the old code here
-    self.world.borrow().tanks.borrow_mut().push_back(tank_state.clone());
+    self.world.borrow().get_tanks().borrow_mut().push_back(tank_state.clone());
     tank_state
   }
 
   pub fn build_tank_operator(&self) {
     let tank_operator: Rc<RefCell<dyn TankOperator>> =
-      self.world.borrow().factory.make_tank_operator();
-    self.world.borrow().tank_operators.borrow_mut().push_back(tank_operator);
+      self.world.borrow().get_factory().make_tank_operator();
+    self
+      .world
+      .borrow()
+      .get_tank_operators()
+      .borrow_mut()
+      .push_back(tank_operator);
   }
 
   pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {

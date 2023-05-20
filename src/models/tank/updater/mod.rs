@@ -14,6 +14,7 @@
 use crate::constants::TIME_DELTA;
 use crate::models::tank::state::TankState;
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -30,7 +31,7 @@ impl TankUpdater {
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
     world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
-    let tanks = world.borrow().tanks.clone();
+    let tanks = world.borrow().get_tanks();
     Self {
       // events,
       // inputs,

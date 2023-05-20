@@ -16,6 +16,7 @@ use crate::engine::traits::{ModelAccessor, SpaceTester};
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankAccessor;
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
@@ -72,13 +73,13 @@ impl SpaceTester for DefaultTankConsole {
     tank_circle.center_x = x;
     tank_circle.center_y = y;
     // TODO: previously operated on an array of Impassable
-    for obstacle in self.world.borrow().obstacles.borrow().iter() {
+    for obstacle in self.world.borrow().get_obstacles().borrow().iter() {
       if obstacle.circle.intersects_circle(&tank_circle) {
         return false;
       }
     }
     let self_tank_color = self_tank.get_color();
-    for other_tank in self.world.borrow().tanks.borrow().iter() {
+    for other_tank in self.world.borrow().get_tanks().borrow().iter() {
       let other_tank = other_tank.borrow();
       if self_tank_color != other_tank.get_color() && self_tank.get_ammo() > 0 {
         continue;

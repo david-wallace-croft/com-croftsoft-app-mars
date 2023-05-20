@@ -12,7 +12,6 @@
 // =============================================================================
 
 use super::Bullet;
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
@@ -24,7 +23,7 @@ pub struct BulletPreparer {
 }
 
 impl BulletPreparer {
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
     let bullets = world.borrow().get_bullets();
     Self {
       bullets,

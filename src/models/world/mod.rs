@@ -17,6 +17,7 @@ use super::bullet::Bullet;
 use super::explosion::Explosion;
 use super::obstacle::state::ObstacleState;
 use super::tank::state::TankState;
+use super::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -46,10 +47,16 @@ pub trait World {
 
   fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>>;
 
+  fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>>;
+
   // TODO: move WorldFactory out of World
   fn get_factory(&self) -> Rc<dyn WorldFactory>;
 
   fn get_obstacles(&self) -> Rc<RefCell<VecDeque<ObstacleState>>>;
+
+  fn get_tank_operators(
+    &self
+  ) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>;
 
   fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>;
 

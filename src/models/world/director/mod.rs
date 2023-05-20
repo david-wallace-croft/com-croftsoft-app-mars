@@ -100,7 +100,8 @@ impl WorldBuilderDirector {
 
   fn direct_tank_consoles(&self) {
     let world = self.world_builder.world.borrow();
-    let tanks = world.tanks.borrow();
+    let tanks = world.get_tanks();
+    let tanks = tanks.borrow();
     let length = tanks.len();
     for index in 0..length {
       let tank = tanks[index].clone();
@@ -108,7 +109,7 @@ impl WorldBuilderDirector {
         tank,
         world: self.world_builder.world.clone(),
       }));
-      self.world_builder.world.borrow().tank_operators.borrow()[index]
+      self.world_builder.world.borrow().get_tank_operators().borrow()[index]
         .borrow_mut()
         .set_tank_console(tank_console);
     }
@@ -119,11 +120,11 @@ impl WorldBuilderDirector {
       .world_builder
       .world
       .borrow()
-      .tanks
+      .get_tanks()
       .borrow_mut()
       .iter_mut()
       // TODO: Need some connection between tank and tank operator
-      .for_each(|(_tank)| self.world_builder.build_tank_operator());
+      .for_each(|_tank| self.world_builder.build_tank_operator());
   }
 
   fn direct_tanks(&self) {

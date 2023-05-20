@@ -15,6 +15,7 @@ use crate::constants::TIME_DELTA;
 use crate::engine::traits::Model;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -48,7 +49,7 @@ impl ObstacleUpdater {
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
     world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
-    let obstacles = world.borrow().obstacles.clone();
+    let obstacles = world.borrow().get_obstacles();
     Self {
       // events,
       // inputs,

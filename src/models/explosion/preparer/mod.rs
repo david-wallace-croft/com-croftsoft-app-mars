@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::Explosion;
-use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -23,8 +23,8 @@ pub struct ExplosionPreparer {
 }
 
 impl ExplosionPreparer {
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
-    let explosions = world.borrow().explosions.clone();
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
+    let explosions = world.borrow().get_explosions();
     Self {
       explosions,
     }

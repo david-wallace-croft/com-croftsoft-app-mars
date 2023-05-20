@@ -14,6 +14,7 @@
 use super::TankOperator;
 use crate::constants::TIME_DELTA;
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::{RefCell, RefMut};
 use std::collections::VecDeque;
@@ -51,15 +52,16 @@ impl Updater for TankOperatorUpdater {
     //   return;
     // }
     let world = self.world.borrow();
+    let tank_operators = world.get_tank_operators();
     let mut tank_operators: RefMut<VecDeque<Rc<RefCell<dyn TankOperator>>>> =
-      world.tank_operators.borrow_mut();
+      tank_operators.borrow_mut();
     let length = tank_operators.len();
     for _index in 0..length {
       let tank_operator = tank_operators.pop_front().unwrap();
-      let tank = world.tanks.borrow_mut().pop_front().unwrap();
-      tank_operator.borrow_mut().update(world.tanks.clone(), TIME_DELTA);
+      let tank = world.get_tanks().borrow_mut().pop_front().unwrap();
+      tank_operator.borrow_mut().update(world.get_tanks(), TIME_DELTA);
       tank_operators.push_back(tank_operator);
-      world.tanks.borrow_mut().push_back(tank);
+      world.get_tanks().borrow_mut().push_back(tank);
     }
   }
 }

@@ -13,6 +13,7 @@
 
 use crate::models::tank::state::TankState;
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -24,7 +25,7 @@ pub struct TankPreparer {
 
 impl TankPreparer {
   pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
-    let tanks = world.borrow().tanks.clone();
+    let tanks = world.borrow().get_tanks();
     Self {
       tanks,
     }

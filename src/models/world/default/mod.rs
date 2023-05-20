@@ -28,12 +28,12 @@ use std::rc::Rc;
 pub struct DefaultWorld {
   pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
   bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
-  pub explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
+  explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
   // TODO: move factory out of World
-  pub factory: Rc<dyn WorldFactory>,
-  pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
-  pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
-  pub tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  factory: Rc<dyn WorldFactory>,
+  obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+  tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
 }
 
 impl DefaultWorld {
@@ -99,12 +99,22 @@ impl World for DefaultWorld {
     self.bullets.clone()
   }
 
+  fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>> {
+    self.explosions.clone()
+  }
+
   fn get_factory(&self) -> Rc<dyn WorldFactory> {
     self.factory.clone()
   }
 
   fn get_obstacles(&self) -> Rc<RefCell<VecDeque<ObstacleState>>> {
     self.obstacles.clone()
+  }
+
+  fn get_tank_operators(
+    &self
+  ) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>> {
+    self.tank_operators.clone()
   }
 
   fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>> {
