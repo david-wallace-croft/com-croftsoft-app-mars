@@ -19,25 +19,22 @@ use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
 use std::rc::Rc;
 
+#[derive(Clone, Copy)]
 pub struct WorldSeed {
   pub ammo_dump_count: usize,
   pub bounds: Rectangle,
-  pub factory: Rc<dyn WorldFactory>,
   pub obstacle_count: usize,
 }
 
 impl WorldSeed {
-  pub fn grow_world(&self) -> Rc<RefCell<World>> {
-    let seed = WorldSeed {
-      ammo_dump_count: self.ammo_dump_count,
-      bounds: self.bounds,
-      factory: self.factory.clone(),
-      obstacle_count: self.obstacle_count,
-    };
-    let world = Rc::new(RefCell::new(World::new(self.factory.clone())));
+  pub fn grow_world(
+    &self,
+    factory: Rc<dyn WorldFactory>,
+  ) -> Rc<RefCell<World>> {
+    let world = Rc::new(RefCell::new(World::new(factory)));
     let world_builder = WorldBuilder::new(world.clone());
     let world_director = WorldBuilderDirector {
-      seed,
+      seed: *self,
       world_builder,
     };
     world_director.direct();

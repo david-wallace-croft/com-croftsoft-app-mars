@@ -19,6 +19,7 @@ use crate::messages::inputs::Inputs;
 use crate::models::options::Options;
 use crate::models::root::Root;
 use crate::models::world::factory::default::DefaultWorldFactory;
+use crate::models::world::factory::WorldFactory;
 use crate::models::world::seed::WorldSeed;
 use crate::models::world::World;
 use crate::painters::root::updater::{RootUpdater, RootUpdaterConfiguration};
@@ -61,10 +62,10 @@ impl Looper {
     let world_seed = WorldSeed {
       ammo_dump_count: AMMO_DUMP_COUNT,
       bounds,
-      factory: Rc::new(DefaultWorldFactory::default()),
       obstacle_count: OBSTACLE_COUNT,
     };
-    let world: Rc<RefCell<World>> = world_seed.grow_world();
+    let factory: Rc<dyn WorldFactory> = Rc::new(DefaultWorldFactory::default());
+    let world: Rc<RefCell<World>> = world_seed.grow_world(factory);
     let root_state = Rc::new(RefCell::new(Root::new(world)));
     let root_component = RootComponent::new(
       events.clone(),
