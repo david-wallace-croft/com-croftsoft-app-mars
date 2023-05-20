@@ -20,7 +20,6 @@ use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Preparer;
-use core::cell::RefCell;
 use rand::rngs::ThreadRng;
 use rand::Rng;
 use std::rc::Rc;
@@ -35,7 +34,7 @@ pub struct ObstacleState {
   pub updated: bool,
   pub velocity_x: f64,
   pub velocity_y: f64,
-  world: Rc<RefCell<dyn World>>,
+  world: Rc<dyn World>,
 }
 
 impl ObstacleState {
@@ -44,7 +43,7 @@ impl ObstacleState {
     drift_bounds: Rectangle,
     id: usize,
     radius_min: f64,
-    world: Rc<RefCell<dyn World>>,
+    world: Rc<dyn World>,
   ) -> Self {
     Self {
       active: true,
@@ -139,7 +138,7 @@ impl Model for ObstacleState {
     self.velocity_x = velocity_x;
     self.velocity_y = velocity_y;
     if new_center_x != old_center_x || new_center_y != old_center_y {
-      if self.world.borrow().is_blocked_by_impassable(&self.circle) {
+      if self.world.is_blocked_by_impassable(&self.circle) {
         self.circle.center_x = new_center_x;
         self.circle.center_y = new_center_y;
         // TODO: updated event
@@ -149,7 +148,7 @@ impl Model for ObstacleState {
           center_y: new_center_y,
           radius,
         };
-        if !self.world.borrow().is_blocked_by_impassable(&new_circle) {
+        if !self.world.is_blocked_by_impassable(&new_circle) {
           self.circle.center_x = new_center_x;
           self.circle.center_y = new_center_y;
         } else {

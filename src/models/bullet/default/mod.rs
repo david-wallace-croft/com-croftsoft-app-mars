@@ -19,7 +19,6 @@ use crate::engine::traits::{Damageable, Model, ModelAccessor};
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
-use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct DefaultBullet {
@@ -31,7 +30,7 @@ pub struct DefaultBullet {
   origin_x: f64,
   origin_y: f64,
   updated: bool,
-  world: Rc<RefCell<dyn World>>,
+  world: Rc<dyn World>,
 }
 
 impl DefaultBullet {
@@ -44,7 +43,7 @@ impl DefaultBullet {
     id: usize,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<RefCell<dyn World>>,
+    world: Rc<dyn World>,
   ) -> Self {
     let mut bullet = Self {
       active: false,
@@ -111,8 +110,7 @@ impl Model for DefaultBullet {
     let center_y = self.origin_y + self.distance * self.heading.sin();
     self.circle.set_center(center_x, center_y);
     // TODO: old code fetched first damageable or impassable at point from World
-    let world = self.world.borrow();
-    let obstacles = world.get_obstacles();
+    let obstacles = self.world.get_obstacles();
     for obstacle in obstacles.borrow_mut().iter_mut() {
       if obstacle.contains(center_x, center_y) {
         self.active = false;
@@ -120,7 +118,7 @@ impl Model for DefaultBullet {
         return;
       }
     }
-    let tanks = world.get_tanks();
+    let tanks = self.world.get_tanks();
     for tank in tanks.borrow_mut().iter_mut() {
       let mut tank = tank.borrow_mut();
       if tank.contains(center_x, center_y) {
@@ -129,7 +127,7 @@ impl Model for DefaultBullet {
         return;
       }
     }
-    let ammo_dumps = world.get_ammo_dumps();
+    let ammo_dumps = self.world.get_ammo_dumps();
     for ammo_dump in ammo_dumps.borrow_mut().iter_mut() {
       if ammo_dump.contains(center_x, center_y) {
         self.active = false;

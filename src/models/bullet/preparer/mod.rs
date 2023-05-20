@@ -12,7 +12,6 @@
 // =============================================================================
 
 use super::Bullet;
-use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -23,8 +22,7 @@ pub struct BulletPreparer {
 }
 
 impl BulletPreparer {
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
-    let bullets = world.borrow().get_bullets();
+  pub fn new(bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>) -> Self {
     Self {
       bullets,
     }

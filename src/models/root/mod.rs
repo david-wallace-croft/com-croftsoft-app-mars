@@ -18,11 +18,11 @@ use std::rc::Rc;
 
 pub struct Root {
   pub overlay: Rc<RefCell<Overlay>>,
-  pub world: Rc<RefCell<dyn World>>,
+  pub world: Rc<dyn World>,
 }
 
 impl Root {
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
+  pub fn new(world: Rc<dyn World>) -> Self {
     Self {
       overlay: Rc::new(RefCell::new(Overlay::default())),
       world,

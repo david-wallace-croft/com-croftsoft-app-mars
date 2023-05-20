@@ -17,7 +17,6 @@ use crate::models::bullet::preparer::BulletPreparer;
 use crate::models::obstacle::preparer::ObstaclePreparer;
 use crate::models::tank::preparer::TankPreparer;
 use com_croftsoft_lib_role::Preparer;
-use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct WorldPreparer {
@@ -25,11 +24,11 @@ pub struct WorldPreparer {
 }
 
 impl WorldPreparer {
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
-    let ammo_dump_preparer = AmmoDumpPreparer::new(world.clone());
-    let bullet_preparer = BulletPreparer::new(world.clone());
-    let obstacle_preparer = ObstaclePreparer::new(world.clone());
-    let tank_preparer = TankPreparer::new(world);
+  pub fn new(world: Rc<dyn World>) -> Self {
+    let ammo_dump_preparer = AmmoDumpPreparer::new(world.get_ammo_dumps());
+    let bullet_preparer = BulletPreparer::new(world.get_bullets());
+    let obstacle_preparer = ObstaclePreparer::new(world.get_obstacles());
+    let tank_preparer = TankPreparer::new(world.get_tanks());
     let child_preparers: Vec<Box<dyn Preparer>> = vec![
       Box::new(ammo_dump_preparer),
       Box::new(tank_preparer),

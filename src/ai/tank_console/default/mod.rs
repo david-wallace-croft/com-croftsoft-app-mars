@@ -24,7 +24,7 @@ use std::rc::Rc;
 
 pub struct DefaultTankConsole {
   pub tank: Rc<RefCell<TankState>>,
-  pub world: Rc<RefCell<dyn World>>,
+  pub world: Rc<dyn World>,
 }
 
 impl ModelAccessor for DefaultTankConsole {
@@ -72,13 +72,13 @@ impl SpaceTester for DefaultTankConsole {
     tank_circle.center_x = x;
     tank_circle.center_y = y;
     // TODO: previously operated on an array of Impassable
-    for obstacle in self.world.borrow().get_obstacles().borrow().iter() {
+    for obstacle in self.world.get_obstacles().borrow().iter() {
       if obstacle.circle.intersects_circle(&tank_circle) {
         return false;
       }
     }
     let self_tank_color = self_tank.get_color();
-    for other_tank in self.world.borrow().get_tanks().borrow().iter() {
+    for other_tank in self.world.get_tanks().borrow().iter() {
       let other_tank = other_tank.borrow();
       if self_tank_color != other_tank.get_color() && self_tank.get_ammo() > 0 {
         continue;
@@ -152,7 +152,7 @@ impl TankConsole for DefaultTankConsole {
     let mut tank_center = Point2DD::default();
     self.tank.borrow().get_center(&mut tank_center);
     let mut closest_distance: f64 = INFINITY;
-    let world = self.world.borrow();
+    let world = &self.world;
     let ammo_dumps = world.get_ammo_dumps();
     for ammo_dump in ammo_dumps.borrow().iter() {
       let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();

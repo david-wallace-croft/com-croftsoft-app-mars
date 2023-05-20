@@ -13,7 +13,6 @@
 
 use super::builder::WorldBuilder;
 use super::seed::WorldSeed;
-use super::World;
 use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::constants::{
   AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,
@@ -45,7 +44,7 @@ impl WorldBuilderDirector {
   }
 
   fn direct_ammo_dumps(&self) {
-    let world = self.world_builder.world.borrow();
+    let world = &self.world_builder.world;
     let mut rng = rand::thread_rng();
     for index in 0..self.seed.ammo_dump_count {
       let mut circle = Circle {
@@ -89,8 +88,7 @@ impl WorldBuilderDirector {
       for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
         circle.center_x = center_uniform.sample(&mut rng);
         circle.center_y = center_uniform.sample(&mut rng);
-        if !self.world_builder.world.borrow().is_blocked_by_impassable(&circle)
-        {
+        if !self.world_builder.world.is_blocked_by_impassable(&circle) {
           break;
         }
       }
@@ -99,7 +97,7 @@ impl WorldBuilderDirector {
   }
 
   fn direct_tank_consoles(&self) {
-    let world = self.world_builder.world.borrow();
+    let world = &self.world_builder.world;
     let tanks = world.get_tanks();
     let tanks = tanks.borrow();
     let length = tanks.len();
@@ -109,7 +107,7 @@ impl WorldBuilderDirector {
         tank,
         world: self.world_builder.world.clone(),
       }));
-      self.world_builder.world.borrow().get_tank_operators().borrow()[index]
+      self.world_builder.world.get_tank_operators().borrow()[index]
         .borrow_mut()
         .set_tank_console(tank_console);
     }
@@ -119,7 +117,6 @@ impl WorldBuilderDirector {
     self
       .world_builder
       .world
-      .borrow()
       .get_tanks()
       .borrow_mut()
       .iter_mut()

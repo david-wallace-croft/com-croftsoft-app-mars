@@ -42,6 +42,11 @@ pub trait World {
     explosion: Box<dyn Explosion>,
   );
 
+  fn add_tank_operator(
+    &self,
+    tank_operator: Rc<RefCell<dyn TankOperator>>,
+  );
+
   // TODO: Use the AmmoDump trait
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<DefaultAmmoDump>>>;
 

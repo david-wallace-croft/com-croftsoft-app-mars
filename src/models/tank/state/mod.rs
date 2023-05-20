@@ -50,7 +50,7 @@ pub struct TankState {
   target_point: Point2DD,
   turret_heading: f64,
   updated: bool,
-  world: Rc<RefCell<dyn World>>,
+  world: Rc<dyn World>,
 }
 
 impl TankState {
@@ -73,7 +73,7 @@ impl TankState {
     center_y: f64,
     color: Color,
     id: usize,
-    world: Rc<RefCell<dyn World>>,
+    world: Rc<dyn World>,
   ) -> Self {
     let circle: Circle = Circle {
       center_x: 0.,
@@ -159,7 +159,7 @@ impl TankState {
       return;
     }
     let mut ammo_needed: usize = TANK_AMMO_MAX - self.ammo;
-    let ammo_dumps = self.world.borrow().get_ammo_dumps();
+    let ammo_dumps = self.world.get_ammo_dumps();
     for ammo_dump in ammo_dumps.borrow_mut().iter_mut() {
       if !ammo_dump.contains(self.circle.center_x, self.circle.center_y) {
         continue;
@@ -226,10 +226,10 @@ impl TankState {
     self.circle.center_x = new_x;
     self.circle.center_y = new_y;
     // TODO
-    if self.world.borrow().is_blocked_by_impassable(&self.circle) {
+    if self.world.is_blocked_by_impassable(&self.circle) {
       self.circle.center_x = old_x;
       self.circle.center_y = old_y;
-      if self.world.borrow().is_blocked_by_impassable(&self.circle) {
+      if self.world.is_blocked_by_impassable(&self.circle) {
         self.circle.center_x = new_x;
         self.circle.center_y = new_y;
         self.updated = true;
@@ -281,14 +281,13 @@ impl TankState {
       self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
     let bullet_origin_y: f64 =
       self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    let bullet: Box<dyn Bullet> =
-      self.world.borrow().get_factory().make_bullet(
-        self.turret_heading,
-        bullet_origin_x,
-        bullet_origin_y,
-        self.world.clone(),
-      );
-    self.world.borrow().add_bullet(bullet);
+    let bullet: Box<dyn Bullet> = self.world.get_factory().make_bullet(
+      self.turret_heading,
+      bullet_origin_x,
+      bullet_origin_y,
+      self.world.clone(),
+    );
+    self.world.add_bullet(bullet);
   }
 
   pub fn get_body_rotation_speed(&self) -> f64 {

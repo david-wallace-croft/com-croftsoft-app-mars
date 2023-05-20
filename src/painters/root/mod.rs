@@ -58,22 +58,15 @@ impl RootPainter {
       context.clone(),
       BACKGROUND_FILL_STYLE,
     );
-    let ammo_dump_painter = AmmoDumpPainter::new(
-      context.clone(),
-      root_state.world.borrow().get_ammo_dumps(),
-    );
-    let bullet_painter = BulletPainter::new(
-      root_state.world.borrow().get_bullets(),
-      context.clone(),
-    );
-    let obstacle_painter = ObstaclePainter::new(
-      context.clone(),
-      root_state.world.borrow().get_obstacles(),
-    );
+    let ammo_dump_painter =
+      AmmoDumpPainter::new(context.clone(), root_state.world.get_ammo_dumps());
+    let bullet_painter =
+      BulletPainter::new(root_state.world.get_bullets(), context.clone());
+    let obstacle_painter =
+      ObstaclePainter::new(context.clone(), root_state.world.get_obstacles());
     let overlay_painter =
       OverlayPainter::new(context.clone(), options, root_state.overlay.clone());
-    let tank_painter =
-      TankPainter::new(context, root_state.world.borrow().get_tanks());
+    let tank_painter = TankPainter::new(context, root_state.world.get_tanks());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
       // TODO: maybe wrap in a world painter

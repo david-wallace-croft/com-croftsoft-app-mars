@@ -24,7 +24,7 @@ use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct WorldBuilder {
-  pub world: Rc<RefCell<dyn World>>,
+  pub world: Rc<dyn World>,
 }
 
 impl WorldBuilder {
@@ -41,7 +41,7 @@ impl WorldBuilder {
       id,
       self.world.clone(),
     );
-    self.world.borrow().get_ammo_dumps().borrow_mut().push_back(ammo_dump);
+    self.world.get_ammo_dumps().borrow_mut().push_back(ammo_dump);
   }
 
   pub fn build_obstacle(
@@ -57,7 +57,7 @@ impl WorldBuilder {
       OBSTACLE_RADIUS_MIN,
       self.world.clone(),
     );
-    self.world.borrow().get_obstacles().borrow_mut().push_back(obstacle);
+    self.world.get_obstacles().borrow_mut().push_back(obstacle);
   }
 
   pub fn build_tank(
@@ -78,22 +78,17 @@ impl WorldBuilder {
     // tank_state.borrow_mut().set_tank_operator(tank_operator.clone());
     // tank_operator.borrow_mut().set_tank_console(tank_state.clone());
     // TODO: model_array_keep.insert(seriTank) was in the old code here
-    self.world.borrow().get_tanks().borrow_mut().push_back(tank_state.clone());
+    self.world.get_tanks().borrow_mut().push_back(tank_state.clone());
     tank_state
   }
 
   pub fn build_tank_operator(&self) {
     let tank_operator: Rc<RefCell<dyn TankOperator>> =
-      self.world.borrow().get_factory().make_tank_operator();
-    self
-      .world
-      .borrow()
-      .get_tank_operators()
-      .borrow_mut()
-      .push_back(tank_operator);
+      self.world.get_factory().make_tank_operator();
+    self.world.add_tank_operator(tank_operator);
   }
 
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
+  pub fn new(world: Rc<dyn World>) -> Self {
     Self {
       world,
     }

@@ -37,7 +37,7 @@ impl WorldFactory for DefaultWorldFactory {
     heading: f64,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<RefCell<dyn World>>,
+    world: Rc<dyn World>,
   ) -> Box<dyn Bullet> {
     let id = self.id_next_bullet.get();
     self.id_next_bullet.set(id + 1);

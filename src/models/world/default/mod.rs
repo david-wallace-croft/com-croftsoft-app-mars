@@ -65,6 +65,13 @@ impl World for DefaultWorld {
     self.explosions.borrow_mut().push_back(explosion);
   }
 
+  fn add_tank_operator(
+    &self,
+    tank_operator: Rc<RefCell<dyn TankOperator>>,
+  ) {
+    self.tank_operators.borrow_mut().push_back(tank_operator);
+  }
+
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<DefaultAmmoDump>>> {
     self.ammo_dumps.clone()
   }

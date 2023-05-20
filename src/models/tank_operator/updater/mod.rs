@@ -20,7 +20,7 @@ use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankOperatorUpdater {
-  world: Rc<RefCell<dyn World>>,
+  world: Rc<dyn World>,
 }
 
 impl TankOperatorUpdater {
@@ -28,7 +28,7 @@ impl TankOperatorUpdater {
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-    world: Rc<RefCell<dyn World>>,
+    world: Rc<dyn World>,
   ) -> Self {
     Self {
       // events,
@@ -50,7 +50,7 @@ impl Updater for TankOperatorUpdater {
     // if !inputs.get_time_to_update() || self.options.borrow().get_pause() {
     //   return;
     // }
-    let world = self.world.borrow();
+    let world = &self.world;
     let tank_operators = world.get_tank_operators();
     let mut tank_operators: RefMut<VecDeque<Rc<RefCell<dyn TankOperator>>>> =
       tank_operators.borrow_mut();

@@ -12,7 +12,6 @@
 // =============================================================================
 
 use super::state::ObstacleState;
-use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -23,8 +22,7 @@ pub struct ObstaclePreparer {
 }
 
 impl ObstaclePreparer {
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
-    let obstacles = world.borrow().get_obstacles();
+  pub fn new(obstacles: Rc<RefCell<VecDeque<ObstacleState>>>) -> Self {
     Self {
       obstacles,
     }

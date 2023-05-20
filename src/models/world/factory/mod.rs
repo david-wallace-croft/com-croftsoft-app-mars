@@ -27,7 +27,7 @@ pub trait WorldFactory {
     heading: f64,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<RefCell<dyn World>>,
+    world: Rc<dyn World>,
   ) -> Box<dyn Bullet>;
 
   // TODO: make_tank_operator

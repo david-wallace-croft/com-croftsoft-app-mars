@@ -18,7 +18,6 @@ use crate::models::obstacle::updater::ObstacleUpdater;
 use crate::models::tank::updater::TankUpdater;
 use crate::models::tank_operator::updater::TankOperatorUpdater;
 use com_croftsoft_lib_role::Updater;
-use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct WorldUpdater {
@@ -26,12 +25,12 @@ pub struct WorldUpdater {
 }
 
 impl WorldUpdater {
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
-    let ammo_dump_updater = AmmoDumpUpdater::new(world.clone());
-    let bullet_updater = BulletUpdater::new(world.clone());
-    let obstacle_updater = ObstacleUpdater::new(world.clone());
+  pub fn new(world: Rc<dyn World>) -> Self {
+    let ammo_dump_updater = AmmoDumpUpdater::new(world.get_ammo_dumps());
+    let bullet_updater = BulletUpdater::new(world.get_bullets());
+    let obstacle_updater = ObstacleUpdater::new(world.get_obstacles());
     let tank_operator_updater = TankOperatorUpdater::new(world.clone());
-    let tank_updater = TankUpdater::new(world);
+    let tank_updater = TankUpdater::new(world.get_tanks());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(ammo_dump_updater),
       Box::new(tank_operator_updater),

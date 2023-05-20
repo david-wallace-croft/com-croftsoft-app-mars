@@ -13,7 +13,6 @@
 
 use super::Bullet;
 use crate::constants::TIME_DELTA;
-use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -24,8 +23,7 @@ pub struct BulletUpdater {
 }
 
 impl BulletUpdater {
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
-    let bullets = world.borrow().get_bullets();
+  pub fn new(bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>) -> Self {
     Self {
       bullets,
     }
