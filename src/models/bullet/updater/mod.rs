@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-12
-//! - Updated: 2023-05-12
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,7 @@
 
 use super::Bullet;
 use crate::constants::TIME_DELTA;
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -24,7 +24,7 @@ pub struct BulletUpdater {
 }
 
 impl BulletUpdater {
-  pub fn new(world: Rc<RefCell<World>>) -> Self {
+  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
     let bullets = world.borrow().bullets.clone();
     Self {
       bullets,

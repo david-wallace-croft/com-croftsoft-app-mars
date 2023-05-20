@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-07
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,7 @@
 use crate::constants::TIME_DELTA;
 use crate::engine::traits::Model;
 use crate::models::obstacle::state::ObstacleState;
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -46,7 +46,7 @@ impl ObstacleUpdater {
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-    world: Rc<RefCell<World>>,
+    world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
     let obstacles = world.borrow().obstacles.clone();
     Self {

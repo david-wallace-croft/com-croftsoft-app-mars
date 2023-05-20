@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Preparer;
@@ -35,7 +35,7 @@ pub struct ObstacleState {
   pub updated: bool,
   pub velocity_x: f64,
   pub velocity_y: f64,
-  world: Rc<RefCell<World>>,
+  world: Rc<RefCell<DefaultWorld>>,
 }
 
 impl ObstacleState {
@@ -44,7 +44,7 @@ impl ObstacleState {
     drift_bounds: Rectangle,
     id: usize,
     radius_min: f64,
-    world: Rc<RefCell<World>>,
+    world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
     Self {
       active: true,

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-05-12
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::models::bullet::updater::BulletUpdater;
 use crate::models::obstacle::updater::ObstacleUpdater;
 use crate::models::tank::updater::TankUpdater;
 use crate::models::tank_operator::updater::TankOperatorUpdater;
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -26,7 +26,7 @@ pub struct WorldUpdater {
 }
 
 impl WorldUpdater {
-  pub fn new(world: Rc<RefCell<World>>) -> Self {
+  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
     let ammo_dump_updater = AmmoDumpUpdater::new(world.clone());
     let bullet_updater = BulletUpdater::new(world.clone());
     let obstacle_updater = ObstacleUpdater::new(world.clone());

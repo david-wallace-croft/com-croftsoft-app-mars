@@ -5,17 +5,17 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::default::DefaultWorld;
 use crate::models::ammo_dump::preparer::AmmoDumpPreparer;
 use crate::models::bullet::preparer::BulletPreparer;
 use crate::models::obstacle::preparer::ObstaclePreparer;
 use crate::models::tank::preparer::TankPreparer;
-use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -25,7 +25,7 @@ pub struct WorldPreparer {
 }
 
 impl WorldPreparer {
-  pub fn new(world: Rc<RefCell<World>>) -> Self {
+  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
     let ammo_dump_preparer = AmmoDumpPreparer::new(world.clone());
     let bullet_preparer = BulletPreparer::new(world.clone());
     let obstacle_preparer = ObstaclePreparer::new(world.clone());

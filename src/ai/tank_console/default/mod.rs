@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-25
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,7 @@ use super::TankConsole;
 use crate::engine::traits::{ModelAccessor, SpaceTester};
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankAccessor;
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
@@ -24,7 +24,7 @@ use std::rc::Rc;
 
 pub struct DefaultTankConsole {
   pub tank: Rc<RefCell<TankState>>,
-  pub world: Rc<RefCell<World>>,
+  pub world: Rc<RefCell<DefaultWorld>>,
 }
 
 impl ModelAccessor for DefaultTankConsole {

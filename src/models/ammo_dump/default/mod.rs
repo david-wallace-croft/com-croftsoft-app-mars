@@ -17,7 +17,7 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
@@ -31,7 +31,7 @@ pub struct DefaultAmmoDump {
   exploding: bool,
   id: usize,
   updated: bool,
-  world: Rc<RefCell<World>>,
+  world: Rc<RefCell<DefaultWorld>>,
   z: f64,
 }
 
@@ -45,7 +45,7 @@ impl DefaultAmmoDump {
     center_x: f64,
     center_y: f64,
     id: usize,
-    world: Rc<RefCell<World>>,
+    world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
     let circle = Circle {
       center_x,

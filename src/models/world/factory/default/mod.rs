@@ -18,7 +18,7 @@ use crate::models::explosion::default::DefaultExplosion;
 use crate::models::explosion::Explosion;
 use crate::models::tank_operator::default::DefaultTankOperator;
 use crate::models::tank_operator::TankOperator;
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::{Cell, RefCell};
 use std::rc::Rc;
@@ -37,7 +37,7 @@ impl WorldFactory for DefaultWorldFactory {
     heading: f64,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<RefCell<World>>,
+    world: Rc<RefCell<DefaultWorld>>,
   ) -> Box<dyn Bullet> {
     let id = self.id_next_bullet.get();
     self.id_next_bullet.set(id + 1);

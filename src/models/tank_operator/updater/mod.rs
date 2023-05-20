@@ -13,14 +13,14 @@
 
 use super::TankOperator;
 use crate::constants::TIME_DELTA;
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_lib_role::Updater;
 use core::cell::{RefCell, RefMut};
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankOperatorUpdater {
-  world: Rc<RefCell<World>>,
+  world: Rc<RefCell<DefaultWorld>>,
 }
 
 impl TankOperatorUpdater {
@@ -28,7 +28,7 @@ impl TankOperatorUpdater {
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-    world: Rc<RefCell<World>>,
+    world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
     Self {
       // events,

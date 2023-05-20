@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::constants::{
   BULLET_DAMAGE, BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
 };
 use crate::engine::traits::{Damageable, Model, ModelAccessor};
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
@@ -31,7 +31,7 @@ pub struct DefaultBullet {
   origin_x: f64,
   origin_y: f64,
   updated: bool,
-  world: Rc<RefCell<World>>,
+  world: Rc<RefCell<DefaultWorld>>,
 }
 
 impl DefaultBullet {
@@ -44,7 +44,7 @@ impl DefaultBullet {
     id: usize,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<RefCell<World>>,
+    world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
     let mut bullet = Self {
       active: false,

@@ -23,7 +23,7 @@ use crate::engine::traits::{
 };
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::bullet::Bullet;
-use crate::models::world::World;
+use crate::models::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_animation::web_sys::log;
@@ -50,7 +50,7 @@ pub struct TankState {
   target_point: Point2DD,
   turret_heading: f64,
   updated: bool,
-  world: Rc<RefCell<World>>,
+  world: Rc<RefCell<DefaultWorld>>,
 }
 
 impl TankState {
@@ -73,7 +73,7 @@ impl TankState {
     center_y: f64,
     color: Color,
     id: usize,
-    world: Rc<RefCell<World>>,
+    world: Rc<RefCell<DefaultWorld>>,
   ) -> Self {
     let circle: Circle = Circle {
       center_x: 0.,
