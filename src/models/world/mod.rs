@@ -32,6 +32,12 @@ pub mod seed;
 pub mod updater;
 
 pub trait World {
+  // TODO: use AmmoDump trait
+  fn add_ammo_dump(
+    &self,
+    ammo_dump: DefaultAmmoDump,
+  );
+
   fn add_bullet(
     &self,
     bullet: Box<dyn Bullet>,
@@ -40,6 +46,16 @@ pub trait World {
   fn add_explosion(
     &self,
     explosion: Box<dyn Explosion>,
+  );
+
+  fn add_obstacle(
+    &self,
+    obstacle: ObstacleState,
+  );
+
+  fn add_tank(
+    &self,
+    tank: Rc<RefCell<TankState>>,
   );
 
   fn add_tank_operator(

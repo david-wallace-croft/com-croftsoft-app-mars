@@ -51,6 +51,13 @@ impl DefaultWorld {
 }
 
 impl World for DefaultWorld {
+  fn add_ammo_dump(
+    &self,
+    ammo_dump: DefaultAmmoDump,
+  ) {
+    self.ammo_dumps.borrow_mut().push_back(ammo_dump);
+  }
+
   fn add_bullet(
     &self,
     bullet: Box<dyn Bullet>,
@@ -63,6 +70,20 @@ impl World for DefaultWorld {
     explosion: Box<dyn Explosion>,
   ) {
     self.explosions.borrow_mut().push_back(explosion);
+  }
+
+  fn add_obstacle(
+    &self,
+    obstacle: ObstacleState,
+  ) {
+    self.obstacles.borrow_mut().push_back(obstacle);
+  }
+
+  fn add_tank(
+    &self,
+    tank: Rc<RefCell<TankState>>,
+  ) {
+    self.tanks.borrow_mut().push_back(tank);
   }
 
   fn add_tank_operator(

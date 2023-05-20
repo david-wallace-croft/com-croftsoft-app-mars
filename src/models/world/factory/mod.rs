@@ -39,4 +39,9 @@ pub trait WorldFactory {
   ) -> Box<dyn Explosion>;
 
   fn make_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
+
+  fn make_world(
+    &self,
+    factory: Rc<dyn WorldFactory>,
+  ) -> Rc<dyn World>;
 }

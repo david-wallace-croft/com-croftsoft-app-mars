@@ -12,7 +12,9 @@
 // =============================================================================
 
 use super::builder::WorldBuilder;
+use super::factory::WorldFactory;
 use super::seed::WorldSeed;
+use super::World;
 use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::constants::{
   AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,
@@ -30,17 +32,18 @@ use rand::prelude::Distribution;
 use std::rc::Rc;
 
 pub struct WorldBuilderDirector {
-  pub seed: WorldSeed,
-  pub world_builder: WorldBuilder,
+  seed: WorldSeed,
+  world_builder: WorldBuilder,
 }
 
 impl WorldBuilderDirector {
-  pub fn direct(&self) {
+  pub fn direct(&self) -> Rc<dyn World> {
     self.direct_tanks();
     self.direct_tank_operators();
     self.direct_tank_consoles();
     self.direct_obstacles();
     self.direct_ammo_dumps();
+    self.world_builder.world.clone()
   }
 
   fn direct_ammo_dumps(&self) {
@@ -145,6 +148,17 @@ impl WorldBuilderDirector {
         self.world_builder.build_tank(center_x, center_y, color, index);
       tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
+    }
+  }
+
+  pub fn new(
+    factory: Rc<dyn WorldFactory>,
+    seed: WorldSeed,
+  ) -> Self {
+    let world_builder = WorldBuilder::new(factory);
+    Self {
+      seed,
+      world_builder,
     }
   }
 }

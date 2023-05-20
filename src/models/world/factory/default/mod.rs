@@ -18,6 +18,7 @@ use crate::models::explosion::default::DefaultExplosion;
 use crate::models::explosion::Explosion;
 use crate::models::tank_operator::default::DefaultTankOperator;
 use crate::models::tank_operator::TankOperator;
+use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::{Cell, RefCell};
@@ -61,5 +62,13 @@ impl WorldFactory for DefaultWorldFactory {
     self.id_next_tank_operator.set(id + 1);
     let tank_operator = DefaultTankOperator::new(id);
     Rc::new(RefCell::new(tank_operator))
+  }
+
+  fn make_world(
+    &self,
+    // TODO: get rid of dependency on factory
+    factory: Rc<dyn WorldFactory>,
+  ) -> Rc<dyn World> {
+    Rc::new(DefaultWorld::new(factory))
   }
 }
