@@ -17,6 +17,7 @@ use crate::constants::{
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Preparer;

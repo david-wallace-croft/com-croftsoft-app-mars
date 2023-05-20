@@ -13,6 +13,7 @@
 
 use super::Bullet;
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -24,7 +25,7 @@ pub struct BulletPreparer {
 
 impl BulletPreparer {
   pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
-    let bullets = world.borrow().bullets.clone();
+    let bullets = world.borrow().get_bullets();
     Self {
       bullets,
     }

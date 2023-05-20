@@ -24,6 +24,7 @@ use crate::engine::traits::{
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::bullet::Bullet;
 use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_animation::web_sys::log;
@@ -50,7 +51,7 @@ pub struct TankState {
   target_point: Point2DD,
   turret_heading: f64,
   updated: bool,
-  world: Rc<RefCell<DefaultWorld>>,
+  world: Rc<RefCell<dyn World>>,
 }
 
 impl TankState {
@@ -159,9 +160,8 @@ impl TankState {
       return;
     }
     let mut ammo_needed: usize = TANK_AMMO_MAX - self.ammo;
-    let world = self.world.borrow();
-    let mut ammo_dumps = world.ammo_dumps.borrow_mut();
-    for ammo_dump in ammo_dumps.iter_mut() {
+    let ammo_dumps = self.world.borrow().get_ammo_dumps();
+    for ammo_dump in ammo_dumps.borrow_mut().iter_mut() {
       if !ammo_dump.contains(self.circle.center_x, self.circle.center_y) {
         continue;
       }
@@ -282,13 +282,14 @@ impl TankState {
       self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
     let bullet_origin_y: f64 =
       self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    let bullet: Box<dyn Bullet> = self.world.borrow().factory.make_bullet(
-      self.turret_heading,
-      bullet_origin_x,
-      bullet_origin_y,
-      self.world.clone(),
-    );
-    self.world.borrow().bullets.borrow_mut().push_back(bullet);
+    let bullet: Box<dyn Bullet> =
+      self.world.borrow().get_factory().make_bullet(
+        self.turret_heading,
+        bullet_origin_x,
+        bullet_origin_y,
+        self.world.clone(),
+      );
+    self.world.borrow().add_bullet(bullet);
   }
 
   pub fn get_body_rotation_speed(&self) -> f64 {

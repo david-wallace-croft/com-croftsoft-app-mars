@@ -19,6 +19,7 @@ use super::tank::TankPainter;
 use crate::constants::BACKGROUND_FILL_STYLE;
 use crate::models::options::Options;
 use crate::models::root::Root;
+use crate::models::world::World;
 use com_croftsoft_lib_animation::painter::background::BackgroundPainter;
 use com_croftsoft_lib_role::Painter;
 use core::cell::RefCell;
@@ -63,7 +64,7 @@ impl RootPainter {
       root_state.world.borrow().ammo_dumps.clone(),
     );
     let bullet_painter = BulletPainter::new(
-      root_state.world.borrow().bullets.clone(),
+      root_state.world.borrow().get_bullets(),
       context.clone(),
     );
     let obstacle_painter = ObstaclePainter::new(

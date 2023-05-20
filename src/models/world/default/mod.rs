@@ -12,6 +12,7 @@
 // =============================================================================
 
 use super::factory::WorldFactory;
+use super::World;
 use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::bullet::Bullet;
@@ -26,8 +27,9 @@ use std::rc::Rc;
 
 pub struct DefaultWorld {
   pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
-  pub bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
+  bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   pub explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
+  // TODO: move factory out of World
   pub factory: Rc<dyn WorldFactory>,
   pub obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   pub tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
@@ -35,21 +37,6 @@ pub struct DefaultWorld {
 }
 
 impl DefaultWorld {
-  // TODO: argument was Model in old code; could be Shape
-  pub fn is_blocked_by_impassable(
-    &self,
-    circle: &dyn CircleAccessor,
-  ) -> bool {
-    // TODO: Use CollisionDetector
-    // TODO: Old code iterated over array of Impassable
-    for obstacle in self.obstacles.borrow().iter() {
-      if circle.intersects_circle(&obstacle.circle) {
-        return true;
-      }
-    }
-    self.is_blocked_by_tank(circle)
-  }
-
   pub fn is_blocked_by_ammo_dump(
     &self,
     circle: &dyn CircleAccessor,
@@ -86,5 +73,49 @@ impl DefaultWorld {
       tank_operators: Default::default(),
       tanks: Default::default(),
     }
+  }
+}
+
+impl World for DefaultWorld {
+  fn add_bullet(
+    &self,
+    bullet: Box<dyn Bullet>,
+  ) {
+    self.bullets.borrow_mut().push_back(bullet);
+  }
+
+  fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<DefaultAmmoDump>>> {
+    self.ammo_dumps.clone()
+  }
+
+  fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>> {
+    self.bullets.clone()
+  }
+
+  fn get_factory(&self) -> Rc<dyn WorldFactory> {
+    self.factory.clone()
+  }
+
+  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<ObstacleState>>> {
+    self.obstacles.clone()
+  }
+
+  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>> {
+    self.tanks.clone()
+  }
+
+  // TODO: argument was Model in old code; could be Shape
+  fn is_blocked_by_impassable(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    // TODO: Use CollisionDetector
+    // TODO: Old code iterated over array of Impassable
+    for obstacle in self.obstacles.borrow().iter() {
+      if circle.intersects_circle(&obstacle.circle) {
+        return true;
+      }
+    }
+    self.is_blocked_by_tank(circle)
   }
 }

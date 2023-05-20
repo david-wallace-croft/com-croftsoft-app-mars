@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-03
-//! - Updated: 2023-05-08
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use super::builder::WorldBuilder;
 use super::seed::WorldSeed;
+use super::World;
 use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::constants::{
   AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,

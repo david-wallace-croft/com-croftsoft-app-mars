@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::default::DefaultWorld;
+use super::World;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
 use crate::models::tank_operator::TankOperator;
@@ -27,7 +27,7 @@ pub trait WorldFactory {
     heading: f64,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<RefCell<DefaultWorld>>,
+    world: Rc<RefCell<dyn World>>,
   ) -> Box<dyn Bullet>;
 
   // TODO: make_tank_operator
