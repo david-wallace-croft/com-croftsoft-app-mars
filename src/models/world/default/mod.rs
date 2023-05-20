@@ -11,7 +11,6 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::factory::WorldFactory;
 use super::World;
 use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
@@ -25,29 +24,14 @@ use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+#[derive(Default)]
 pub struct DefaultWorld {
   ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
   bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
-  // TODO: move factory out of World
-  factory: Rc<dyn WorldFactory>,
   obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
-}
-
-impl DefaultWorld {
-  pub fn new(factory: Rc<dyn WorldFactory>) -> Self {
-    Self {
-      ammo_dumps: Default::default(),
-      bullets: Default::default(),
-      explosions: Default::default(),
-      factory,
-      obstacles: Default::default(),
-      tank_operators: Default::default(),
-      tanks: Default::default(),
-    }
-  }
 }
 
 impl World for DefaultWorld {
@@ -103,10 +87,6 @@ impl World for DefaultWorld {
 
   fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>> {
     self.explosions.clone()
-  }
-
-  fn get_factory(&self) -> Rc<dyn WorldFactory> {
-    self.factory.clone()
   }
 
   fn get_obstacles(&self) -> Rc<RefCell<VecDeque<ObstacleState>>> {

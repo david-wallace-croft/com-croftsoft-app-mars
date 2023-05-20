@@ -23,6 +23,7 @@ use crate::engine::traits::{
 };
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::bullet::Bullet;
+use crate::models::world::factory::WorldFactory;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -44,6 +45,7 @@ pub struct TankState {
   // TODO: was PointXY
   destination: Option<Point2DD>,
   dry_firing: bool,
+  factory: Rc<dyn WorldFactory>,
   firing: bool,
   id: usize,
   sparking: bool,
@@ -72,6 +74,7 @@ impl TankState {
     center_x: f64,
     center_y: f64,
     color: Color,
+    factory: Rc<dyn WorldFactory>,
     id: usize,
     world: Rc<dyn World>,
   ) -> Self {
@@ -89,6 +92,7 @@ impl TankState {
       damage: 0.,
       destination: None,
       dry_firing: false,
+      factory,
       firing: false,
       id,
       sparking: false,
@@ -281,7 +285,7 @@ impl TankState {
       self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
     let bullet_origin_y: f64 =
       self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    let bullet: Box<dyn Bullet> = self.world.get_factory().make_bullet(
+    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
       self.turret_heading,
       bullet_origin_x,
       bullet_origin_y,

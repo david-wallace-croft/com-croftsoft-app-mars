@@ -11,7 +11,6 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use self::factory::WorldFactory;
 use super::ammo_dump::default::DefaultAmmoDump;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
@@ -69,9 +68,6 @@ pub trait World {
   fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>>;
 
   fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>>;
-
-  // TODO: move WorldFactory out of World
-  fn get_factory(&self) -> Rc<dyn WorldFactory>;
 
   fn get_obstacles(&self) -> Rc<RefCell<VecDeque<ObstacleState>>>;
 

@@ -40,6 +40,7 @@ impl WorldBuilder {
       AMMO_DUMP_AMMO_MAX,
       center_x,
       center_y,
+      self.factory.clone(),
       id,
       self.world.clone(),
     );
@@ -73,6 +74,7 @@ impl WorldBuilder {
       center_x,
       center_y,
       color,
+      self.factory.clone(),
       id,
       self.world.clone(),
     )));
