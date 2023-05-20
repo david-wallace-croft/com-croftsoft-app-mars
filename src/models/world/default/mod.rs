@@ -84,6 +84,13 @@ impl World for DefaultWorld {
     self.bullets.borrow_mut().push_back(bullet);
   }
 
+  fn add_explosion(
+    &self,
+    explosion: Box<dyn Explosion>,
+  ) {
+    self.explosions.borrow_mut().push_back(explosion);
+  }
+
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<DefaultAmmoDump>>> {
     self.ammo_dumps.clone()
   }

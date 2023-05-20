@@ -4,7 +4,7 @@
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2022-05-20
+//! - Created: 2023-05-20
 //! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
@@ -14,6 +14,7 @@
 use self::factory::WorldFactory;
 use super::ammo_dump::default::DefaultAmmoDump;
 use super::bullet::Bullet;
+use super::explosion::Explosion;
 use super::obstacle::state::ObstacleState;
 use super::tank::state::TankState;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
@@ -33,6 +34,11 @@ pub trait World {
   fn add_bullet(
     &self,
     bullet: Box<dyn Bullet>,
+  );
+
+  fn add_explosion(
+    &self,
+    explosion: Box<dyn Explosion>,
   );
 
   // TODO: Use the AmmoDump trait

@@ -17,7 +17,7 @@ use crate::constants::{
   AMMO_DUMP_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
-use crate::models::world::default::DefaultWorld;
+use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
@@ -31,7 +31,7 @@ pub struct DefaultAmmoDump {
   exploding: bool,
   id: usize,
   updated: bool,
-  world: Rc<RefCell<DefaultWorld>>,
+  world: Rc<RefCell<dyn World>>,
   z: f64,
 }
 
@@ -45,7 +45,7 @@ impl DefaultAmmoDump {
     center_x: f64,
     center_y: f64,
     id: usize,
-    world: Rc<RefCell<DefaultWorld>>,
+    world: Rc<RefCell<dyn World>>,
   ) -> Self {
     let circle = Circle {
       center_x,
@@ -111,9 +111,12 @@ impl Damageable for DefaultAmmoDump {
     let mut explosion_circle = Circle::default();
     explosion_circle.set_center_from_circle(&self.circle);
     explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
-    let explosion =
-      self.world.borrow().factory.make_explosion(explosion_circle, self.ammo);
-    self.world.borrow().explosions.borrow_mut().push_back(explosion);
+    let explosion = self
+      .world
+      .borrow()
+      .get_factory()
+      .make_explosion(explosion_circle, self.ammo);
+    self.world.borrow().add_explosion(explosion);
     self.set_ammo(0.);
   }
 }
