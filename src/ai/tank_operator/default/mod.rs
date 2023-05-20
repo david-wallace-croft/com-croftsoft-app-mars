@@ -5,13 +5,12 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-05-14
+//! - Updated: 2023-05-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::TankOperator;
 use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_cartographer::TankCartographer;
 use crate::ai::tank_console::TankConsole;
@@ -20,6 +19,7 @@ use crate::constants::{
   TANK_FIRING_PROBABILITY,
 };
 use crate::models::tank::state::TankState;
+use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};

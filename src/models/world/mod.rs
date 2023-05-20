@@ -14,7 +14,7 @@
 use self::factory::WorldFactory;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
-use crate::ai::tank_operator::TankOperator;
+use super::tank_operator::TankOperator;
 use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
@@ -30,6 +30,8 @@ pub mod factory;
 pub mod preparer;
 pub mod seed;
 pub mod updater;
+
+// TODO: make World a trait and add make_world to WorldFactory
 
 pub struct World {
   pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
