@@ -11,12 +11,12 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::constants::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
 use crate::engine::traits::Color;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
+use crate::models::tank_operator::default::DefaultTankOperator;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
