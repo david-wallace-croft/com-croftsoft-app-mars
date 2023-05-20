@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::default::DefaultWorld;
+use super::World;
 use crate::models::ammo_dump::preparer::AmmoDumpPreparer;
 use crate::models::bullet::preparer::BulletPreparer;
 use crate::models::obstacle::preparer::ObstaclePreparer;
@@ -25,7 +25,7 @@ pub struct WorldPreparer {
 }
 
 impl WorldPreparer {
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
     let ammo_dump_preparer = AmmoDumpPreparer::new(world.clone());
     let bullet_preparer = BulletPreparer::new(world.clone());
     let obstacle_preparer = ObstaclePreparer::new(world.clone());

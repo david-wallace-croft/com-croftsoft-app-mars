@@ -16,7 +16,6 @@ use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
 use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -36,7 +35,7 @@ pub struct ObstacleState {
   pub updated: bool,
   pub velocity_x: f64,
   pub velocity_y: f64,
-  world: Rc<RefCell<DefaultWorld>>,
+  world: Rc<RefCell<dyn World>>,
 }
 
 impl ObstacleState {
@@ -45,7 +44,7 @@ impl ObstacleState {
     drift_bounds: Rectangle,
     id: usize,
     radius_min: f64,
-    world: Rc<RefCell<DefaultWorld>>,
+    world: Rc<RefCell<dyn World>>,
   ) -> Self {
     Self {
       active: true,

@@ -26,7 +26,7 @@ use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct DefaultWorld {
-  pub ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
+  ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
   bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
   // TODO: move factory out of World
@@ -37,32 +37,6 @@ pub struct DefaultWorld {
 }
 
 impl DefaultWorld {
-  pub fn is_blocked_by_ammo_dump(
-    &self,
-    circle: &dyn CircleAccessor,
-  ) -> bool {
-    for ammo_dump in self.ammo_dumps.borrow().iter() {
-      // TODO: use a function to determine if there is one
-      if ammo_dump.intersects_circle(circle) {
-        return true;
-      }
-    }
-    false
-  }
-
-  pub fn is_blocked_by_tank(
-    &self,
-    circle: &dyn CircleAccessor,
-  ) -> bool {
-    // TODO: use a function to determine if there is one
-    for tank in self.tanks.borrow().iter() {
-      if tank.borrow().intersects_circle(circle) {
-        return true;
-      }
-    }
-    false
-  }
-
   pub fn new(factory: Rc<dyn WorldFactory>) -> Self {
     Self {
       ammo_dumps: Default::default(),
@@ -121,6 +95,19 @@ impl World for DefaultWorld {
     self.tanks.clone()
   }
 
+  fn is_blocked_by_ammo_dump(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    for ammo_dump in self.ammo_dumps.borrow().iter() {
+      // TODO: use a function to determine if there is one
+      if ammo_dump.intersects_circle(circle) {
+        return true;
+      }
+    }
+    false
+  }
+
   // TODO: argument was Model in old code; could be Shape
   fn is_blocked_by_impassable(
     &self,
@@ -134,5 +121,18 @@ impl World for DefaultWorld {
       }
     }
     self.is_blocked_by_tank(circle)
+  }
+
+  fn is_blocked_by_tank(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool {
+    // TODO: use a function to determine if there is one
+    for tank in self.tanks.borrow().iter() {
+      if tank.borrow().intersects_circle(circle) {
+        return true;
+      }
+    }
+    false
   }
 }

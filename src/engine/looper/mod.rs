@@ -18,10 +18,10 @@ use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
 use crate::models::options::Options;
 use crate::models::root::Root;
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::factory::default::DefaultWorldFactory;
 use crate::models::world::factory::WorldFactory;
 use crate::models::world::seed::WorldSeed;
+use crate::models::world::World;
 use crate::painters::root::updater::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
@@ -65,7 +65,7 @@ impl Looper {
       obstacle_count: OBSTACLE_COUNT,
     };
     let factory: Rc<dyn WorldFactory> = Rc::new(DefaultWorldFactory::default());
-    let world: Rc<RefCell<DefaultWorld>> = world_seed.grow_world(factory);
+    let world: Rc<RefCell<dyn World>> = world_seed.grow_world(factory);
     let root_state = Rc::new(RefCell::new(Root::new(world)));
     let root_component = RootComponent::new(
       events.clone(),

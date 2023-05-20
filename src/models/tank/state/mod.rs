@@ -23,7 +23,6 @@ use crate::engine::traits::{
 };
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::bullet::Bullet;
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -74,7 +73,7 @@ impl TankState {
     center_y: f64,
     color: Color,
     id: usize,
-    world: Rc<RefCell<DefaultWorld>>,
+    world: Rc<RefCell<dyn World>>,
   ) -> Self {
     let circle: Circle = Circle {
       center_x: 0.,

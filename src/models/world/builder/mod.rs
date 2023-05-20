@@ -18,14 +18,13 @@ use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::state::TankState;
 use crate::models::tank_operator::TankOperator;
-use crate::models::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct WorldBuilder {
-  pub world: Rc<RefCell<DefaultWorld>>,
+  pub world: Rc<RefCell<dyn World>>,
 }
 
 impl WorldBuilder {
@@ -42,7 +41,7 @@ impl WorldBuilder {
       id,
       self.world.clone(),
     );
-    self.world.borrow().ammo_dumps.borrow_mut().push_back(ammo_dump);
+    self.world.borrow().get_ammo_dumps().borrow_mut().push_back(ammo_dump);
   }
 
   pub fn build_obstacle(
@@ -94,7 +93,7 @@ impl WorldBuilder {
       .push_back(tank_operator);
   }
 
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
     Self {
       world,
     }

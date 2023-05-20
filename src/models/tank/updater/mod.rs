@@ -13,7 +13,6 @@
 
 use crate::constants::TIME_DELTA;
 use crate::models::tank::state::TankState;
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
@@ -29,7 +28,7 @@ impl TankUpdater {
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-    world: Rc<RefCell<DefaultWorld>>,
+    world: Rc<RefCell<dyn World>>,
   ) -> Self {
     let tanks = world.borrow().get_tanks();
     Self {

@@ -15,7 +15,6 @@ use super::TankConsole;
 use crate::engine::traits::{ModelAccessor, SpaceTester};
 use crate::models::tank::state::TankState;
 use crate::models::tank::TankAccessor;
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -25,7 +24,7 @@ use std::rc::Rc;
 
 pub struct DefaultTankConsole {
   pub tank: Rc<RefCell<TankState>>,
-  pub world: Rc<RefCell<DefaultWorld>>,
+  pub world: Rc<RefCell<dyn World>>,
 }
 
 impl ModelAccessor for DefaultTankConsole {
@@ -154,8 +153,8 @@ impl TankConsole for DefaultTankConsole {
     self.tank.borrow().get_center(&mut tank_center);
     let mut closest_distance: f64 = INFINITY;
     let world = self.world.borrow();
-    let ammo_dumps = world.ammo_dumps.borrow();
-    for ammo_dump in ammo_dumps.iter() {
+    let ammo_dumps = world.get_ammo_dumps();
+    for ammo_dump in ammo_dumps.borrow().iter() {
       let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();
       let distance: f64 = tank_center.distance_to(&ammo_dump_center);
       if distance < closest_distance {

@@ -11,12 +11,12 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::World;
 use crate::models::ammo_dump::updater::AmmoDumpUpdater;
 use crate::models::bullet::updater::BulletUpdater;
 use crate::models::obstacle::updater::ObstacleUpdater;
 use crate::models::tank::updater::TankUpdater;
 use crate::models::tank_operator::updater::TankOperatorUpdater;
-use crate::models::world::default::DefaultWorld;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -26,7 +26,7 @@ pub struct WorldUpdater {
 }
 
 impl WorldUpdater {
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
     let ammo_dump_updater = AmmoDumpUpdater::new(world.clone());
     let bullet_updater = BulletUpdater::new(world.clone());
     let obstacle_updater = ObstacleUpdater::new(world.clone());

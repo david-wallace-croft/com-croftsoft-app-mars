@@ -12,7 +12,6 @@
 // =============================================================================
 
 use super::state::ObstacleState;
-use crate::models::world::default::DefaultWorld;
 use crate::models::world::World;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
@@ -24,7 +23,7 @@ pub struct ObstaclePreparer {
 }
 
 impl ObstaclePreparer {
-  pub fn new(world: Rc<RefCell<DefaultWorld>>) -> Self {
+  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
     let obstacles = world.borrow().get_obstacles();
     Self {
       obstacles,

@@ -60,7 +60,17 @@ pub trait World {
 
   fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>;
 
+  fn is_blocked_by_ammo_dump(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool;
+
   fn is_blocked_by_impassable(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> bool;
+
+  fn is_blocked_by_tank(
     &self,
     circle: &dyn CircleAccessor,
   ) -> bool;

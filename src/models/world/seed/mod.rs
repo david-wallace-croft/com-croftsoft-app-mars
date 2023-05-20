@@ -15,6 +15,7 @@ use super::builder::WorldBuilder;
 use super::default::DefaultWorld;
 use super::director::WorldBuilderDirector;
 use super::factory::WorldFactory;
+use super::World;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -30,7 +31,8 @@ impl WorldSeed {
   pub fn grow_world(
     &self,
     factory: Rc<dyn WorldFactory>,
-  ) -> Rc<RefCell<DefaultWorld>> {
+  ) -> Rc<RefCell<dyn World>> {
+    // TODO: use WorldFactory to make the World
     let world = Rc::new(RefCell::new(DefaultWorld::new(factory)));
     let world_builder = WorldBuilder::new(world.clone());
     let world_director = WorldBuilderDirector {
