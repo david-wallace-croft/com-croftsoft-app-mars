@@ -64,11 +64,7 @@ impl WorldFactory for DefaultWorldFactory {
     Rc::new(RefCell::new(tank_operator))
   }
 
-  fn make_world(
-    &self,
-    // TODO: get rid of dependency on factory
-    factory: Rc<dyn WorldFactory>,
-  ) -> Rc<dyn World> {
-    Rc::new(DefaultWorld::new(factory))
+  fn make_world(&self) -> Rc<dyn World> {
+    Rc::new(DefaultWorld::default())
   }
 }

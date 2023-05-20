@@ -40,8 +40,5 @@ pub trait WorldFactory {
 
   fn make_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
 
-  fn make_world(
-    &self,
-    factory: Rc<dyn WorldFactory>,
-  ) -> Rc<dyn World>;
+  fn make_world(&self) -> Rc<dyn World>;
 }

@@ -93,7 +93,7 @@ impl WorldBuilder {
   }
 
   pub fn new(factory: Rc<dyn WorldFactory>) -> Self {
-    let world = factory.make_world(factory.clone());
+    let world = factory.make_world();
     Self {
       factory,
       world,
