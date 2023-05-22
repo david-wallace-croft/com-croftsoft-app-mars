@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -106,17 +106,7 @@ impl Damageable for DefaultAmmoDump {
     &mut self,
     _damage: f64,
   ) {
-    if self.exploding {
-      return;
-    }
-    self.updated = true;
     self.exploding = true;
-    let mut explosion_circle = Circle::default();
-    explosion_circle.set_center_from_circle(&self.circle);
-    explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
-    let explosion = self.factory.make_explosion(explosion_circle, self.ammo);
-    self.world.add_explosion(explosion);
-    self.set_ammo(0.);
   }
 }
 
@@ -137,6 +127,13 @@ impl Model for DefaultAmmoDump {
     time_delta: f64,
   ) {
     if self.exploding {
+      self.exploding = false;
+      let mut explosion_circle = Circle::default();
+      explosion_circle.set_center_from_circle(&self.circle);
+      explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
+      let explosion = self.factory.make_explosion(explosion_circle, self.ammo);
+      self.world.add_explosion(explosion);
+      self.set_ammo(0.);
       return;
     }
     let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
@@ -184,7 +181,7 @@ impl ModelAccessor for DefaultAmmoDump {
 
 impl Preparer for DefaultAmmoDump {
   fn prepare(&mut self) {
-    self.exploding = false;
+    // self.exploding = false;
     self.updated = false;
   }
 }

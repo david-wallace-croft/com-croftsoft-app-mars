@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-15
-//! - Updated: 2023-05-15
+//! - Updated: 2023-05-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -63,10 +63,12 @@ impl Model for DefaultExplosion {
     if !self.active {
       return;
     }
+    let radius_delta = self.circle.radius * time_delta;
+    // TODO: Make this a constant
+    self.circle.radius -= 10. * radius_delta;
     self.updated = true;
-    // TODO
-    self.active = false;
-    todo!()
+    // TODO: Make this a constant
+    self.active = self.circle.radius > 1.;
   }
 }
 

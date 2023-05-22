@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use super::ammo_dump::AmmoDumpPainter;
 use super::bullet::BulletPainter;
+use super::explosion::ExplosionPainter;
 use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use super::tank::TankPainter;
@@ -62,6 +63,8 @@ impl RootPainter {
       AmmoDumpPainter::new(context.clone(), root_state.world.get_ammo_dumps());
     let bullet_painter =
       BulletPainter::new(root_state.world.get_bullets(), context.clone());
+    let explosion_painter =
+      ExplosionPainter::new(context.clone(), root_state.world.get_explosions());
     let obstacle_painter =
       ObstaclePainter::new(context.clone(), root_state.world.get_obstacles());
     let overlay_painter =
@@ -75,6 +78,7 @@ impl RootPainter {
       Box::new(obstacle_painter),
       Box::new(overlay_painter),
       Box::new(bullet_painter),
+      Box::new(explosion_painter),
     ];
     Self {
       painters,

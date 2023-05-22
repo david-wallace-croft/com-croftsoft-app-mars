@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-15
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,6 @@
 
 use super::Explosion;
 use crate::constants::TIME_DELTA;
-use crate::models::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -24,8 +23,7 @@ pub struct ExplosionUpdater {
 }
 
 impl ExplosionUpdater {
-  pub fn new(world: Rc<RefCell<dyn World>>) -> Self {
-    let explosions = world.borrow().get_explosions();
+  pub fn new(explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>) -> Self {
     Self {
       explosions,
     }

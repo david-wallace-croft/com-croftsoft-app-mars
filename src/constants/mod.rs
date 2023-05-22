@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-12
+//! - Updated: 2023-05-21
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -44,6 +44,8 @@ pub const CONFIGURATION: Configuration = Configuration {
   bounds: BOUNDS,
   update_period_millis_initial: UPDATE_PERIOD_MILLIS,
 };
+pub const EXPLOSION_FILL_STYLE: &str = "yellow";
+pub const EXPLOSION_STROKE_STYLE: &str = "red";
 pub static FONT: &str = "bold 17px monospace";
 pub static INFO: &str = "CroftSoft Mars \
   v0.0.1-SNAPSHOT \
