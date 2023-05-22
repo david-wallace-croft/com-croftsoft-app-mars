@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-21
+//! - Updated: 2023-05-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -83,11 +83,11 @@ impl AmmoDump for DefaultAmmoDump {
     }
     self.ammo = ammo;
     self.updated = true;
-    if ammo > 0. {
-      self.circle.radius = ammo;
+    self.circle.radius = if ammo > 0. {
+      ammo
     } else {
-      self.circle.radius = 0.;
-    }
+      0.
+    };
   }
 }
 
@@ -139,7 +139,7 @@ impl Model for DefaultAmmoDump {
     let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
     if new_ammo > self.ammo_max {
       new_ammo = self.ammo_max;
-    } else {
+    } else if new_ammo < 0. {
       new_ammo = 0.;
     }
     self.set_ammo(new_ammo);
