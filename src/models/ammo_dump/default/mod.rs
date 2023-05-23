@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-22
+//! - Updated: 2023-05-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,14 +23,21 @@ use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 use std::rc::Rc;
 
+#[derive(PartialEq)]
+enum DefaultAmmoDumpState {
+  Cooling,
+  Exploding,
+  Nominal,
+}
+
 pub struct DefaultAmmoDump {
   ammo: f64,
   ammo_growth_rate: f64,
   ammo_max: f64,
   circle: Circle,
-  exploding: bool,
   factory: Rc<dyn WorldFactory>,
   id: usize,
+  state: DefaultAmmoDumpState,
   updated: bool,
   world: Rc<dyn World>,
   z: f64,
@@ -54,17 +61,15 @@ impl DefaultAmmoDump {
       center_y,
       radius: 0.,
     };
-    let exploding = false;
-    let updated = false;
     let mut ammo_dump = Self {
       ammo: 0.,
       ammo_growth_rate: AMMO_DUMP_AMMO_GROWTH_RATE,
       ammo_max: AMMO_DUMP_AMMO_MAX,
       circle,
-      exploding,
       factory,
       id,
-      updated,
+      state: DefaultAmmoDumpState::Nominal,
+      updated: false,
       world,
       z: AMMO_DUMP_Z,
     };
@@ -95,10 +100,6 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
   fn get_ammo(&self) -> f64 {
     self.ammo
   }
-
-  fn is_exploding(&self) -> bool {
-    self.exploding
-  }
 }
 
 impl Damageable for DefaultAmmoDump {
@@ -106,7 +107,9 @@ impl Damageable for DefaultAmmoDump {
     &mut self,
     _damage: f64,
   ) {
-    self.exploding = true;
+    if self.state == DefaultAmmoDumpState::Nominal {
+      self.state = DefaultAmmoDumpState::Exploding;
+    };
   }
 }
 
@@ -126,14 +129,22 @@ impl Model for DefaultAmmoDump {
     &mut self,
     time_delta: f64,
   ) {
-    if self.exploding {
-      self.exploding = false;
+    if self.state == DefaultAmmoDumpState::Exploding {
+      self.state = DefaultAmmoDumpState::Cooling;
       let mut explosion_circle = Circle::default();
       explosion_circle.set_center_from_circle(&self.circle);
       explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
-      let explosion = self.factory.make_explosion(explosion_circle, self.ammo);
+      let explosion = self.factory.make_explosion(
+        explosion_circle,
+        self.ammo,
+        self.world.clone(),
+      );
       self.world.add_explosion(explosion);
       self.set_ammo(0.);
+      return;
+    }
+    if self.state == DefaultAmmoDumpState::Cooling {
+      self.state = DefaultAmmoDumpState::Nominal;
       return;
     }
     let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;

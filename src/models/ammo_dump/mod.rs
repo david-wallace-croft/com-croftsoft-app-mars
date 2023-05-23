@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-19
+//! - Updated: 2023-05-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,6 +26,4 @@ pub trait AmmoDump: AmmoDumpAccessor + Damageable + Model {
 
 pub trait AmmoDumpAccessor: ModelAccessor {
   fn get_ammo(&self) -> f64;
-
-  fn is_exploding(&self) -> bool;
 }

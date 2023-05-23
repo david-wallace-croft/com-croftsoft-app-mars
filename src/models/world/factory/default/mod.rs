@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-21
+//! - Updated: 2023-05-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -50,10 +50,11 @@ impl WorldFactory for DefaultWorldFactory {
     &self,
     circle: Circle,
     damage: f64,
+    world: Rc<dyn World>,
   ) -> Box<dyn Explosion> {
     let id = self.id_next_explosion.get();
     self.id_next_explosion.set(id + 1);
-    let explosion = DefaultExplosion::new(circle, damage, id);
+    let explosion = DefaultExplosion::new(circle, damage, id, world);
     Box::new(explosion)
   }
 
