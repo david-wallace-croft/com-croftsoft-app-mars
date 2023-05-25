@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-02
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use super::World;
 use crate::constants::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
 use crate::engine::traits::Color;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
-use crate::models::obstacle::state::ObstacleState;
+use crate::models::obstacle::default::DefaultObstacle;
 use crate::models::tank::default::DefaultTank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::Circle;
@@ -53,7 +53,7 @@ impl WorldBuilder {
     drift_bounds: Rectangle,
     id: usize,
   ) {
-    let obstacle = ObstacleState::new(
+    let obstacle = DefaultObstacle::new(
       circle,
       drift_bounds,
       id,

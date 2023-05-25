@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -24,8 +24,7 @@ use rand::rngs::ThreadRng;
 use rand::Rng;
 use std::rc::Rc;
 
-// TODO: rename this to DefaultObstacle
-pub struct ObstacleState {
+pub struct DefaultObstacle {
   pub active: bool,
   pub circle: Circle,
   pub drift_bounds: Rectangle,
@@ -38,7 +37,7 @@ pub struct ObstacleState {
   world: Rc<dyn World>,
 }
 
-impl ObstacleState {
+impl DefaultObstacle {
   pub fn new(
     circle: Circle,
     drift_bounds: Rectangle,
@@ -60,7 +59,7 @@ impl ObstacleState {
   }
 }
 
-impl Damageable for ObstacleState {
+impl Damageable for DefaultObstacle {
   fn add_damage(
     &mut self,
     damage: f64,
@@ -78,9 +77,9 @@ impl Damageable for ObstacleState {
   }
 }
 
-impl Impassable for ObstacleState {}
+impl Impassable for DefaultObstacle {}
 
-impl Model for ObstacleState {
+impl Model for DefaultObstacle {
   fn set_center(
     &mut self,
     x: f64,
@@ -162,7 +161,7 @@ impl Model for ObstacleState {
   }
 }
 
-impl ModelAccessor for ObstacleState {
+impl ModelAccessor for DefaultObstacle {
   fn contains(
     &self,
     x: f64,
@@ -199,7 +198,7 @@ impl ModelAccessor for ObstacleState {
   }
 }
 
-impl Obstacle for ObstacleState {
+impl Obstacle for DefaultObstacle {
   fn set_active(
     &mut self,
     active: bool,
@@ -215,7 +214,7 @@ impl Obstacle for ObstacleState {
   }
 }
 
-impl ObstacleAccessor for ObstacleState {
+impl ObstacleAccessor for DefaultObstacle {
   fn get_circle(
     &self,
     mut circle: Circle,
@@ -227,7 +226,7 @@ impl ObstacleAccessor for ObstacleState {
   }
 }
 
-impl Preparer for ObstacleState {
+impl Preparer for DefaultObstacle {
   fn prepare(&mut self) {
     self.updated = false;
   }

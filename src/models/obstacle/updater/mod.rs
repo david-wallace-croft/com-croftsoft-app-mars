@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,7 @@
 
 use crate::constants::TIME_DELTA;
 use crate::engine::traits::Model;
-use crate::models::obstacle::state::ObstacleState;
+use crate::models::obstacle::default::DefaultObstacle;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -35,7 +35,7 @@ use std::rc::Rc;
 pub struct ObstacleUpdater {
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-  obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+  obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
   // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   // root: Rc<RefCell<Root>>,
 }
@@ -44,7 +44,7 @@ impl ObstacleUpdater {
   pub fn new(
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+    obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {

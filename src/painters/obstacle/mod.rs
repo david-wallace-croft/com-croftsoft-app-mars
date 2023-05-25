@@ -5,14 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-15
-//! - Updated: 2023-03-28
+//! - Updated: 2023-05-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::constants::{OBSTACLE_FILL_STYLE, OBSTACLE_STROKE_STYLE};
-use crate::models::obstacle::state::ObstacleState;
+use crate::models::obstacle::default::DefaultObstacle;
 use crate::models::obstacle::ObstacleAccessor;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
@@ -27,14 +27,14 @@ pub struct ObstaclePainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style: JsValue,
   // TODO: change this to dyn ObstacleAccessor
-  obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+  obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
   stroke_style: JsValue,
 }
 
 impl ObstaclePainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+    obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
   ) -> Self {
     let fill_style: JsValue = JsValue::from_str(OBSTACLE_FILL_STYLE);
     let stroke_style: JsValue = JsValue::from_str(OBSTACLE_STROKE_STYLE);
@@ -52,7 +52,7 @@ impl Painter for ObstaclePainter {
     let context = self.context.borrow();
     context.set_fill_style(&self.fill_style);
     context.set_stroke_style(&self.stroke_style);
-    let obstacles: Ref<VecDeque<ObstacleState>> = self.obstacles.borrow();
+    let obstacles: Ref<VecDeque<DefaultObstacle>> = self.obstacles.borrow();
     let mut circle = Circle::default();
     for obstacle in obstacles.iter() {
       circle = obstacle.get_circle(circle);

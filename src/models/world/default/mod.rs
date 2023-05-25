@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::engine::traits::ModelAccessor;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
-use crate::models::obstacle::state::ObstacleState;
+use crate::models::obstacle::default::DefaultObstacle;
 use crate::models::tank::default::DefaultTank;
 use crate::models::tank::Tank;
 use crate::models::tank_operator::TankOperator;
@@ -30,7 +30,7 @@ pub struct DefaultWorld {
   ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
   bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
-  obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
+  obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
   tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
@@ -59,7 +59,7 @@ impl World for DefaultWorld {
 
   fn add_obstacle(
     &self,
-    obstacle: ObstacleState,
+    obstacle: DefaultObstacle,
   ) {
     self.obstacles.borrow_mut().push_back(obstacle);
   }
@@ -90,7 +90,7 @@ impl World for DefaultWorld {
     self.explosions.clone()
   }
 
-  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<ObstacleState>>> {
+  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<DefaultObstacle>>> {
     self.obstacles.clone()
   }
 

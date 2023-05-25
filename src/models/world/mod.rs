@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,7 @@
 use super::ammo_dump::default::DefaultAmmoDump;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
-use super::obstacle::state::ObstacleState;
+use super::obstacle::default::DefaultObstacle;
 use super::tank::default::DefaultTank;
 use super::tank::Tank;
 use super::tank_operator::TankOperator;
@@ -50,7 +50,7 @@ pub trait World {
 
   fn add_obstacle(
     &self,
-    obstacle: ObstacleState,
+    obstacle: DefaultObstacle,
   );
 
   fn add_tank(
@@ -70,7 +70,7 @@ pub trait World {
 
   fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>>;
 
-  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<ObstacleState>>>;
+  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<DefaultObstacle>>>;
 
   fn get_tank_operators(
     &self
