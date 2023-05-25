@@ -11,15 +11,15 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::Tank;
 use crate::constants::TIME_DELTA;
-use crate::models::tank::default::DefaultTank;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankUpdater {
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
 
 impl TankUpdater {
@@ -27,7 +27,7 @@ impl TankUpdater {
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
   ) -> Self {
     Self {
       // events,

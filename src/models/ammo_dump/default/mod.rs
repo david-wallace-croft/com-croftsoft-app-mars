@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-23
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -44,10 +44,6 @@ pub struct DefaultAmmoDump {
 }
 
 impl DefaultAmmoDump {
-  pub fn get_id(&self) -> usize {
-    self.id
-  }
-
   pub fn new(
     ammo: f64,
     center_x: f64,
@@ -168,6 +164,10 @@ impl ModelAccessor for DefaultAmmoDump {
 
   fn get_circle(&self) -> Circle {
     self.circle
+  }
+
+  fn get_id(&self) -> usize {
+    self.id
   }
 
   fn get_z(&self) -> f64 {

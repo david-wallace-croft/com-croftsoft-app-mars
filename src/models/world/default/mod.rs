@@ -18,6 +18,7 @@ use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
 use crate::models::obstacle::state::ObstacleState;
 use crate::models::tank::default::DefaultTank;
+use crate::models::tank::Tank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
@@ -31,7 +32,7 @@ pub struct DefaultWorld {
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
   obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
 
 impl World for DefaultWorld {
@@ -99,7 +100,7 @@ impl World for DefaultWorld {
     self.tank_operators.clone()
   }
 
-  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>> {
+  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>> {
     self.tanks.clone()
   }
 

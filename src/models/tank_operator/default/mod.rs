@@ -18,7 +18,7 @@ use crate::constants::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
-use crate::models::tank::default::DefaultTank;
+use crate::models::tank::Tank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -116,7 +116,7 @@ impl TankOperator for DefaultTankOperator {
 
   fn update(
     &mut self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
     time_delta: f64,
   ) {
     // log("DefaultTankOperator.update");
@@ -124,7 +124,7 @@ impl TankOperator for DefaultTankOperator {
     let tank_console: Rc<RefCell<dyn TankConsole>> = tank_console.clone();
     {
       let mut tank_console: RefMut<dyn TankConsole> = tank_console.borrow_mut();
-      tank_console.get_center(&mut self.center);
+      self.center = tank_console.get_center();
       self.enemy_center = tank_console.get_closest_enemy_tank_center(tanks);
       tank_console.rotate_turret(&self.enemy_center);
     }

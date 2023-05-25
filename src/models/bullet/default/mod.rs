@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -34,10 +34,6 @@ pub struct DefaultBullet {
 }
 
 impl DefaultBullet {
-  pub fn get_id(&self) -> usize {
-    self.id
-  }
-
   pub fn new(
     heading: f64,
     id: usize,
@@ -149,6 +145,10 @@ impl ModelAccessor for DefaultBullet {
 
   fn get_circle(&self) -> Circle {
     self.circle
+  }
+
+  fn get_id(&self) -> usize {
+    self.id
   }
 
   fn get_z(&self) -> f64 {

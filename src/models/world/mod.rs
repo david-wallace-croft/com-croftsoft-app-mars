@@ -16,6 +16,7 @@ use super::bullet::Bullet;
 use super::explosion::Explosion;
 use super::obstacle::state::ObstacleState;
 use super::tank::default::DefaultTank;
+use super::tank::Tank;
 use super::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
@@ -75,7 +76,7 @@ pub trait World {
     &self
   ) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>;
 
-  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>;
+  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>;
 
   fn is_blocked_by_ammo_dump(
     &self,

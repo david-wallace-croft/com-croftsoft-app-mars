@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -24,6 +24,7 @@ use rand::rngs::ThreadRng;
 use rand::Rng;
 use std::rc::Rc;
 
+// TODO: rename this to DefaultObstacle
 pub struct ObstacleState {
   pub active: bool,
   pub circle: Circle,
@@ -172,6 +173,10 @@ impl ModelAccessor for ObstacleState {
 
   fn get_circle(&self) -> Circle {
     self.circle
+  }
+
+  fn get_id(&self) -> usize {
+    self.id
   }
 
   fn get_z(&self) -> f64 {

@@ -107,13 +107,6 @@ impl DefaultTank {
     tank
   }
 
-  pub fn set_ammo(
-    &mut self,
-    ammo: usize,
-  ) {
-    self.ammo = ammo;
-  }
-
   pub fn update(
     &mut self,
     time_delta: f64,
@@ -267,104 +260,6 @@ impl DefaultTank {
     self.updated = true;
     self.turret_heading = new_turret_heading;
   }
-
-  // moved from TankConsole
-
-  pub fn fire(&mut self) {
-    if !self.active || self.firing || self.dry_firing {
-      return;
-    }
-    self.updated = true;
-    if self.ammo < 1 {
-      self.dry_firing = true;
-      return;
-    }
-    self.ammo -= 1;
-    self.firing = true;
-    let bullet_origin_x: f64 =
-      self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
-    let bullet_origin_y: f64 =
-      self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
-      self.turret_heading,
-      bullet_origin_x,
-      bullet_origin_y,
-      self.world.clone(),
-    );
-    self.world.add_bullet(bullet);
-  }
-
-  pub fn get_body_rotation_speed(&self) -> f64 {
-    TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND
-  }
-
-  pub fn get_center(
-    &self,
-    center: &mut Point2DD,
-  ) {
-    center.set_xy(self.circle.center_x, self.circle.center_y);
-  }
-
-  pub fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
-    // todo!()
-    None
-  }
-
-  pub fn get_closest_enemy_tank_center(
-    &self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
-  ) -> Option<Point2DD> {
-    let mut closest_distance: f64 = INFINITY;
-    let mut found = false;
-    let tanks = tanks.borrow();
-    let length = tanks.len();
-    let tank_center = Point2DD::new(self.circle.center_x, self.circle.center_y);
-    let mut enemy_tank_center = Point2DD::default();
-    let mut closest_enemy_tank_center = Point2DD::default();
-    for i in 0..length {
-      let tank = tanks[i].borrow();
-      if !tank.is_active() || tank.color == self.color {
-        continue;
-      }
-      tank.get_center(&mut enemy_tank_center);
-      let distance = tank_center.distance_to(&enemy_tank_center);
-      if distance < closest_distance {
-        found = true;
-        closest_distance = distance;
-        closest_enemy_tank_center.x = enemy_tank_center.x;
-        closest_enemy_tank_center.y = enemy_tank_center.y;
-      }
-    }
-    if found {
-      return Some(closest_enemy_tank_center);
-    }
-    None
-  }
-
-  pub fn get_id(&self) -> usize {
-    self.id
-  }
-
-  pub fn get_tank_speed(&self) -> f64 {
-    TANK_SPEED_METERS_PER_SECOND
-  }
-
-  pub fn go(
-    &mut self,
-    destination: &Point2DD,
-  ) {
-    self.destination = Some(Point2DD::new(destination.x, destination.y));
-  }
-
-  pub fn rotate_turret(
-    &mut self,
-    target_point: &Option<Point2DD>,
-  ) {
-    if let Some(target_point) = target_point {
-      self.target_point.set_xy_point(target_point);
-    }
-    // TODO: else if None, rotate turret forward maybe
-  }
 }
 
 impl Damageable for DefaultTank {
@@ -426,6 +321,10 @@ impl ModelAccessor for DefaultTank {
     self.circle
   }
 
+  fn get_id(&self) -> usize {
+    self.id
+  }
+
   fn get_z(&self) -> f64 {
     TANK_Z
   }
@@ -476,6 +375,48 @@ impl TankAccessor for DefaultTank {
     self.body_heading
   }
 
+  fn get_body_rotation_speed(&self) -> f64 {
+    TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND
+  }
+
+  fn get_center(&self) -> Point2DD {
+    Point2DD::new(self.circle.center_x, self.circle.center_y)
+  }
+
+  // pub fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
+  //   // todo!()
+  //   None
+  // }
+
+  fn get_closest_enemy_tank_center(
+    &self,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+  ) -> Option<Point2DD> {
+    let mut closest_distance: f64 = INFINITY;
+    let mut found = false;
+    let tanks = tanks.borrow();
+    let length = tanks.len();
+    let tank_center = Point2DD::new(self.circle.center_x, self.circle.center_y);
+    let mut closest_enemy_tank_center = Point2DD::default();
+    for i in 0..length {
+      let tank = tanks[i].borrow();
+      if !tank.is_active() || tank.get_color() == self.color {
+        continue;
+      }
+      let enemy_tank_center = tank.get_center();
+      let distance = tank_center.distance_to(&enemy_tank_center);
+      if distance < closest_distance {
+        found = true;
+        closest_distance = distance;
+        closest_enemy_tank_center = enemy_tank_center;
+      }
+    }
+    if found {
+      return Some(closest_enemy_tank_center);
+    }
+    None
+  }
+
   fn get_color(&self) -> Color {
     self.color
   }
@@ -486,6 +427,10 @@ impl TankAccessor for DefaultTank {
 
   fn get_radius(&self) -> f64 {
     self.circle.radius
+  }
+
+  fn get_tank_speed(&self) -> f64 {
+    TANK_SPEED_METERS_PER_SECOND
   }
 
   fn get_turret_heading(&self) -> f64 {
@@ -506,6 +451,55 @@ impl TankAccessor for DefaultTank {
 }
 
 impl TankMutator for DefaultTank {
+  // moved from TankConsole
+  fn fire(&mut self) {
+    if !self.active || self.firing || self.dry_firing {
+      return;
+    }
+    self.updated = true;
+    if self.ammo < 1 {
+      self.dry_firing = true;
+      return;
+    }
+    self.ammo -= 1;
+    self.firing = true;
+    let bullet_origin_x: f64 =
+      self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
+    let bullet_origin_y: f64 =
+      self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
+    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
+      self.turret_heading,
+      bullet_origin_x,
+      bullet_origin_y,
+      self.world.clone(),
+    );
+    self.world.add_bullet(bullet);
+  }
+
+  fn go(
+    &mut self,
+    destination: &Point2DD,
+  ) {
+    self.destination = Some(Point2DD::new(destination.x, destination.y));
+  }
+
+  fn rotate_turret(
+    &mut self,
+    target_point: &Option<Point2DD>,
+  ) {
+    if let Some(target_point) = target_point {
+      self.target_point.set_xy_point(target_point);
+    }
+    // TODO: else if None, rotate turret forward maybe
+  }
+
+  fn set_ammo(
+    &mut self,
+    ammo: usize,
+  ) {
+    self.ammo = ammo;
+  }
+
   fn set_body_heading(
     &mut self,
     body_heading: f64,

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-13
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -54,6 +54,8 @@ pub trait ModelAccessor {
   ) -> bool;
 
   fn get_circle(&self) -> Circle;
+
+  fn get_id(&self) -> usize;
 
   fn get_z(&self) -> f64;
 

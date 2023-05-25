@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-15
-//! - Updated: 2023-05-23
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,10 +35,6 @@ pub struct DefaultExplosion {
 }
 
 impl DefaultExplosion {
-  pub fn get_id(&self) -> usize {
-    self.id
-  }
-
   pub fn new(
     circle: Circle,
     damage: f64,
@@ -119,6 +115,10 @@ impl ModelAccessor for DefaultExplosion {
 
   fn get_circle(&self) -> Circle {
     self.circle
+  }
+
+  fn get_id(&self) -> usize {
+    self.id
   }
 
   fn get_z(&self) -> f64 {

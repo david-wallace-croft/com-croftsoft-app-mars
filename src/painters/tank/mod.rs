@@ -14,9 +14,8 @@
 use crate::constants::{
   TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_STROKE_STYLE,
 };
-use crate::engine::traits::{Color, ModelAccessor};
-use crate::models::tank::default::DefaultTank;
-use crate::models::tank::TankAccessor;
+use crate::engine::traits::Color;
+use crate::models::tank::Tank;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
 use core::cell::{Ref, RefCell};
@@ -31,14 +30,13 @@ pub struct TankPainter {
   fill_style_blue: JsValue,
   fill_style_red: JsValue,
   stroke_style: JsValue,
-  // TODO: change this to dyn TankAccessor
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
 
 impl TankPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
     let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
@@ -54,7 +52,8 @@ impl TankPainter {
 
   fn paint_tank(
     &self,
-    tank: &DefaultTank,
+    // TODO: Can this take TankAccessor
+    tank: &dyn Tank,
   ) -> Result<(), JsValue> {
     let circle: Circle = tank.get_circle();
     let center_x: f64 = circle.center_x;
@@ -143,9 +142,10 @@ impl TankPainter {
 
 impl Painter for TankPainter {
   fn paint(&mut self) {
-    let tanks: Ref<VecDeque<Rc<RefCell<DefaultTank>>>> = self.tanks.borrow();
+    let tanks: Ref<VecDeque<Rc<RefCell<dyn Tank>>>> = self.tanks.borrow();
     for tank in tanks.iter() {
-      let _result = self.paint_tank(&tank.borrow());
+      let tank: Ref<dyn Tank> = tank.borrow();
+      let _result = self.paint_tank(&*tank);
     }
   }
 }

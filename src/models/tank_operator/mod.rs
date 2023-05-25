@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::tank::default::DefaultTank;
+use super::tank::Tank;
 use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_console::TankConsole;
 use core::cell::RefCell;
@@ -36,7 +36,7 @@ pub trait TankOperator {
 
   fn update(
     &mut self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
     time_delta: f64,
   );
 }

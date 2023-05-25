@@ -11,18 +11,18 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::models::tank::default::DefaultTank;
+use super::Tank;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankPreparer {
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
 
 impl TankPreparer {
-  pub fn new(tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>) -> Self {
+  pub fn new(tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>) -> Self {
     Self {
       tanks,
     }

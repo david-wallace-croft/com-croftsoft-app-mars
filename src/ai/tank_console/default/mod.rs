@@ -13,17 +13,17 @@
 
 use super::TankConsole;
 use crate::engine::traits::{ModelAccessor, SpaceTester};
-use crate::models::tank::default::DefaultTank;
-use crate::models::tank::TankAccessor;
+use crate::models::tank::Tank;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use core::f64::INFINITY;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct DefaultTankConsole {
-  pub tank: Rc<RefCell<DefaultTank>>,
+  pub tank: Rc<RefCell<dyn Tank>>,
   pub world: Rc<dyn World>,
 }
 
@@ -38,6 +38,10 @@ impl ModelAccessor for DefaultTankConsole {
 
   fn get_circle(&self) -> Circle {
     self.tank.borrow().get_circle()
+  }
+
+  fn get_id(&self) -> usize {
+    self.tank.borrow().get_id()
   }
 
   fn get_z(&self) -> f64 {
@@ -92,7 +96,11 @@ impl SpaceTester for DefaultTankConsole {
   }
 }
 
-impl TankAccessor for DefaultTankConsole {
+impl TankConsole for DefaultTankConsole {
+  fn fire(&mut self) {
+    self.tank.borrow_mut().fire();
+  }
+
   fn get_ammo(&self) -> usize {
     self.tank.borrow().get_ammo()
   }
@@ -101,56 +109,17 @@ impl TankAccessor for DefaultTankConsole {
     self.tank.borrow().get_body_heading()
   }
 
-  fn get_color(&self) -> crate::engine::traits::Color {
-    self.tank.borrow().get_color()
-  }
-
-  fn get_damage(&self) -> f64 {
-    self.tank.borrow().get_damage()
-  }
-
-  fn get_radius(&self) -> f64 {
-    self.tank.borrow().get_radius()
-  }
-
-  fn get_turret_heading(&self) -> f64 {
-    self.tank.borrow().get_turret_heading()
-  }
-
-  fn is_dry_firing(&self) -> bool {
-    self.tank.borrow().is_dry_firing()
-  }
-
-  fn is_firing(&self) -> bool {
-    self.tank.borrow().is_firing()
-  }
-
-  fn is_sparking(&self) -> bool {
-    self.tank.borrow().is_sparking()
-  }
-}
-
-impl TankConsole for DefaultTankConsole {
-  fn fire(&mut self) {
-    self.tank.borrow_mut().fire();
-  }
-
   fn get_body_rotation_speed(&self) -> f64 {
     self.tank.borrow().get_body_rotation_speed()
   }
 
-  fn get_center(
-    &self,
-    center: &mut com_croftsoft_core::math::geom::point_2dd::Point2DD,
-  ) {
-    // TODO: change method signature
-    self.tank.borrow().get_center(center)
+  fn get_center(&self) -> Point2DD {
+    self.tank.borrow().get_center()
   }
 
   fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
     let mut closest_ammo_dump_center: Option<Point2DD> = None;
-    let mut tank_center = Point2DD::default();
-    self.tank.borrow().get_center(&mut tank_center);
+    let tank_center = self.tank.borrow().get_center();
     let mut closest_distance: f64 = INFINITY;
     let world = &self.world;
     let ammo_dumps = world.get_ammo_dumps();
@@ -167,15 +136,7 @@ impl TankConsole for DefaultTankConsole {
 
   fn get_closest_enemy_tank_center(
     &self,
-    tanks: std::rc::Rc<
-      std::cell::RefCell<
-        std::collections::VecDeque<
-          std::rc::Rc<
-            std::cell::RefCell<crate::models::tank::default::DefaultTank>,
-          >,
-        >,
-      >,
-    >,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
   ) -> Option<com_croftsoft_core::math::geom::point_2dd::Point2DD> {
     self.tank.borrow().get_closest_enemy_tank_center(tanks)
   }

@@ -12,8 +12,7 @@
 // =============================================================================
 
 use crate::engine::traits::SpaceTester;
-use crate::models::tank::default::DefaultTank;
-use crate::models::tank::TankAccessor;
+use crate::models::tank::Tank;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -21,20 +20,18 @@ use std::rc::Rc;
 
 pub mod default;
 
-pub trait TankConsole: TankAccessor + SpaceTester {
+pub trait TankConsole: SpaceTester {
   fn fire(&mut self);
+  fn get_ammo(&self) -> usize;
+  fn get_body_heading(&self) -> f64;
   fn get_body_rotation_speed(&self) -> f64;
-  // TODO: was get_shape
-  fn get_center(
-    &self,
-    center: &mut Point2DD,
-  );
+  fn get_center(&self) -> Point2DD;
   // TODO: was PointXY
   fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
   // TODO: was PointXY
   fn get_closest_enemy_tank_center(
     &self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
   ) -> Option<Point2DD>;
   fn get_id(&self) -> usize;
   fn get_tank_speed(&self) -> f64;
