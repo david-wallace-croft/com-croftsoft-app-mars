@@ -98,7 +98,7 @@ impl Model for DefaultExplosion {
     // TODO: Make this a constant
     self.circle.radius -= 10. * radius_delta;
     // TODO: Make this a constant
-    if self.circle.radius > 1. {
+    if self.circle.radius < 1. {
       self.state = DefaultExplosionState::Inactive;
     }
   }
