@@ -5,14 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::engine::traits::SpaceTester;
-use crate::models::tank::state::TankState;
+use crate::models::tank::default::DefaultTank;
 use crate::models::tank::TankAccessor;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
@@ -34,7 +34,7 @@ pub trait TankConsole: TankAccessor + SpaceTester {
   // TODO: was PointXY
   fn get_closest_enemy_tank_center(
     &self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
   ) -> Option<Point2DD>;
   fn get_id(&self) -> usize;
   fn get_tank_speed(&self) -> f64;

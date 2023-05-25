@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-25
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,7 @@
 
 use super::TankConsole;
 use crate::engine::traits::{ModelAccessor, SpaceTester};
-use crate::models::tank::state::TankState;
+use crate::models::tank::default::DefaultTank;
 use crate::models::tank::TankAccessor;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
@@ -23,7 +23,7 @@ use core::f64::INFINITY;
 use std::rc::Rc;
 
 pub struct DefaultTankConsole {
-  pub tank: Rc<RefCell<TankState>>,
+  pub tank: Rc<RefCell<DefaultTank>>,
   pub world: Rc<dyn World>,
 }
 
@@ -171,7 +171,7 @@ impl TankConsole for DefaultTankConsole {
       std::cell::RefCell<
         std::collections::VecDeque<
           std::rc::Rc<
-            std::cell::RefCell<crate::models::tank::state::TankState>,
+            std::cell::RefCell<crate::models::tank::default::DefaultTank>,
           >,
         >,
       >,

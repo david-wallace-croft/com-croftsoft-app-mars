@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,7 @@ use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
 use crate::models::obstacle::state::ObstacleState;
-use crate::models::tank::state::TankState;
+use crate::models::tank::default::DefaultTank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
@@ -31,7 +31,7 @@ pub struct DefaultWorld {
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
   obstacles: Rc<RefCell<VecDeque<ObstacleState>>>,
   tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
 }
 
 impl World for DefaultWorld {
@@ -65,7 +65,7 @@ impl World for DefaultWorld {
 
   fn add_tank(
     &self,
-    tank: Rc<RefCell<TankState>>,
+    tank: Rc<RefCell<DefaultTank>>,
   ) {
     self.tanks.borrow_mut().push_back(tank);
   }
@@ -99,7 +99,7 @@ impl World for DefaultWorld {
     self.tank_operators.clone()
   }
 
-  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>> {
+  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>> {
     self.tanks.clone()
   }
 

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,7 @@ use super::ammo_dump::default::DefaultAmmoDump;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
 use super::obstacle::state::ObstacleState;
-use super::tank::state::TankState;
+use super::tank::default::DefaultTank;
 use super::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
@@ -54,7 +54,7 @@ pub trait World {
 
   fn add_tank(
     &self,
-    tank: Rc<RefCell<TankState>>,
+    tank: Rc<RefCell<DefaultTank>>,
   );
 
   fn add_tank_operator(
@@ -75,7 +75,7 @@ pub trait World {
     &self
   ) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>;
 
-  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>;
+  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>;
 
   fn is_blocked_by_ammo_dump(
     &self,

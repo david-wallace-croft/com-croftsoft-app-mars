@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,7 +18,7 @@ use crate::constants::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
-use crate::models::tank::state::TankState;
+use crate::models::tank::default::DefaultTank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
@@ -116,7 +116,7 @@ impl TankOperator for DefaultTankOperator {
 
   fn update(
     &mut self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
     time_delta: f64,
   ) {
     // log("DefaultTankOperator.update");

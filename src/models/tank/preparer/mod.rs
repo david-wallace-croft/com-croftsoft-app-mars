@@ -5,24 +5,24 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::models::tank::state::TankState;
+use crate::models::tank::default::DefaultTank;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankPreparer {
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
 }
 
 impl TankPreparer {
-  pub fn new(tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>) -> Self {
+  pub fn new(tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>) -> Self {
     Self {
       tanks,
     }

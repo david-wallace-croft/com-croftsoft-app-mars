@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-02
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,7 @@ use crate::constants::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
 use crate::engine::traits::Color;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::state::ObstacleState;
-use crate::models::tank::state::TankState;
+use crate::models::tank::default::DefaultTank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -69,8 +69,8 @@ impl WorldBuilder {
     center_y: f64,
     color: Color,
     id: usize,
-  ) -> Rc<RefCell<TankState>> {
-    let tank_state = Rc::new(RefCell::new(TankState::new(
+  ) -> Rc<RefCell<DefaultTank>> {
+    let tank_state = Rc::new(RefCell::new(DefaultTank::new(
       center_x,
       center_y,
       color,

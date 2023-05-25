@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,7 +35,7 @@ use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
-pub struct TankState {
+pub struct DefaultTank {
   active: bool,
   ammo: usize,
   body_heading: f64,
@@ -55,7 +55,7 @@ pub struct TankState {
   world: Rc<dyn World>,
 }
 
-impl TankState {
+impl DefaultTank {
   pub fn initialize(
     &mut self,
     center_x: f64,
@@ -83,7 +83,7 @@ impl TankState {
       center_y: 0.,
       radius: TANK_RADIUS,
     };
-    let mut tank: TankState = Self {
+    let mut tank: DefaultTank = Self {
       active: false,
       ammo: 0,
       body_heading: 0.,
@@ -201,7 +201,7 @@ impl TankState {
     if aim_heading < 0. {
       aim_heading += TAU;
     }
-    let new_body_heading: f64 = TankState::rotate_toward_heading(
+    let new_body_heading: f64 = DefaultTank::rotate_toward_heading(
       self.body_heading,
       aim_heading,
       time_delta * TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND,
@@ -256,7 +256,7 @@ impl TankState {
     if desired_turret_heading < 0. {
       desired_turret_heading += TAU;
     }
-    let new_turret_heading = TankState::rotate_toward_heading(
+    let new_turret_heading = DefaultTank::rotate_toward_heading(
       self.turret_heading,
       desired_turret_heading,
       time_delta * TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND,
@@ -312,7 +312,7 @@ impl TankState {
 
   pub fn get_closest_enemy_tank_center(
     &self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
   ) -> Option<Point2DD> {
     let mut closest_distance: f64 = INFINITY;
     let mut found = false;
@@ -367,7 +367,7 @@ impl TankState {
   }
 }
 
-impl Damageable for TankState {
+impl Damageable for DefaultTank {
   fn add_damage(
     &mut self,
     new_damage: f64,
@@ -384,9 +384,9 @@ impl Damageable for TankState {
   }
 }
 
-impl Impassable for TankState {}
+impl Impassable for DefaultTank {}
 
-impl Model for TankState {
+impl Model for DefaultTank {
   fn set_center(
     &mut self,
     x: f64,
@@ -413,7 +413,7 @@ impl Model for TankState {
   }
 }
 
-impl ModelAccessor for TankState {
+impl ModelAccessor for DefaultTank {
   fn contains(
     &self,
     x: f64,
@@ -446,7 +446,7 @@ impl ModelAccessor for TankState {
   }
 }
 
-impl Tank for TankState {
+impl Tank for DefaultTank {
   // fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
   //   todo!()
   // }
@@ -467,7 +467,7 @@ impl Tank for TankState {
   // }
 }
 
-impl TankAccessor for TankState {
+impl TankAccessor for DefaultTank {
   fn get_ammo(&self) -> usize {
     self.ammo
   }
@@ -505,7 +505,7 @@ impl TankAccessor for TankState {
   }
 }
 
-impl TankMutator for TankState {
+impl TankMutator for DefaultTank {
   fn set_body_heading(
     &mut self,
     body_heading: f64,
@@ -521,7 +521,7 @@ impl TankMutator for TankState {
   }
 }
 
-impl Preparer for TankState {
+impl Preparer for DefaultTank {
   fn prepare(&mut self) {
     self.updated = false;
     self.firing = false;

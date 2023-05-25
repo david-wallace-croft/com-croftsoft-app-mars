@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,7 @@ use crate::constants::{
   TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_STROKE_STYLE,
 };
 use crate::engine::traits::{Color, ModelAccessor};
-use crate::models::tank::state::TankState;
+use crate::models::tank::default::DefaultTank;
 use crate::models::tank::TankAccessor;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
@@ -32,13 +32,13 @@ pub struct TankPainter {
   fill_style_red: JsValue,
   stroke_style: JsValue,
   // TODO: change this to dyn TankAccessor
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
 }
 
 impl TankPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<TankState>>>>>,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<DefaultTank>>>>>,
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
     let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
@@ -54,7 +54,7 @@ impl TankPainter {
 
   fn paint_tank(
     &self,
-    tank: &TankState,
+    tank: &DefaultTank,
   ) -> Result<(), JsValue> {
     let circle: Circle = tank.get_circle();
     let center_x: f64 = circle.center_x;
@@ -143,7 +143,7 @@ impl TankPainter {
 
 impl Painter for TankPainter {
   fn paint(&mut self) {
-    let tanks: Ref<VecDeque<Rc<RefCell<TankState>>>> = self.tanks.borrow();
+    let tanks: Ref<VecDeque<Rc<RefCell<DefaultTank>>>> = self.tanks.borrow();
     for tank in tanks.iter() {
       let _result = self.paint_tank(&tank.borrow());
     }
