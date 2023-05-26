@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-04
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,6 @@
 
 use super::tank::Tank;
 use crate::ai::state_space_node::StateSpaceNode;
-use crate::ai::tank_console::TankConsole;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -28,11 +27,6 @@ pub trait TankOperator {
 
   // TODO: was iterator
   fn get_path(&self) -> Vec<StateSpaceNode>;
-
-  fn set_tank_console(
-    &mut self,
-    tank_console: Rc<RefCell<dyn TankConsole>>,
-  );
 
   fn update(
     &mut self,

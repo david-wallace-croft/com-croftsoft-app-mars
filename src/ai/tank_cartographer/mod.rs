@@ -5,20 +5,19 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-05-14
+//! - Updated: 2023-05-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::state_space_node::StateSpaceNode;
-use crate::ai::tank_console::TankConsole;
+use crate::models::tank::Tank;
 use com_croftsoft_core::ai::astar::traits::Cartographer;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
 use std::cell::RefCell;
 use std::f64::consts::PI;
-use std::f64::INFINITY;
 use std::rc::Rc;
 
 pub struct TankCartographer {
@@ -27,7 +26,7 @@ pub struct TankCartographer {
   id: usize,
   init_step_size: f64,
   start_state_space_node: StateSpaceNode,
-  tank_console: Option<Rc<RefCell<dyn TankConsole>>>,
+  tank: Rc<RefCell<dyn Tank>>,
 }
 
 impl TankCartographer {
@@ -37,13 +36,8 @@ impl TankCartographer {
     to_node: &StateSpaceNode,
   ) -> f64 {
     let distance: f64 = from_node.distance(to_node);
-    if let Some(tank_console) = &self.tank_console {
-      let tank_speed: f64 = tank_console.borrow().get_tank_speed();
-      distance / tank_speed
-    } else {
-      // TODO: what if tank_console is None?
-      INFINITY
-    }
+    let tank_speed: f64 = self.tank.borrow().get_tank_speed();
+    distance / tank_speed
   }
 
   pub fn get_id(&self) -> usize {
@@ -54,17 +48,17 @@ impl TankCartographer {
     id: usize,
     init_step_size: f64,
     directions: usize,
+    tank: Rc<RefCell<dyn Tank>>,
   ) -> Self {
     let goal_state_space_node = StateSpaceNode::new(0., Point2DD::default());
     let start_state_space_node = StateSpaceNode::new(0., Point2DD::default());
-    let tank_console = None;
     TankCartographer {
       directions,
       goal_state_space_node,
       id,
       init_step_size,
       start_state_space_node,
-      tank_console,
+      tank,
     }
   }
 
@@ -80,13 +74,6 @@ impl TankCartographer {
     start_state_space_node: StateSpaceNode,
   ) {
     self.start_state_space_node.set(start_state_space_node);
-  }
-
-  pub fn set_tank_console(
-    &mut self,
-    tank_console: Rc<RefCell<dyn TankConsole>>,
-  ) {
-    self.tank_console = Some(tank_console);
   }
 }
 
@@ -132,13 +119,11 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
           y + step_size * heading.sin(),
         ),
       );
-      if let Some(tank_console) = &self.tank_console {
-        if tank_console.borrow().is_space_available(
-          adjacent_state_space_node.get_point_xy().get_x(),
-          adjacent_state_space_node.get_point_xy().get_y(),
-        ) {
-          adjacent_list.push(adjacent_state_space_node);
-        }
+      if self.tank.borrow().is_space_available(
+        adjacent_state_space_node.get_point_xy().get_x(),
+        adjacent_state_space_node.get_point_xy().get_y(),
+      ) {
+        adjacent_list.push(adjacent_state_space_node);
       }
     }
     adjacent_list
@@ -151,17 +136,11 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
   ) -> f64 {
     let mut rotation: f64 = from_node.rotation(to_node);
     rotation = rotation.abs();
-    if let Some(tank_console) = &self.tank_console {
-      let body_rotation_speed: f64 =
-        tank_console.borrow().get_body_rotation_speed();
-      let rotation_time: f64 = rotation / body_rotation_speed;
-      let travel_time: f64 = self.calculate_travel_time(from_node, to_node);
-      let total_time: f64 = travel_time + rotation_time;
-      total_time
-    } else {
-      // TODO: what if tank_console is None?
-      INFINITY
-    }
+    let body_rotation_speed: f64 = self.tank.borrow().get_body_rotation_speed();
+    let rotation_time: f64 = rotation / body_rotation_speed;
+    let travel_time: f64 = self.calculate_travel_time(from_node, to_node);
+    let total_time: f64 = travel_time + rotation_time;
+    total_time
   }
 
   fn is_goal_node(

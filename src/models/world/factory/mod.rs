@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-23
+//! - Updated: 2023-05-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,6 +14,7 @@
 use super::World;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
+use crate::models::tank::Tank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
@@ -37,7 +38,10 @@ pub trait WorldFactory {
     world: Rc<dyn World>,
   ) -> Box<dyn Explosion>;
 
-  fn make_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
+  fn make_tank_operator(
+    &self,
+    tank: Rc<RefCell<dyn Tank>>,
+  ) -> Rc<RefCell<dyn TankOperator>>;
 
   fn make_world(&self) -> Rc<dyn World>;
 }

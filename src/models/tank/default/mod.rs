@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,7 +19,7 @@ use crate::constants::{
   TANK_Z,
 };
 use crate::engine::traits::{
-  Color, Damageable, Impassable, Model, ModelAccessor,
+  Color, Damageable, Impassable, Model, ModelAccessor, SpaceTester,
 };
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::bullet::Bullet;
@@ -345,10 +345,58 @@ impl ModelAccessor for DefaultTank {
   }
 }
 
+impl SpaceTester for DefaultTank {
+  fn is_space_available(
+    &self,
+    // TODO: this was PointXY; could be a Circle
+    x: f64,
+    y: f64,
+  ) -> bool {
+    let mut tank_circle = self.get_circle();
+    tank_circle.center_x = x;
+    tank_circle.center_y = y;
+    // TODO: previously operated on an array of Impassable
+    for obstacle in self.world.get_obstacles().borrow().iter() {
+      if obstacle.circle.intersects_circle(&tank_circle) {
+        return false;
+      }
+    }
+    let self_tank_color = self.get_color();
+    for other_tank in self.world.get_tanks().borrow().iter() {
+      let other_tank = other_tank.borrow();
+      if self_tank_color != other_tank.get_color() && self.get_ammo() > 0 {
+        continue;
+      }
+      let other_tank_circle = other_tank.get_circle();
+      if other_tank_circle.intersects_circle(&tank_circle) {
+        return false;
+      }
+    }
+    true
+  }
+}
+
 impl Tank for DefaultTank {
   // fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
   //   todo!()
   // }
+
+  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
+    let mut closest_ammo_dump_center: Option<Point2DD> = None;
+    let tank_center = self.get_center();
+    let mut closest_distance: f64 = INFINITY;
+    let world = &self.world;
+    let ammo_dumps = world.get_ammo_dumps();
+    for ammo_dump in ammo_dumps.borrow().iter() {
+      let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();
+      let distance: f64 = tank_center.distance_to(&ammo_dump_center);
+      if distance < closest_distance {
+        closest_distance = distance;
+        closest_ammo_dump_center = Some(ammo_dump_center);
+      }
+    }
+    closest_ammo_dump_center
+  }
 
   fn initialize(
     &mut self,

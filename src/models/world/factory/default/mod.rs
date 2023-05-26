@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-23
+//! - Updated: 2023-05-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,6 +16,7 @@ use crate::models::bullet::default::DefaultBullet;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::default::DefaultExplosion;
 use crate::models::explosion::Explosion;
+use crate::models::tank::Tank;
 use crate::models::tank_operator::default::DefaultTankOperator;
 use crate::models::tank_operator::TankOperator;
 use crate::models::world::default::DefaultWorld;
@@ -58,10 +59,13 @@ impl WorldFactory for DefaultWorldFactory {
     Box::new(explosion)
   }
 
-  fn make_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
+  fn make_tank_operator(
+    &self,
+    tank: Rc<RefCell<dyn Tank>>,
+  ) -> Rc<RefCell<dyn TankOperator>> {
     let id = self.id_next_tank_operator.get();
     self.id_next_tank_operator.set(id + 1);
-    let tank_operator = DefaultTankOperator::new(id);
+    let tank_operator = DefaultTankOperator::new(id, tank);
     Rc::new(RefCell::new(tank_operator))
   }
 

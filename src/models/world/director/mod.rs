@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-03
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,6 @@ use super::builder::WorldBuilder;
 use super::factory::WorldFactory;
 use super::seed::WorldSeed;
 use super::World;
-use crate::ai::tank_console::default::DefaultTankConsole;
 use crate::constants::{
   AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,
   OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
@@ -40,7 +39,6 @@ impl WorldBuilderDirector {
   pub fn direct(&self) -> Rc<dyn World> {
     self.direct_tanks();
     self.direct_tank_operators();
-    self.direct_tank_consoles();
     self.direct_obstacles();
     self.direct_ammo_dumps();
     self.world_builder.world.clone()
@@ -99,32 +97,10 @@ impl WorldBuilderDirector {
     }
   }
 
-  fn direct_tank_consoles(&self) {
-    let world = &self.world_builder.world;
-    let tanks = world.get_tanks();
-    let tanks = tanks.borrow();
-    let length = tanks.len();
-    for index in 0..length {
-      let tank = tanks[index].clone();
-      let tank_console = Rc::new(RefCell::new(DefaultTankConsole {
-        tank,
-        world: self.world_builder.world.clone(),
-      }));
-      self.world_builder.world.get_tank_operators().borrow()[index]
-        .borrow_mut()
-        .set_tank_console(tank_console);
-    }
-  }
-
   fn direct_tank_operators(&self) {
-    self
-      .world_builder
-      .world
-      .get_tanks()
-      .borrow_mut()
-      .iter_mut()
-      // TODO: Need some connection between tank and tank operator
-      .for_each(|_tank| self.world_builder.build_tank_operator());
+    self.world_builder.world.get_tanks().borrow().iter().for_each(|tank| {
+      self.world_builder.build_tank_operator(tank.clone());
+    });
   }
 
   fn direct_tanks(&self) {

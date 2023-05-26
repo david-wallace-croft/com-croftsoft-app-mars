@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-02
-//! - Updated: 2023-05-25
+//! - Updated: 2023-05-26
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use crate::engine::traits::Color;
 use crate::models::ammo_dump::default::DefaultAmmoDump;
 use crate::models::obstacle::default::DefaultObstacle;
 use crate::models::tank::default::DefaultTank;
+use crate::models::tank::Tank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -86,9 +87,12 @@ impl WorldBuilder {
     tank_state
   }
 
-  pub fn build_tank_operator(&self) {
+  pub fn build_tank_operator(
+    &self,
+    tank: Rc<RefCell<dyn Tank>>,
+  ) {
     let tank_operator: Rc<RefCell<dyn TankOperator>> =
-      self.factory.make_tank_operator();
+      self.factory.make_tank_operator(tank);
     self.world.add_tank_operator(tank_operator);
   }
 
