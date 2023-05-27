@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-26
+//! - Updated: 2023-05-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,7 +35,6 @@ pub trait WorldFactory {
     &self,
     circle: Circle,
     damage: f64,
-    world: Rc<dyn World>,
   ) -> Box<dyn Explosion>;
 
   fn make_tank_operator(

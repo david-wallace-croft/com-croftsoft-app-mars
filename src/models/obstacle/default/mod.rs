@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-25
+//! - Updated: 2023-05-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -60,11 +60,12 @@ impl DefaultObstacle {
 }
 
 impl Damageable for DefaultObstacle {
+  // TODO: make this private
   fn add_damage(
     &mut self,
     damage: f64,
   ) {
-    if !self.active || damage == 0. {
+    if !self.active || damage <= 0. {
       return;
     }
     self.updated = true;
@@ -93,6 +94,12 @@ impl Model for DefaultObstacle {
     &mut self,
     time_delta: f64,
   ) {
+    if !self.active {
+      return;
+    }
+    let explosion_damage: f64 =
+      self.world.compute_explosion_damage(&self.circle);
+    self.add_damage(explosion_damage);
     if !self.active {
       return;
     }

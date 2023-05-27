@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -99,10 +99,14 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
 }
 
 impl Damageable for DefaultAmmoDump {
+  // TODO: make this private
   fn add_damage(
     &mut self,
-    _damage: f64,
+    damage: f64,
   ) {
+    if damage <= 0. {
+      return;
+    }
     if self.state == DefaultAmmoDumpState::Nominal {
       self.state = DefaultAmmoDumpState::Exploding;
     };
@@ -130,17 +134,19 @@ impl Model for DefaultAmmoDump {
       let mut explosion_circle = Circle::default();
       explosion_circle.set_center_from_circle(&self.circle);
       explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
-      let explosion = self.factory.make_explosion(
-        explosion_circle,
-        self.ammo,
-        self.world.clone(),
-      );
+      let explosion = self.factory.make_explosion(explosion_circle, self.ammo);
       self.world.add_explosion(explosion);
       self.set_ammo(0.);
       return;
     }
     if self.state == DefaultAmmoDumpState::Cooling {
       self.state = DefaultAmmoDumpState::Nominal;
+      return;
+    }
+    let explosion_damage: f64 =
+      self.world.compute_explosion_damage(&self.circle);
+    self.add_damage(explosion_damage);
+    if self.state != DefaultAmmoDumpState::Nominal {
       return;
     }
     let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;

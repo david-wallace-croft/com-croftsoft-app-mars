@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-26
+//! - Updated: 2023-05-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -27,7 +27,6 @@ use crate::models::world::factory::WorldFactory;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
-use com_croftsoft_lib_animation::web_sys::log;
 use com_croftsoft_lib_role::Preparer;
 use core::f64::consts::{PI, TAU};
 use core::f64::INFINITY;
@@ -105,19 +104,6 @@ impl DefaultTank {
     tank.initialize(center_x, center_y);
     // TODO: self.ammo_dumps = [];
     tank
-  }
-
-  pub fn update(
-    &mut self,
-    time_delta: f64,
-  ) {
-    // if let Some(tank_operator) = &self.tank_operator {
-    //   log("TankState.update()");
-    //   tank_operator.borrow_mut().update(time_delta);
-    // }
-    self.update_ammo();
-    self.update_position(time_delta);
-    self.update_turret_heading(time_delta);
   }
 
   // private update functions
@@ -263,11 +249,12 @@ impl DefaultTank {
 }
 
 impl Damageable for DefaultTank {
+  // TODO: make this private
   fn add_damage(
     &mut self,
     new_damage: f64,
   ) {
-    if !self.active || new_damage == 0. {
+    if !self.active || new_damage <= 0. {
       return;
     }
     self.updated = true;
@@ -293,15 +280,17 @@ impl Model for DefaultTank {
 
   fn update(
     &mut self,
-    // TODO: remove the root argument
     time_delta: f64,
   ) {
-    log("TankState.update()");
     if !self.active {
       return;
     }
-    // let Some(tank_operator) = &self.tank_operator else { return; };
-    // tank_operator.borrow_mut().update(time_delta);
+    let explosion_damage: f64 =
+      self.world.compute_explosion_damage(&self.circle);
+    self.add_damage(explosion_damage);
+    if !self.active {
+      return;
+    }
     self.update_ammo();
     self.update_position(time_delta);
     self.update_turret_heading(time_delta);

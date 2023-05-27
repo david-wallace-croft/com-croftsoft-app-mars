@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-25
+//! - Updated: 2023-05-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -76,6 +76,18 @@ impl World for DefaultWorld {
     tank_operator: Rc<RefCell<dyn TankOperator>>,
   ) {
     self.tank_operators.borrow_mut().push_back(tank_operator);
+  }
+
+  fn compute_explosion_damage(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> f64 {
+    self
+      .explosions
+      .borrow()
+      .iter()
+      .filter(|explosion| explosion.intersects_circle(circle))
+      .fold(0., |damage, explosion| damage + explosion.get_damage())
   }
 
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<DefaultAmmoDump>>> {

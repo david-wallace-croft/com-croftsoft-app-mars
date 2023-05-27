@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-25
+//! - Updated: 2023-05-27
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,6 +35,7 @@ use std::rc::Rc;
 pub struct ObstacleUpdater {
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
+  // TODO: Change this do dyn Obstacle
   obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
   // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   // root: Rc<RefCell<Root>>,
@@ -71,7 +72,9 @@ impl Updater for ObstacleUpdater {
     for _index in 0..length {
       let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
       obstacle.update(TIME_DELTA);
-      self.obstacles.borrow_mut().push_back(obstacle);
+      if obstacle.active {
+        self.obstacles.borrow_mut().push_back(obstacle);
+      }
     }
   }
 }
