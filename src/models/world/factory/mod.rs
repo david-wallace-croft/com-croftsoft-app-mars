@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-27
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,7 +28,6 @@ pub trait WorldFactory {
     heading: f64,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<dyn World>,
   ) -> Box<dyn Bullet>;
 
   fn make_explosion(

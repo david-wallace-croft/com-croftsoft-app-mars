@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,13 +23,6 @@ pub enum Color {
 
 pub trait Component: Initializer + Updater {
   fn make_html(&self) -> String;
-}
-
-pub trait Damageable: Model {
-  fn add_damage(
-    &mut self,
-    damage: f64,
-  );
 }
 
 pub trait Impassable: Model {}

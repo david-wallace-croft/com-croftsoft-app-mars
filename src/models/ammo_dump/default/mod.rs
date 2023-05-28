@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-05-27
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use crate::constants::{
   AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
   AMMO_DUMP_Z,
 };
-use crate::engine::traits::{Damageable, Impassable, Model, ModelAccessor};
+use crate::engine::traits::{Impassable, Model, ModelAccessor};
 use crate::models::world::factory::WorldFactory;
 use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
@@ -44,6 +44,19 @@ pub struct DefaultAmmoDump {
 }
 
 impl DefaultAmmoDump {
+  fn add_damage(
+    &mut self,
+    damage: f64,
+  ) {
+    if damage <= 0. {
+      return;
+    }
+    if self.state == DefaultAmmoDumpState::Nominal {
+      self.state = DefaultAmmoDumpState::Exploding;
+      self.updated = true;
+    };
+  }
+
   pub fn new(
     ammo: f64,
     center_x: f64,
@@ -98,21 +111,6 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
   }
 }
 
-impl Damageable for DefaultAmmoDump {
-  // TODO: make this private
-  fn add_damage(
-    &mut self,
-    damage: f64,
-  ) {
-    if damage <= 0. {
-      return;
-    }
-    if self.state == DefaultAmmoDumpState::Nominal {
-      self.state = DefaultAmmoDumpState::Exploding;
-    };
-  }
-}
-
 impl Impassable for DefaultAmmoDump {}
 
 impl Model for DefaultAmmoDump {
@@ -141,6 +139,11 @@ impl Model for DefaultAmmoDump {
     }
     if self.state == DefaultAmmoDumpState::Cooling {
       self.state = DefaultAmmoDumpState::Nominal;
+      return;
+    }
+    let bullet_damage = self.world.compute_bullet_damage(&self.circle);
+    self.add_damage(bullet_damage);
+    if self.state != DefaultAmmoDumpState::Nominal {
       return;
     }
     let explosion_damage: f64 =

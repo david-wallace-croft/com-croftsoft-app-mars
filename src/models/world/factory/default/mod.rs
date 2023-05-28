@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-27
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -39,11 +39,10 @@ impl WorldFactory for DefaultWorldFactory {
     heading: f64,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<dyn World>,
   ) -> Box<dyn Bullet> {
     let id = self.id_next_bullet.get();
     self.id_next_bullet.set(id + 1);
-    let bullet = DefaultBullet::new(heading, id, origin_x, origin_y, world);
+    let bullet = DefaultBullet::new(heading, id, origin_x, origin_y);
     Box::new(bullet)
   }
 

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-27
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,7 +19,7 @@ use crate::constants::{
   TANK_Z,
 };
 use crate::engine::traits::{
-  Color, Damageable, Impassable, Model, ModelAccessor, SpaceTester,
+  Color, Impassable, Model, ModelAccessor, SpaceTester,
 };
 use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::bullet::Bullet;
@@ -55,6 +55,21 @@ pub struct DefaultTank {
 }
 
 impl DefaultTank {
+  fn add_damage(
+    &mut self,
+    new_damage: f64,
+  ) {
+    if !self.active || new_damage <= 0. {
+      return;
+    }
+    self.updated = true;
+    self.sparking = true;
+    self.damage += new_damage;
+    if self.damage > TANK_DAMAGE_MAX {
+      self.active = false;
+    }
+  }
+
   pub fn initialize(
     &mut self,
     center_x: f64,
@@ -248,24 +263,6 @@ impl DefaultTank {
   }
 }
 
-impl Damageable for DefaultTank {
-  // TODO: make this private
-  fn add_damage(
-    &mut self,
-    new_damage: f64,
-  ) {
-    if !self.active || new_damage <= 0. {
-      return;
-    }
-    self.updated = true;
-    self.sparking = true;
-    self.damage += new_damage;
-    if self.damage > TANK_DAMAGE_MAX {
-      self.active = false;
-    }
-  }
-}
-
 impl Impassable for DefaultTank {}
 
 impl Model for DefaultTank {
@@ -282,6 +279,11 @@ impl Model for DefaultTank {
     &mut self,
     time_delta: f64,
   ) {
+    if !self.active {
+      return;
+    }
+    let bullet_damage: f64 = self.world.compute_bullet_damage(&self.circle);
+    self.add_damage(bullet_damage);
     if !self.active {
       return;
     }
@@ -389,18 +391,11 @@ impl Tank for DefaultTank {
 
   fn initialize(
     &mut self,
-    center_x: f64,
-    center_y: f64,
+    _center_x: f64,
+    _center_y: f64,
   ) {
     todo!()
   }
-
-  // fn set_tank_operator(
-  //   &mut self,
-  //   tank_operator: Rc<RefCell<dyn TankOperator>>,
-  // ) {
-  //   self.tank_operator = Some(tank_operator);
-  // }
 }
 
 impl TankAccessor for DefaultTank {
@@ -508,7 +503,6 @@ impl TankMutator for DefaultTank {
       self.turret_heading,
       bullet_origin_x,
       bullet_origin_y,
-      self.world.clone(),
     );
     self.world.add_bullet(bullet);
   }

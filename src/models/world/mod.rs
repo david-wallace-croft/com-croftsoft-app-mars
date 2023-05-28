@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-05-27
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -62,6 +62,11 @@ pub trait World {
     &self,
     tank_operator: Rc<RefCell<dyn TankOperator>>,
   );
+
+  fn compute_bullet_damage(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> f64;
 
   fn compute_explosion_damage(
     &self,

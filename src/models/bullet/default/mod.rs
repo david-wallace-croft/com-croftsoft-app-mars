@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,11 +15,9 @@ use super::{Bullet, BulletAccessor};
 use crate::constants::{
   BULLET_DAMAGE, BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
 };
-use crate::engine::traits::{Damageable, Model, ModelAccessor};
-use crate::models::world::World;
+use crate::engine::traits::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
-use std::rc::Rc;
 
 pub struct DefaultBullet {
   active: bool,
@@ -29,8 +27,8 @@ pub struct DefaultBullet {
   id: usize,
   origin_x: f64,
   origin_y: f64,
+  spent: bool,
   updated: bool,
-  world: Rc<dyn World>,
 }
 
 impl DefaultBullet {
@@ -39,7 +37,6 @@ impl DefaultBullet {
     id: usize,
     origin_x: f64,
     origin_y: f64,
-    world: Rc<dyn World>,
   ) -> Self {
     let mut bullet = Self {
       active: false,
@@ -53,8 +50,8 @@ impl DefaultBullet {
       id,
       origin_x: 0.,
       origin_y: 0.,
+      spent: false,
       updated: false,
-      world,
     };
     bullet.fire(heading, origin_x, origin_y);
     bullet
@@ -76,9 +73,21 @@ impl Bullet for DefaultBullet {
     self.origin_y = origin_y;
     self.updated = true;
   }
+
+  fn mark_spent(&mut self) {
+    self.spent = true;
+  }
 }
 
-impl BulletAccessor for DefaultBullet {}
+impl BulletAccessor for DefaultBullet {
+  fn get_damage(&self) -> f64 {
+    if !self.active || self.spent {
+      0.
+    } else {
+      BULLET_DAMAGE
+    }
+  }
+}
 
 impl Model for DefaultBullet {
   fn set_center(
@@ -96,6 +105,11 @@ impl Model for DefaultBullet {
     if !self.active {
       return;
     }
+    if self.spent {
+      self.active = false;
+      self.updated = true;
+      return;
+    }
     self.updated = true;
     self.distance += time_delta * BULLET_VELOCITY;
     if self.distance > BULLET_RANGE || self.distance < 0. {
@@ -105,32 +119,6 @@ impl Model for DefaultBullet {
     let center_x = self.origin_x + self.distance * self.heading.cos();
     let center_y = self.origin_y + self.distance * self.heading.sin();
     self.circle.set_center(center_x, center_y);
-    // TODO: old code fetched first damageable or impassable at point from World
-    let obstacles = self.world.get_obstacles();
-    for obstacle in obstacles.borrow_mut().iter_mut() {
-      if obstacle.contains(center_x, center_y) {
-        self.active = false;
-        obstacle.add_damage(BULLET_DAMAGE);
-        return;
-      }
-    }
-    let tanks = self.world.get_tanks();
-    for tank in tanks.borrow_mut().iter_mut() {
-      let mut tank = tank.borrow_mut();
-      if tank.contains(center_x, center_y) {
-        self.active = false;
-        tank.add_damage(BULLET_DAMAGE);
-        return;
-      }
-    }
-    let ammo_dumps = self.world.get_ammo_dumps();
-    for ammo_dump in ammo_dumps.borrow_mut().iter_mut() {
-      if ammo_dump.contains(center_x, center_y) {
-        self.active = false;
-        ammo_dump.add_damage(BULLET_DAMAGE);
-        return;
-      }
-    }
   }
 }
 
@@ -159,7 +147,11 @@ impl ModelAccessor for DefaultBullet {
     &self,
     circle: &dyn CircleAccessor,
   ) -> bool {
-    self.circle.intersects_circle(circle)
+    // TODO: move contains() to CircleAccessor and use bullet center point
+    let distance = ((self.circle.center_x - circle.get_center_x()).powi(2)
+      + (self.circle.center_y - circle.get_center_y()).powi(2))
+    .sqrt();
+    distance <= circle.get_radius()
   }
 
   fn is_active(&self) -> bool {

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-27
+//! - Updated: 2023-05-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -76,6 +76,22 @@ impl World for DefaultWorld {
     tank_operator: Rc<RefCell<dyn TankOperator>>,
   ) {
     self.tank_operators.borrow_mut().push_back(tank_operator);
+  }
+
+  fn compute_bullet_damage(
+    &self,
+    circle: &dyn CircleAccessor,
+  ) -> f64 {
+    self
+      .bullets
+      .borrow_mut()
+      .iter_mut()
+      .filter(|bullet| bullet.intersects_circle(circle))
+      .fold(0., |damage, bullet| {
+        let updated_damage: f64 = damage + bullet.get_damage();
+        bullet.mark_spent();
+        return updated_damage;
+      })
   }
 
   fn compute_explosion_damage(
