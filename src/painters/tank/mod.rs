@@ -5,14 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-05-24
+//! - Updated: 2023-05-29
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::constants::{
-  TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_STROKE_STYLE,
+  TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_FILL_STYLE_SPARKING,
+  TANK_STROKE_STYLE,
 };
 use crate::engine::traits::Color;
 use crate::models::tank::Tank;
@@ -29,6 +30,7 @@ pub struct TankPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style_blue: JsValue,
   fill_style_red: JsValue,
+  fill_style_sparking: JsValue,
   stroke_style: JsValue,
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
@@ -40,11 +42,14 @@ impl TankPainter {
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
     let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
+    let fill_style_sparking: JsValue =
+      JsValue::from_str(TANK_FILL_STYLE_SPARKING);
     let stroke_style: JsValue = JsValue::from_str(TANK_STROKE_STYLE);
     Self {
       context,
       fill_style_blue,
       fill_style_red,
+      fill_style_sparking,
       stroke_style,
       tanks,
     }
@@ -135,6 +140,14 @@ impl TankPainter {
     context.rect(14., -1., 11., 2.);
     context.fill();
     context.stroke();
+    // sparking
+    if tank.is_sparking() {
+      context.set_fill_style(&self.fill_style_sparking);
+      context.begin_path();
+      context.rect(-5., -5., 10., 10.);
+      context.fill();
+    }
+    // end
     context.restore();
     Ok(())
   }
