@@ -141,7 +141,7 @@ impl TankPainter {
     context.fill();
     context.stroke();
     // sparking
-    if tank.is_sparking() {
+    if tank.is_sparking() || !tank.is_active() {
       context.set_fill_style(&self.fill_style_sparking);
       context.begin_path();
       context.rect(-5., -5., 10., 10.);
