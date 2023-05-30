@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-28
+//! - Updated: 2023-05-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,8 +15,8 @@ use super::{Tank, TankAccessor, TankMutator};
 use crate::constants::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
-  TANK_SPEED_METERS_PER_SECOND, TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND,
-  TANK_Z,
+  TANK_SPARKING_DURATION_SECONDS, TANK_SPEED_METERS_PER_SECOND,
+  TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
 };
 use crate::engine::traits::{
   Color, Impassable, Model, ModelAccessor, SpaceTester,
@@ -48,6 +48,7 @@ pub struct DefaultTank {
   firing: bool,
   id: usize,
   sparking: bool,
+  sparking_time_remaining: f64,
   target_point: Point2DD,
   turret_heading: f64,
   updated: bool,
@@ -64,6 +65,7 @@ impl DefaultTank {
     }
     self.updated = true;
     self.sparking = true;
+    self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
     self.damage += new_damage;
     if self.damage > TANK_DAMAGE_MAX {
       self.active = false;
@@ -110,14 +112,13 @@ impl DefaultTank {
       firing: false,
       id,
       sparking: false,
-      // tank_operator: None,
+      sparking_time_remaining: 0.,
       target_point: Point2DD::default(),
       turret_heading: 0.,
       updated: false,
       world,
     };
     tank.initialize(center_x, center_y);
-    // TODO: self.ammo_dumps = [];
     tank
   }
 
@@ -238,6 +239,19 @@ impl DefaultTank {
     }
   }
 
+  fn update_sparking(
+    &mut self,
+    time_delta: f64,
+  ) {
+    if !self.sparking {
+      return;
+    }
+    self.sparking_time_remaining -= time_delta;
+    if self.sparking_time_remaining <= 0. {
+      self.sparking = false;
+    }
+  }
+
   fn update_turret_heading(
     &mut self,
     time_delta: f64,
@@ -295,6 +309,7 @@ impl Model for DefaultTank {
     }
     self.update_ammo();
     self.update_position(time_delta);
+    self.update_sparking(time_delta);
     self.update_turret_heading(time_delta);
   }
 }
@@ -551,6 +566,5 @@ impl Preparer for DefaultTank {
     self.updated = false;
     self.firing = false;
     self.dry_firing = false;
-    self.sparking = false;
   }
 }
