@@ -14,7 +14,7 @@
 use super::ammo_dump::AmmoDump;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
-use super::obstacle::default::DefaultObstacle;
+use super::obstacle::Obstacle;
 use super::tank::default::DefaultTank;
 use super::tank::Tank;
 use super::tank_operator::TankOperator;
@@ -50,8 +50,7 @@ pub trait World {
 
   fn add_obstacle(
     &self,
-    // TODO: change to Box<dyn Obstacle>
-    obstacle: DefaultObstacle,
+    obstacle: Box<dyn Obstacle>,
   );
 
   fn add_tank(
@@ -82,7 +81,7 @@ pub trait World {
 
   fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>>;
 
-  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<DefaultObstacle>>>;
+  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>;
 
   fn get_tank_operators(
     &self

@@ -5,15 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-27
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::Obstacle;
 use crate::constants::TIME_DELTA;
-use crate::engine::traits::Model;
-use crate::models::obstacle::default::DefaultObstacle;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -36,7 +35,7 @@ pub struct ObstacleUpdater {
   // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
   // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
   // TODO: Change this do dyn Obstacle
-  obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
+  obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
   // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   // root: Rc<RefCell<Root>>,
 }
@@ -45,7 +44,7 @@ impl ObstacleUpdater {
   pub fn new(
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
-    obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
+    obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
   ) -> Self {
     Self {
@@ -72,7 +71,7 @@ impl Updater for ObstacleUpdater {
     for _index in 0..length {
       let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
       obstacle.update(TIME_DELTA);
-      if obstacle.active {
+      if obstacle.is_active() {
         self.obstacles.borrow_mut().push_back(obstacle);
       }
     }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-05-28
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -223,17 +223,7 @@ impl Obstacle for DefaultObstacle {
   }
 }
 
-impl ObstacleAccessor for DefaultObstacle {
-  fn get_circle(
-    &self,
-    mut circle: Circle,
-  ) -> Circle {
-    circle.center_x = self.circle.center_x;
-    circle.center_y = self.circle.center_y;
-    circle.radius = self.circle.radius;
-    circle
-  }
-}
+impl ObstacleAccessor for DefaultObstacle {}
 
 impl Preparer for DefaultObstacle {
   fn prepare(&mut self) {

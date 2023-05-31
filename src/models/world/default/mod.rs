@@ -15,7 +15,7 @@ use super::World;
 use crate::models::ammo_dump::AmmoDump;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
-use crate::models::obstacle::default::DefaultObstacle;
+use crate::models::obstacle::Obstacle;
 use crate::models::tank::default::DefaultTank;
 use crate::models::tank::Tank;
 use crate::models::tank_operator::TankOperator;
@@ -29,7 +29,7 @@ pub struct DefaultWorld {
   ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
   bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
-  obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
+  obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
   tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
@@ -58,7 +58,7 @@ impl World for DefaultWorld {
 
   fn add_obstacle(
     &self,
-    obstacle: DefaultObstacle,
+    obstacle: Box<dyn Obstacle>,
   ) {
     self.obstacles.borrow_mut().push_back(obstacle);
   }
@@ -117,7 +117,7 @@ impl World for DefaultWorld {
     self.explosions.clone()
   }
 
-  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<DefaultObstacle>>> {
+  fn get_obstacles(&self) -> Rc<RefCell<VecDeque<Box<dyn Obstacle>>>> {
     self.obstacles.clone()
   }
 
@@ -152,7 +152,7 @@ impl World for DefaultWorld {
     // TODO: Use CollisionDetector
     // TODO: Old code iterated over array of Impassable
     for obstacle in self.obstacles.borrow().iter() {
-      if circle.intersects_circle(&obstacle.circle) {
+      if circle.intersects_circle(&obstacle.get_circle()) {
         return true;
       }
     }

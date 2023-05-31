@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-30
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,7 +21,6 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Impassable, Model, ModelAccessor, SpaceTester,
 };
-use crate::models::ammo_dump::{AmmoDump, AmmoDumpAccessor};
 use crate::models::bullet::Bullet;
 use crate::models::world::factory::WorldFactory;
 use crate::models::world::World;
@@ -363,7 +362,7 @@ impl SpaceTester for DefaultTank {
     tank_circle.center_y = y;
     // TODO: previously operated on an array of Impassable
     for obstacle in self.world.get_obstacles().borrow().iter() {
-      if obstacle.circle.intersects_circle(&tank_circle) {
+      if obstacle.get_circle().intersects_circle(&tank_circle) {
         return false;
       }
     }

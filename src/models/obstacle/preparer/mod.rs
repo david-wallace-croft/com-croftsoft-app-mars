@@ -5,24 +5,24 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-05-25
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::default::DefaultObstacle;
+use super::Obstacle;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct ObstaclePreparer {
-  obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>,
+  obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
 }
 
 impl ObstaclePreparer {
-  pub fn new(obstacles: Rc<RefCell<VecDeque<DefaultObstacle>>>) -> Self {
+  pub fn new(obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>) -> Self {
     Self {
       obstacles,
     }

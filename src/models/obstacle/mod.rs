@@ -5,14 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-27
-//! - Updated: 2023-05-28
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::engine::traits::{Impassable, ModelAccessor};
-use com_croftsoft_core::math::geom::circle::Circle;
 
 pub mod default;
 pub mod preparer;
@@ -30,9 +29,4 @@ pub trait Obstacle: Impassable + ObstacleAccessor {
   );
 }
 
-pub trait ObstacleAccessor: ModelAccessor {
-  fn get_circle(
-    &self,
-    circle: Circle,
-  ) -> Circle;
-}
+pub trait ObstacleAccessor: ModelAccessor {}

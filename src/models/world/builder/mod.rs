@@ -61,7 +61,7 @@ impl WorldBuilder {
       OBSTACLE_RADIUS_MIN,
       self.world.clone(),
     );
-    self.world.add_obstacle(obstacle);
+    self.world.add_obstacle(Box::new(obstacle));
   }
 
   pub fn build_tank(
