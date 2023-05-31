@@ -5,24 +5,24 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::default::DefaultAmmoDump;
+use super::AmmoDump;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct AmmoDumpPreparer {
-  ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
+  ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
 }
 
 impl AmmoDumpPreparer {
-  pub fn new(ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>) -> Self {
+  pub fn new(ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>) -> Self {
     Self {
       ammo_dumps,
     }

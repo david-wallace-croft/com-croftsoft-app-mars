@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-05-28
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::ammo_dump::default::DefaultAmmoDump;
+use super::ammo_dump::AmmoDump;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
 use super::obstacle::default::DefaultObstacle;
@@ -35,7 +35,7 @@ pub trait World {
   // TODO: use AmmoDump trait
   fn add_ammo_dump(
     &self,
-    ammo_dump: DefaultAmmoDump,
+    ammo_dump: Box<dyn AmmoDump>,
   );
 
   fn add_bullet(
@@ -50,11 +50,13 @@ pub trait World {
 
   fn add_obstacle(
     &self,
+    // TODO: change to Box<dyn Obstacle>
     obstacle: DefaultObstacle,
   );
 
   fn add_tank(
     &self,
+    // TODO: change to Box<dyn Tank>
     tank: Rc<RefCell<DefaultTank>>,
   );
 
@@ -74,7 +76,7 @@ pub trait World {
   ) -> f64;
 
   // TODO: Use the AmmoDump trait
-  fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<DefaultAmmoDump>>>;
+  fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>;
 
   fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>>;
 

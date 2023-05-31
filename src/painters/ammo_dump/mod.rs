@@ -5,15 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-05-11
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::constants::{AMMO_DUMP_FILL_STYLE, AMMO_DUMP_STROKE_STYLE};
-use crate::engine::traits::ModelAccessor;
-use crate::models::ammo_dump::default::DefaultAmmoDump;
+use crate::models::ammo_dump::AmmoDump;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
 use core::cell::RefCell;
@@ -24,9 +23,8 @@ use wasm_bindgen::JsValue;
 use web_sys::CanvasRenderingContext2d;
 
 pub struct AmmoDumpPainter {
-  // TODO: maybe dyn AmmoDump instead of DefaultAmmoDump
   // TODO: can this be a Vec instead of a VecDeque?
-  ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
+  ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style: JsValue,
   stroke_style: JsValue,
@@ -35,7 +33,7 @@ pub struct AmmoDumpPainter {
 impl AmmoDumpPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
+    ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
   ) -> Self {
     let fill_style: JsValue = JsValue::from_str(AMMO_DUMP_FILL_STYLE);
     let stroke_style: JsValue = JsValue::from_str(AMMO_DUMP_STROKE_STYLE);

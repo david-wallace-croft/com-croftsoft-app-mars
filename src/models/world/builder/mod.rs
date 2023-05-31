@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-02
-//! - Updated: 2023-05-26
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -45,7 +45,7 @@ impl WorldBuilder {
       id,
       self.world.clone(),
     );
-    self.world.add_ammo_dump(ammo_dump);
+    self.world.add_ammo_dump(Box::new(ammo_dump));
   }
 
   pub fn build_obstacle(

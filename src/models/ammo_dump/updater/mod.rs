@@ -5,27 +5,25 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-07
-//! - Updated: 2023-05-20
+//! - Updated: 2023-05-31
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::default::DefaultAmmoDump;
+use super::AmmoDump;
 use crate::constants::TIME_DELTA;
-use crate::engine::traits::Model;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct AmmoDumpUpdater {
-  // TODO: dyn AmmoDump
-  ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>,
+  ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
 }
 
 impl AmmoDumpUpdater {
-  pub fn new(ammo_dumps: Rc<RefCell<VecDeque<DefaultAmmoDump>>>) -> Self {
+  pub fn new(ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>) -> Self {
     Self {
       ammo_dumps,
     }
