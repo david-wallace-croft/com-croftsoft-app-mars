@@ -89,7 +89,7 @@ impl World for DefaultWorld {
       .fold(0., |damage, bullet| {
         let updated_damage: f64 = damage + bullet.get_damage();
         bullet.mark_spent();
-        return updated_damage;
+        updated_damage
       })
   }
 

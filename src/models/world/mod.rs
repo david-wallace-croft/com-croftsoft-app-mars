@@ -32,7 +32,6 @@ pub mod seed;
 pub mod updater;
 
 pub trait World {
-  // TODO: use AmmoDump trait
   fn add_ammo_dump(
     &self,
     ammo_dump: Box<dyn AmmoDump>,
