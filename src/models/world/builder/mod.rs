@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-02
-//! - Updated: 2023-05-31
+//! - Updated: 2023-06-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -70,7 +70,7 @@ impl WorldBuilder {
     center_y: f64,
     color: Color,
     id: usize,
-  ) -> Rc<RefCell<DefaultTank>> {
+  ) -> Rc<RefCell<dyn Tank>> {
     let tank_state = Rc::new(RefCell::new(DefaultTank::new(
       center_x,
       center_y,

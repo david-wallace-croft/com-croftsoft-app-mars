@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-05-31
+//! - Updated: 2023-06-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,6 @@ use crate::models::ammo_dump::AmmoDump;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
 use crate::models::obstacle::Obstacle;
-use crate::models::tank::default::DefaultTank;
 use crate::models::tank::Tank;
 use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
@@ -65,7 +64,7 @@ impl World for DefaultWorld {
 
   fn add_tank(
     &self,
-    tank: Rc<RefCell<DefaultTank>>,
+    tank: Rc<RefCell<dyn Tank>>,
   ) {
     self.tanks.borrow_mut().push_back(tank);
   }

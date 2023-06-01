@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-05-31
+//! - Updated: 2023-06-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,6 @@ use super::ammo_dump::AmmoDump;
 use super::bullet::Bullet;
 use super::explosion::Explosion;
 use super::obstacle::Obstacle;
-use super::tank::default::DefaultTank;
 use super::tank::Tank;
 use super::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
@@ -54,8 +53,7 @@ pub trait World {
 
   fn add_tank(
     &self,
-    // TODO: change to Box<dyn Tank>
-    tank: Rc<RefCell<DefaultTank>>,
+    tank: Rc<RefCell<dyn Tank>>,
   );
 
   fn add_tank_operator(
@@ -73,7 +71,6 @@ pub trait World {
     circle: &dyn CircleAccessor,
   ) -> f64;
 
-  // TODO: Use the AmmoDump trait
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>;
 
   fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>>;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-03
-//! - Updated: 2023-05-26
+//! - Updated: 2023-06-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,8 +21,7 @@ use crate::constants::{
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
 use crate::engine::traits::Color;
-use crate::models::tank::default::DefaultTank;
-use crate::models::tank::TankMutator;
+use crate::models::tank::Tank;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
 use core::f64::consts::TAU;
@@ -120,7 +119,7 @@ impl WorldBuilderDirector {
       } else {
         Color::BLUE
       };
-      let tank: Rc<RefCell<DefaultTank>> =
+      let tank: Rc<RefCell<dyn Tank>> =
         self.world_builder.build_tank(center_x, center_y, color, index);
       tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
       tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
