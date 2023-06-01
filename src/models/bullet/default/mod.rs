@@ -147,11 +147,7 @@ impl ModelAccessor for DefaultBullet {
     &self,
     circle: &dyn CircleAccessor,
   ) -> bool {
-    // TODO: move contains() to CircleAccessor and use bullet center point
-    let distance = ((self.circle.center_x - circle.get_center_x()).powi(2)
-      + (self.circle.center_y - circle.get_center_y()).powi(2))
-    .sqrt();
-    distance <= circle.get_radius()
+    circle.contains(self.circle.center_x, self.circle.center_y)
   }
 
   fn is_active(&self) -> bool {
