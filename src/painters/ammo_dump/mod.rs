@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-05-31
+//! - Updated: 2023-06-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,7 +23,6 @@ use wasm_bindgen::JsValue;
 use web_sys::CanvasRenderingContext2d;
 
 pub struct AmmoDumpPainter {
-  // TODO: can this be a Vec instead of a VecDeque?
   ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style: JsValue,

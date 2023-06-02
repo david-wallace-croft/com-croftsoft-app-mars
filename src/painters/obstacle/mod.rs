@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-15
-//! - Updated: 2023-05-31
+//! - Updated: 2023-06-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -25,7 +25,6 @@ use web_sys::CanvasRenderingContext2d;
 pub struct ObstaclePainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style: JsValue,
-  // TODO: change this to dyn ObstacleAccessor
   obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
   stroke_style: JsValue,
 }
