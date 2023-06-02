@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-21
+//! - Updated: 2023-06-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -29,8 +29,6 @@ use wasm_bindgen::JsCast;
 use web_sys::{
   window, CanvasRenderingContext2d, Document, Element, HtmlCanvasElement,
 };
-
-pub mod updater;
 
 pub struct RootPainter {
   painters: Vec<Box<dyn Painter>>,

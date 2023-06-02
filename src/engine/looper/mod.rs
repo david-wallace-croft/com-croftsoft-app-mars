@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-20
+//! - Updated: 2023-06-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,7 +23,7 @@ use crate::models::world::factory::default::DefaultWorldFactory;
 use crate::models::world::factory::WorldFactory;
 use crate::models::world::seed::WorldSeed;
 use crate::models::world::World;
-use crate::painters::root::updater::{RootUpdater, RootUpdaterConfiguration};
+use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
