@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-04
-//! - Updated: 2023-05-26
+//! - Updated: 2023-06-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,7 +18,6 @@ use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub mod default;
-pub mod updater;
 
 pub trait TankOperator {
   fn fire(&mut self);

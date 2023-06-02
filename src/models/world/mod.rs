@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-06-01
+//! - Updated: 2023-06-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,7 +28,6 @@ pub mod director;
 pub mod factory;
 pub mod preparer;
 pub mod seed;
-pub mod updater;
 
 pub trait World {
   fn add_ammo_dump(

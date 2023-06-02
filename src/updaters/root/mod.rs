@@ -11,17 +11,17 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::models::options::updater::OptionsUpdater;
-use crate::models::options::updater::OptionsUpdaterInputs;
 use crate::models::options::Options;
-use crate::models::overlay::updater::OverlayUpdater;
-use crate::models::overlay::updater::OverlayUpdaterEvents;
-use crate::models::overlay::updater::OverlayUpdaterInputs;
-use crate::models::overlay::updater::OverlayUpdaterOptions;
 use crate::models::overlay::Overlay;
 use crate::models::root::Root;
 use crate::models::world::preparer::WorldPreparer;
-use crate::models::world::updater::WorldUpdater;
+use crate::updaters::options::OptionsUpdater;
+use crate::updaters::options::OptionsUpdaterInputs;
+use crate::updaters::overlay::OverlayUpdater;
+use crate::updaters::overlay::OverlayUpdaterEvents;
+use crate::updaters::overlay::OverlayUpdaterInputs;
+use crate::updaters::overlay::OverlayUpdaterOptions;
+use crate::updaters::world::WorldUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;

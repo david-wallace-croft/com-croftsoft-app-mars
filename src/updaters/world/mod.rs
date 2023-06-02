@@ -5,19 +5,19 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-05-31
+//! - Updated: 2023-06-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::World;
-use crate::models::ammo_dump::updater::AmmoDumpUpdater;
-use crate::models::bullet::updater::BulletUpdater;
-use crate::models::explosion::updater::ExplosionUpdater;
-use crate::models::obstacle::updater::ObstacleUpdater;
-use crate::models::tank::updater::TankUpdater;
-use crate::models::tank_operator::updater::TankOperatorUpdater;
+use crate::models::world::World;
+use crate::updaters::ammo_dump::AmmoDumpUpdater;
+use crate::updaters::bullet::BulletUpdater;
+use crate::updaters::explosion::ExplosionUpdater;
+use crate::updaters::obstacle::ObstacleUpdater;
+use crate::updaters::tank::TankUpdater;
+use crate::updaters::tank_operator::TankOperatorUpdater;
 use com_croftsoft_lib_role::Updater;
 use std::rc::Rc;
 

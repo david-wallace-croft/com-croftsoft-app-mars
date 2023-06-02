@@ -13,8 +13,6 @@
 
 use crate::updaters::root::RootUpdaterOptions;
 
-pub mod updater;
-
 #[derive(Default)]
 pub struct Options {
   pub pause: bool,
