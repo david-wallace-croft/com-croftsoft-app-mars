@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::engine::traits::Component;
+use super::Component;
 use crate::message::inputs::Inputs;
 use com_croftsoft_lib_animation::web_sys::add_change_handler_by_id;
 use com_croftsoft_lib_role::{Initializer, Updater};

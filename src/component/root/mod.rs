@@ -11,9 +11,9 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::Component;
 use crate::engine::options::Options;
 use crate::engine::root::Root;
-use crate::engine::traits::Component;
 // use super::canvas::CanvasComponent;
 // use super::frame_rate::FrameRateComponent;
 // use super::pause::PauseComponent;

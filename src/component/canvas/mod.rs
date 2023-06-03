@@ -13,7 +13,6 @@
 
 use crate::engine::options::Options;
 use crate::engine::root::Root;
-use crate::engine::traits::Component;
 use crate::message::inputs::Inputs;
 use crate::painter::root::RootPainter;
 use com_croftsoft_lib_animation::web_sys::{
@@ -24,6 +23,8 @@ use core::cell::RefCell;
 use futures::channel::mpsc::{TryRecvError, UnboundedReceiver};
 use std::rc::Rc;
 use web_sys::{HtmlCanvasElement, MouseEvent};
+
+use super::Component;
 
 pub struct CanvasComponent {
   id: String,
