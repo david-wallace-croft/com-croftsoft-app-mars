@@ -20,8 +20,7 @@ use crate::constant::{
   OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
-use crate::engine::traits::Color;
-use crate::model::tank::Tank;
+use crate::model::tank::{Color, Tank};
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
 use core::f64::consts::TAU;

@@ -13,17 +13,6 @@
 
 use com_croftsoft_lib_role::{Initializer, Updater};
 
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum Color {
-  // TODO: Support more than two colors
-  BLUE,
-  RED,
-}
-
 pub trait Component: Initializer + Updater {
   fn make_html(&self) -> String;
-}
-
-pub trait Shape {
-  // TODO: java.awt.Shape
 }

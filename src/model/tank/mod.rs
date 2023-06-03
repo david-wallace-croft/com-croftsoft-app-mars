@@ -12,7 +12,6 @@
 // =============================================================================
 
 use super::{Impassable, Model, ModelAccessor};
-use crate::engine::traits::Color;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -20,6 +19,13 @@ use std::rc::Rc;
 
 pub mod default;
 pub mod preparer;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum Color {
+  // TODO: Support more than two colors
+  BLUE,
+  RED,
+}
 
 pub trait SpaceTester {
   fn is_space_available(

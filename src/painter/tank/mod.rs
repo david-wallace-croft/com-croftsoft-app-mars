@@ -15,8 +15,7 @@ use crate::constant::{
   TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_FILL_STYLE_SPARKING,
   TANK_STROKE_STYLE,
 };
-use crate::engine::traits::Color;
-use crate::model::tank::Tank;
+use crate::model::tank::{Color, Tank};
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;
 use core::cell::{Ref, RefCell};
