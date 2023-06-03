@@ -23,7 +23,7 @@ pub mod constants;
 pub mod engine;
 pub mod messages;
 pub mod model;
-pub mod painters;
+pub mod painter;
 pub mod updater;
 
 #[cfg(feature = "wee_alloc")]
