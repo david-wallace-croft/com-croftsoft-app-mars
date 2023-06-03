@@ -27,12 +27,3 @@ pub trait Component: Initializer + Updater {
 pub trait Shape {
   // TODO: java.awt.Shape
 }
-
-pub trait SpaceTester {
-  fn is_space_available(
-    &self,
-    // TODO: this was PointXY
-    x: f64,
-    y: f64,
-  ) -> bool;
-}

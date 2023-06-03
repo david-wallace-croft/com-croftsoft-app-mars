@@ -11,14 +11,14 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{Tank, TankAccessor, TankMutator};
+use super::{SpaceTester, Tank, TankAccessor, TankMutator};
 use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
   TANK_SPARKING_DURATION_SECONDS, TANK_SPEED_METERS_PER_SECOND,
   TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
 };
-use crate::engine::traits::{Color, SpaceTester};
+use crate::engine::traits::Color;
 use crate::engine::world::factory::WorldFactory;
 use crate::engine::world::World;
 use crate::model::bullet::Bullet;

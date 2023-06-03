@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::{Impassable, Model, ModelAccessor};
-use crate::engine::traits::{Color, SpaceTester};
+use crate::engine::traits::Color;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -20,6 +20,15 @@ use std::rc::Rc;
 
 pub mod default;
 pub mod preparer;
+
+pub trait SpaceTester {
+  fn is_space_available(
+    &self,
+    // TODO: this was PointXY
+    x: f64,
+    y: f64,
+  ) -> bool;
+}
 
 // trait TankConsole
 pub trait Tank:
