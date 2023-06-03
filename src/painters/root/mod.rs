@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-02
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,8 +18,8 @@ use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use super::tank::TankPainter;
 use crate::constants::BACKGROUND_FILL_STYLE;
-use crate::models::options::Options;
-use crate::models::root::Root;
+use crate::engine::options::Options;
+use crate::engine::root::Root;
 use com_croftsoft_lib_animation::painter::background::BackgroundPainter;
 use com_croftsoft_lib_role::Painter;
 use core::cell::RefCell;

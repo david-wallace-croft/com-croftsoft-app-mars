@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-06-02
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::models::world::World;
+use crate::engine::world::World;
 use crate::updaters::ammo_dump::AmmoDumpUpdater;
 use crate::updaters::bullet::BulletUpdater;
 use crate::updaters::explosion::ExplosionUpdater;

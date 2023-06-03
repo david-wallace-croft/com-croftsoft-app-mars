@@ -5,17 +5,17 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-05-17
-//! - Updated: 2023-05-28
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::World;
+use crate::ai::tank_operator::TankOperator;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
 use crate::models::tank::Tank;
-use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
 use std::rc::Rc;

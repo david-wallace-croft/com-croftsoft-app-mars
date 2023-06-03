@@ -5,14 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-06-02
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::constants::OVERLAY_REFRESH_PERIOD_MILLIS;
-use crate::models::overlay::Overlay;
+use crate::engine::overlay::Overlay;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
 use com_croftsoft_lib_animation::metronome::Metronome;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-05-31
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,9 +21,9 @@ use crate::constants::{
 use crate::engine::traits::{
   Color, Impassable, Model, ModelAccessor, SpaceTester,
 };
+use crate::engine::world::factory::WorldFactory;
+use crate::engine::world::World;
 use crate::models::bullet::Bullet;
-use crate::models::world::factory::WorldFactory;
-use crate::models::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_role::Preparer;

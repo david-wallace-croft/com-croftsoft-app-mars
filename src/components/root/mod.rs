@@ -5,15 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-07
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use crate::engine::options::Options;
+use crate::engine::root::Root;
 use crate::engine::traits::Component;
-use crate::models::options::Options;
-use crate::models::root::Root;
 // use super::canvas::CanvasComponent;
 // use super::frame_rate::FrameRateComponent;
 // use super::pause::PauseComponent;

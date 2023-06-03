@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-02
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,15 +14,15 @@
 use super::configuration::Configuration;
 use crate::components::root::RootComponent;
 use crate::constants::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
+use crate::engine::options::Options;
+use crate::engine::root::Root;
+use crate::engine::world::director::WorldBuilderDirector;
+use crate::engine::world::factory::default::DefaultWorldFactory;
+use crate::engine::world::factory::WorldFactory;
+use crate::engine::world::seed::WorldSeed;
+use crate::engine::world::World;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
-use crate::models::options::Options;
-use crate::models::root::Root;
-use crate::models::world::director::WorldBuilderDirector;
-use crate::models::world::factory::default::DefaultWorldFactory;
-use crate::models::world::factory::WorldFactory;
-use crate::models::world::seed::WorldSeed;
-use crate::models::world::World;
 use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;

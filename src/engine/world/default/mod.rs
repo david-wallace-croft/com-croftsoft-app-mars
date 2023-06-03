@@ -5,19 +5,19 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2022-04-29
-//! - Updated: 2023-06-01
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::World;
+use crate::ai::tank_operator::TankOperator;
 use crate::models::ammo_dump::AmmoDump;
 use crate::models::bullet::Bullet;
 use crate::models::explosion::Explosion;
 use crate::models::obstacle::Obstacle;
 use crate::models::tank::Tank;
-use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
 use std::collections::VecDeque;

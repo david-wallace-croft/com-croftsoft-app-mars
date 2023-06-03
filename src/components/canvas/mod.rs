@@ -5,16 +5,16 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-05-07
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use crate::engine::options::Options;
+use crate::engine::root::Root;
 use crate::engine::traits::Component;
 use crate::messages::inputs::Inputs;
-use crate::models::options::Options;
-use crate::models::root::Root;
 use crate::painters::root::RootPainter;
 use com_croftsoft_lib_animation::web_sys::{
   add_mouse_down_handler_by_id, get_canvas_xy, get_html_canvas_element_by_id,

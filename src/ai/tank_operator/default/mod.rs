@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-05-26
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,12 +13,12 @@
 
 use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_cartographer::TankCartographer;
+use crate::ai::tank_operator::TankOperator;
 use crate::constants::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
 use crate::models::tank::Tank;
-use crate::models::tank_operator::TankOperator;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};
