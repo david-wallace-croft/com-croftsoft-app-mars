@@ -15,8 +15,8 @@ use super::{Obstacle, ObstacleAccessor};
 use crate::constants::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
-use crate::engine::traits::{Impassable, Model, ModelAccessor};
 use crate::engine::world::World;
+use crate::models::{Impassable, Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Preparer;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-05-28
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,7 @@ use super::{Bullet, BulletAccessor};
 use crate::constants::{
   BULLET_DAMAGE, BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
 };
-use crate::engine::traits::{Model, ModelAccessor};
+use crate::models::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 

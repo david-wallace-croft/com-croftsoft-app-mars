@@ -16,9 +16,9 @@ use crate::constants::{
   AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
   AMMO_DUMP_Z,
 };
-use crate::engine::traits::{Impassable, Model, ModelAccessor};
 use crate::engine::world::factory::WorldFactory;
 use crate::engine::world::World;
+use crate::models::{Impassable, Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 use std::rc::Rc;

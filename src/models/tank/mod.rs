@@ -5,15 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-02
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::engine::traits::{
-  Color, Impassable, Model, ModelAccessor, SpaceTester,
-};
+use super::{Impassable, Model, ModelAccessor};
+use crate::engine::traits::{Color, SpaceTester};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::collections::VecDeque;

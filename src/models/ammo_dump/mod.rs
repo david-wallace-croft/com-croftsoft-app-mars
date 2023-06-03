@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-06-02
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::engine::traits::{Model, ModelAccessor};
+use crate::models::{Model, ModelAccessor};
 
 pub mod default;
 pub mod preparer;
