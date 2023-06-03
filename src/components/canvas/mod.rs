@@ -14,7 +14,7 @@
 use crate::engine::options::Options;
 use crate::engine::root::Root;
 use crate::engine::traits::Component;
-use crate::messages::inputs::Inputs;
+use crate::message::inputs::Inputs;
 use crate::painter::root::RootPainter;
 use com_croftsoft_lib_animation::web_sys::{
   add_mouse_down_handler_by_id, get_canvas_xy, get_html_canvas_element_by_id,
