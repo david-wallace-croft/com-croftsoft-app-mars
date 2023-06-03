@@ -1,28 +1,32 @@
 // =============================================================================
-//! -Ammo Dump traits for CroftSoft Mars
+//! - Bullet traits for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2023-04-27
+//! - Created: 2023-05-10
 //! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::models::{Model, ModelAccessor};
+use crate::model::{Model, ModelAccessor};
 
 pub mod default;
 pub mod preparer;
 
-pub trait AmmoDump: AmmoDumpAccessor + Model {
-  fn set_ammo(
+pub trait Bullet: BulletAccessor + Model {
+  fn fire(
     &mut self,
-    ammo: f64,
+    origin_x: f64,
+    origin_y: f64,
+    heading: f64,
   );
+
+  fn mark_spent(&mut self);
 }
 
-pub trait AmmoDumpAccessor: ModelAccessor {
-  fn get_ammo(&self) -> f64;
+pub trait BulletAccessor: ModelAccessor {
+  fn get_damage(&self) -> f64;
 }

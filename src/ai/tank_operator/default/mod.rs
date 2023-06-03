@@ -18,7 +18,7 @@ use crate::constants::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };
-use crate::models::tank::Tank;
+use crate::model::tank::Tank;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};

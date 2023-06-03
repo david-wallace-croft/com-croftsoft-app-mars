@@ -12,10 +12,10 @@
 // =============================================================================
 
 use super::World;
-use crate::models::ammo_dump::preparer::AmmoDumpPreparer;
-use crate::models::bullet::preparer::BulletPreparer;
-use crate::models::obstacle::preparer::ObstaclePreparer;
-use crate::models::tank::preparer::TankPreparer;
+use crate::model::ammo_dump::preparer::AmmoDumpPreparer;
+use crate::model::bullet::preparer::BulletPreparer;
+use crate::model::obstacle::preparer::ObstaclePreparer;
+use crate::model::tank::preparer::TankPreparer;
 use com_croftsoft_lib_role::Preparer;
 use std::rc::Rc;
 

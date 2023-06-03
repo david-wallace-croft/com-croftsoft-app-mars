@@ -12,7 +12,7 @@
 // =============================================================================
 
 use crate::ai::state_space_node::StateSpaceNode;
-use crate::models::tank::Tank;
+use crate::model::tank::Tank;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;

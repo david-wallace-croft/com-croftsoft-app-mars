@@ -13,9 +13,9 @@
 
 use super::World;
 use crate::ai::tank_operator::TankOperator;
-use crate::models::bullet::Bullet;
-use crate::models::explosion::Explosion;
-use crate::models::tank::Tank;
+use crate::model::bullet::Bullet;
+use crate::model::explosion::Explosion;
+use crate::model::tank::Tank;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
 use std::rc::Rc;

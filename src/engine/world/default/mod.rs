@@ -13,11 +13,11 @@
 
 use super::World;
 use crate::ai::tank_operator::TankOperator;
-use crate::models::ammo_dump::AmmoDump;
-use crate::models::bullet::Bullet;
-use crate::models::explosion::Explosion;
-use crate::models::obstacle::Obstacle;
-use crate::models::tank::Tank;
+use crate::model::ammo_dump::AmmoDump;
+use crate::model::bullet::Bullet;
+use crate::model::explosion::Explosion;
+use crate::model::obstacle::Obstacle;
+use crate::model::tank::Tank;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
 use std::collections::VecDeque;

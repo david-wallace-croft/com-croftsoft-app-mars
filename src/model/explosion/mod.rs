@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::models::{Model, ModelAccessor};
+use crate::model::{Model, ModelAccessor};
 
 pub mod default;
 pub mod preparer;

@@ -1,41 +1,41 @@
 // =============================================================================
-//! - Bullet Preparer for CroftSoft Mars
+//! - Tank Preparer for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-05-20
+//! - Updated: 2023-06-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::Bullet;
+use super::Tank;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
-pub struct BulletPreparer {
-  bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
+pub struct TankPreparer {
+  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
 
-impl BulletPreparer {
-  pub fn new(bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>) -> Self {
+impl TankPreparer {
+  pub fn new(tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>) -> Self {
     Self {
-      bullets,
+      tanks,
     }
   }
 }
 
-impl Preparer for BulletPreparer {
+impl Preparer for TankPreparer {
   fn prepare(&mut self) {
-    let length: usize = self.bullets.borrow().len();
+    let length = self.tanks.borrow().len();
     for _index in 0..length {
-      let mut bullet = self.bullets.borrow_mut().pop_front().unwrap();
-      bullet.prepare();
-      self.bullets.borrow_mut().push_back(bullet);
+      let tank = self.tanks.borrow_mut().pop_front().unwrap();
+      tank.borrow_mut().prepare();
+      self.tanks.borrow_mut().push_back(tank);
     }
   }
 }

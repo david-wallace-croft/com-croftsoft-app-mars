@@ -21,7 +21,7 @@ use crate::constants::{
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
 use crate::engine::traits::Color;
-use crate::models::tank::Tank;
+use crate::model::tank::Tank;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::RefCell;
 use core::f64::consts::TAU;

@@ -15,7 +15,7 @@ use super::{Bullet, BulletAccessor};
 use crate::constants::{
   BULLET_DAMAGE, BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
 };
-use crate::models::{Model, ModelAccessor};
+use crate::model::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 

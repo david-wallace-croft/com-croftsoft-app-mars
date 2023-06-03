@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::{Explosion, ExplosionAccessor};
-use crate::models::{Model, ModelAccessor};
+use crate::model::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 
