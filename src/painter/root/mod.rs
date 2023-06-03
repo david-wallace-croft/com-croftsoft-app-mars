@@ -17,7 +17,7 @@ use super::explosion::ExplosionPainter;
 use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use super::tank::TankPainter;
-use crate::constants::BACKGROUND_FILL_STYLE;
+use crate::constant::BACKGROUND_FILL_STYLE;
 use crate::engine::options::Options;
 use crate::engine::root::Root;
 use com_croftsoft_lib_animation::painter::background::BackgroundPainter;

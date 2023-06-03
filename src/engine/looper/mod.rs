@@ -13,7 +13,7 @@
 
 use super::configuration::Configuration;
 use crate::component::root::RootComponent;
-use crate::constants::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
+use crate::constant::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
 use crate::engine::options::Options;
 use crate::engine::root::Root;
 use crate::engine::world::director::WorldBuilderDirector;

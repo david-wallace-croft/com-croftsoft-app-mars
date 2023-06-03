@@ -14,7 +14,7 @@
 use super::factory::WorldFactory;
 use super::World;
 use crate::ai::tank_operator::TankOperator;
-use crate::constants::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
+use crate::constant::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
 use crate::engine::traits::Color;
 use crate::model::ammo_dump::default::DefaultAmmoDump;
 use crate::model::obstacle::default::DefaultObstacle;

@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::{AmmoDump, AmmoDumpAccessor};
-use crate::constants::{
+use crate::constant::{
   AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
   AMMO_DUMP_Z,
 };

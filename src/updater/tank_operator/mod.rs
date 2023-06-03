@@ -12,7 +12,7 @@
 // =============================================================================
 
 use crate::ai::tank_operator::TankOperator;
-use crate::constants::TIME_DELTA;
+use crate::constant::TIME_DELTA;
 use crate::engine::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::{RefCell, RefMut};

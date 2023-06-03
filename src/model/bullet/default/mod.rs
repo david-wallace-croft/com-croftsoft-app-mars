@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::{Bullet, BulletAccessor};
-use crate::constants::{
+use crate::constant::{
   BULLET_DAMAGE, BULLET_RADIUS, BULLET_RANGE, BULLET_VELOCITY, BULLET_Z,
 };
 use crate::model::{Model, ModelAccessor};

@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::{Obstacle, ObstacleAccessor};
-use crate::constants::{
+use crate::constant::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
 use crate::engine::world::World;

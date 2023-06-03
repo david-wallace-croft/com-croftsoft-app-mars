@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::TIME_DELTA;
+use crate::constant::TIME_DELTA;
 use crate::model::ammo_dump::AmmoDump;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;

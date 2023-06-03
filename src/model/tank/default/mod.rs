@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::{Tank, TankAccessor, TankMutator};
-use crate::constants::{
+use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
   TANK_SPARKING_DURATION_SECONDS, TANK_SPEED_METERS_PER_SECOND,

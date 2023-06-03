@@ -12,14 +12,14 @@
 // =============================================================================
 
 use com_croftsoft_lib_animation::web_sys::log;
-use constants::INFO;
+use constant::INFO;
 use engine::looper::Looper;
 use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
 pub mod ai;
 pub mod component;
-pub mod constants;
+pub mod constant;
 pub mod engine;
 pub mod message;
 pub mod model;

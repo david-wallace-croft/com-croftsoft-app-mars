@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{AMMO_DUMP_FILL_STYLE, AMMO_DUMP_STROKE_STYLE};
+use crate::constant::{AMMO_DUMP_FILL_STYLE, AMMO_DUMP_STROKE_STYLE};
 use crate::model::ammo_dump::AmmoDump;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;

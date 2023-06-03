@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{EXPLOSION_FILL_STYLE, EXPLOSION_STROKE_STYLE};
+use crate::constant::{EXPLOSION_FILL_STYLE, EXPLOSION_STROKE_STYLE};
 use crate::model::explosion::Explosion;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;

@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{
+use crate::constant::{
   TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_FILL_STYLE_SPARKING,
   TANK_STROKE_STYLE,
 };

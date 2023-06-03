@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{FONT, OVERLAY_FILL_STYLE};
+use crate::constant::{FONT, OVERLAY_FILL_STYLE};
 use crate::engine::options::Options;
 use crate::engine::overlay::Overlay;
 use com_croftsoft_lib_role::Painter;

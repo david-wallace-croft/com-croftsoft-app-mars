@@ -14,7 +14,7 @@
 use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_cartographer::TankCartographer;
 use crate::ai::tank_operator::TankOperator;
-use crate::constants::{
+use crate::constant::{
   A_STAR_DIRECTIONS, A_STAR_LOOPS, A_STAR_STEP_SIZE, TANK_DRIFT_PROBABILITY,
   TANK_FIRING_PROBABILITY,
 };

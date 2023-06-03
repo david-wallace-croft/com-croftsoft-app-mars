@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{OBSTACLE_FILL_STYLE, OBSTACLE_STROKE_STYLE};
+use crate::constant::{OBSTACLE_FILL_STYLE, OBSTACLE_STROKE_STYLE};
 use crate::model::obstacle::Obstacle;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;

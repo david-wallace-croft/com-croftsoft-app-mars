@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::constants::{BULLET_FILL_STYLE, BULLET_STROKE_STYLE};
+use crate::constant::{BULLET_FILL_STYLE, BULLET_STROKE_STYLE};
 use crate::model::bullet::Bullet;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_lib_role::Painter;

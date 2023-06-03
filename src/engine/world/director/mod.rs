@@ -15,7 +15,7 @@ use super::builder::WorldBuilder;
 use super::factory::WorldFactory;
 use super::seed::WorldSeed;
 use super::World;
-use crate::constants::{
+use crate::constant::{
   AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,
   OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
