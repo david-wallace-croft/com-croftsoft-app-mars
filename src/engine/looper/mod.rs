@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::configuration::Configuration;
-use crate::components::root::RootComponent;
+use crate::component::root::RootComponent;
 use crate::constants::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
 use crate::engine::options::Options;
 use crate::engine::root::Root;

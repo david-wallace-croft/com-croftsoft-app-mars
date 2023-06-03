@@ -18,7 +18,7 @@ use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
 pub mod ai;
-pub mod components;
+pub mod component;
 pub mod constants;
 pub mod engine;
 pub mod message;
