@@ -23,7 +23,7 @@ use crate::engine::world::seed::WorldSeed;
 use crate::engine::world::World;
 use crate::messages::events::Events;
 use crate::messages::inputs::Inputs;
-use crate::updaters::root::{RootUpdater, RootUpdaterConfiguration};
+use crate::updater::root::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};

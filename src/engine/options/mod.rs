@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::updaters::root::RootUpdaterOptions;
+use crate::updater::root::RootUpdaterOptions;
 
 #[derive(Default)]
 pub struct Options {

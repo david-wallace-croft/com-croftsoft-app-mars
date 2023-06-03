@@ -12,12 +12,12 @@
 // =============================================================================
 
 use crate::engine::world::World;
-use crate::updaters::ammo_dump::AmmoDumpUpdater;
-use crate::updaters::bullet::BulletUpdater;
-use crate::updaters::explosion::ExplosionUpdater;
-use crate::updaters::obstacle::ObstacleUpdater;
-use crate::updaters::tank::TankUpdater;
-use crate::updaters::tank_operator::TankOperatorUpdater;
+use crate::updater::ammo_dump::AmmoDumpUpdater;
+use crate::updater::bullet::BulletUpdater;
+use crate::updater::explosion::ExplosionUpdater;
+use crate::updater::obstacle::ObstacleUpdater;
+use crate::updater::tank::TankUpdater;
+use crate::updater::tank_operator::TankOperatorUpdater;
 use com_croftsoft_lib_role::Updater;
 use std::rc::Rc;
 
