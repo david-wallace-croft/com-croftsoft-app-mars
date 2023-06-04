@@ -90,14 +90,6 @@ impl BulletAccessor for DefaultBullet {
 }
 
 impl Model for DefaultBullet {
-  fn set_center(
-    &mut self,
-    x: f64,
-    y: f64,
-  ) {
-    self.circle.set_center(x, y);
-  }
-
   fn update(
     &mut self,
     time_delta: f64,

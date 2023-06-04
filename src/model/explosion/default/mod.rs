@@ -59,14 +59,6 @@ impl ExplosionAccessor for DefaultExplosion {
 }
 
 impl Model for DefaultExplosion {
-  fn set_center(
-    &mut self,
-    x: f64,
-    y: f64,
-  ) {
-    // not needed
-  }
-
   fn update(
     &mut self,
     time_delta: f64,

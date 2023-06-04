@@ -21,11 +21,6 @@ pub mod obstacle;
 pub mod tank;
 
 pub trait Model: ModelAccessor + Preparer {
-  fn set_center(
-    &mut self,
-    x: f64,
-    y: f64,
-  );
   fn update(
     &mut self,
     time_delta: f64,

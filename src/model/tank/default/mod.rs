@@ -275,15 +275,6 @@ impl DefaultTank {
 }
 
 impl Model for DefaultTank {
-  fn set_center(
-    &mut self,
-    x: f64,
-    y: f64,
-  ) {
-    self.circle.center_x = x;
-    self.circle.center_y = y;
-  }
-
   fn update(
     &mut self,
     time_delta: f64,
