@@ -38,42 +38,25 @@ impl DefaultBullet {
     origin_x: f64,
     origin_y: f64,
   ) -> Self {
-    let mut bullet = Self {
-      active: false,
+    Self {
+      active: true,
       circle: Circle {
-        center_x: 0.,
-        center_y: 0.,
+        center_x: origin_x,
+        center_y: origin_y,
         radius: BULLET_RADIUS,
       },
       distance: 0.,
-      heading: 0.,
+      heading,
       id,
-      origin_x: 0.,
-      origin_y: 0.,
+      origin_x,
+      origin_y,
       spent: false,
-      updated: false,
-    };
-    bullet.fire(heading, origin_x, origin_y);
-    bullet
+      updated: true,
+    }
   }
 }
 
 impl Bullet for DefaultBullet {
-  fn fire(
-    &mut self,
-    heading: f64,
-    origin_x: f64,
-    origin_y: f64,
-  ) {
-    self.active = true;
-    self.circle.set_center(origin_x, origin_y);
-    self.distance = 0.;
-    self.heading = heading;
-    self.origin_x = origin_x;
-    self.origin_y = origin_y;
-    self.updated = true;
-  }
-
   fn mark_spent(&mut self) {
     self.spent = true;
   }

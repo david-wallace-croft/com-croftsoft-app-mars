@@ -16,13 +16,6 @@ use crate::model::{Model, ModelAccessor};
 pub mod default;
 
 pub trait Bullet: BulletAccessor + Model {
-  fn fire(
-    &mut self,
-    origin_x: f64,
-    origin_y: f64,
-    heading: f64,
-  );
-
   fn mark_spent(&mut self);
 }
 
