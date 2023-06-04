@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{Color, SpaceTester, Tank, TankAccessor, TankMutator};
+use super::{Color, SpaceTester, Tank, TankAccessor};
 use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
@@ -337,6 +337,14 @@ impl ModelAccessor for DefaultTank {
   }
 }
 
+impl Preparer for DefaultTank {
+  fn prepare(&mut self) {
+    self.updated = false;
+    self.firing = false;
+    self.dry_firing = false;
+  }
+}
+
 impl SpaceTester for DefaultTank {
   fn is_space_available(
     &self,
@@ -368,7 +376,69 @@ impl SpaceTester for DefaultTank {
   }
 }
 
-impl Tank for DefaultTank {}
+impl Tank for DefaultTank {
+  // moved from TankConsole
+  fn fire(&mut self) {
+    if !self.active || self.firing || self.dry_firing {
+      return;
+    }
+    self.updated = true;
+    if self.ammo < 1 {
+      self.dry_firing = true;
+      return;
+    }
+    self.ammo -= 1;
+    self.firing = true;
+    let bullet_origin_x: f64 =
+      self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
+    let bullet_origin_y: f64 =
+      self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
+    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
+      self.turret_heading,
+      bullet_origin_x,
+      bullet_origin_y,
+    );
+    self.world.add_bullet(bullet);
+  }
+
+  fn go(
+    &mut self,
+    destination: &Point2DD,
+  ) {
+    self.destination = Some(Point2DD::new(destination.x, destination.y));
+  }
+
+  fn rotate_turret(
+    &mut self,
+    target_point: &Option<Point2DD>,
+  ) {
+    if let Some(target_point) = target_point {
+      self.target_point.set_xy_point(target_point);
+    }
+    // TODO: else if None, rotate turret forward maybe
+  }
+
+  fn set_ammo(
+    &mut self,
+    ammo: usize,
+  ) {
+    self.ammo = ammo;
+  }
+
+  fn set_body_heading(
+    &mut self,
+    body_heading: f64,
+  ) {
+    self.body_heading = body_heading;
+  }
+
+  fn set_turret_heading(
+    &mut self,
+    turret_heading: f64,
+  ) {
+    self.turret_heading = turret_heading;
+  }
+}
 
 impl TankAccessor for DefaultTank {
   fn get_ammo(&self) -> usize {
@@ -463,77 +533,5 @@ impl TankAccessor for DefaultTank {
 
   fn is_sparking(&self) -> bool {
     self.sparking
-  }
-}
-
-impl TankMutator for DefaultTank {
-  // moved from TankConsole
-  fn fire(&mut self) {
-    if !self.active || self.firing || self.dry_firing {
-      return;
-    }
-    self.updated = true;
-    if self.ammo < 1 {
-      self.dry_firing = true;
-      return;
-    }
-    self.ammo -= 1;
-    self.firing = true;
-    let bullet_origin_x: f64 =
-      self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
-    let bullet_origin_y: f64 =
-      self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
-      self.turret_heading,
-      bullet_origin_x,
-      bullet_origin_y,
-    );
-    self.world.add_bullet(bullet);
-  }
-
-  fn go(
-    &mut self,
-    destination: &Point2DD,
-  ) {
-    self.destination = Some(Point2DD::new(destination.x, destination.y));
-  }
-
-  fn rotate_turret(
-    &mut self,
-    target_point: &Option<Point2DD>,
-  ) {
-    if let Some(target_point) = target_point {
-      self.target_point.set_xy_point(target_point);
-    }
-    // TODO: else if None, rotate turret forward maybe
-  }
-
-  fn set_ammo(
-    &mut self,
-    ammo: usize,
-  ) {
-    self.ammo = ammo;
-  }
-
-  fn set_body_heading(
-    &mut self,
-    body_heading: f64,
-  ) {
-    self.body_heading = body_heading;
-  }
-
-  fn set_turret_heading(
-    &mut self,
-    turret_heading: f64,
-  ) {
-    self.turret_heading = turret_heading;
-  }
-}
-
-impl Preparer for DefaultTank {
-  fn prepare(&mut self) {
-    self.updated = false;
-    self.firing = false;
-    self.dry_firing = false;
   }
 }

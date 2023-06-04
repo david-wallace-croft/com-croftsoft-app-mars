@@ -36,30 +36,7 @@ pub trait SpaceTester {
 }
 
 // trait TankConsole
-pub trait Tank: Model + SpaceTester + TankAccessor + TankMutator {}
-
-pub trait TankAccessor: ModelAccessor {
-  fn get_ammo(&self) -> usize;
-  fn get_body_heading(&self) -> f64;
-  fn get_body_rotation_speed(&self) -> f64;
-  fn get_center(&self) -> Point2DD;
-  // TODO: was PointXY
-  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
-  fn get_closest_enemy_tank_center(
-    &self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
-  ) -> Option<Point2DD>;
-  fn get_color(&self) -> Color;
-  fn get_damage(&self) -> f64;
-  fn get_radius(&self) -> f64;
-  fn get_tank_speed(&self) -> f64;
-  fn get_turret_heading(&self) -> f64;
-  fn is_dry_firing(&self) -> bool;
-  fn is_firing(&self) -> bool;
-  fn is_sparking(&self) -> bool;
-}
-
-pub trait TankMutator {
+pub trait Tank: Model + SpaceTester + TankAccessor {
   fn fire(&mut self);
 
   fn go(
@@ -86,4 +63,25 @@ pub trait TankMutator {
     &mut self,
     turret_heading: f64,
   );
+}
+
+pub trait TankAccessor: ModelAccessor {
+  fn get_ammo(&self) -> usize;
+  fn get_body_heading(&self) -> f64;
+  fn get_body_rotation_speed(&self) -> f64;
+  fn get_center(&self) -> Point2DD;
+  // TODO: was PointXY
+  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
+  fn get_closest_enemy_tank_center(
+    &self,
+    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+  ) -> Option<Point2DD>;
+  fn get_color(&self) -> Color;
+  fn get_damage(&self) -> f64;
+  fn get_radius(&self) -> f64;
+  fn get_tank_speed(&self) -> f64;
+  fn get_turret_heading(&self) -> f64;
+  fn is_dry_firing(&self) -> bool;
+  fn is_firing(&self) -> bool;
+  fn is_sparking(&self) -> bool;
 }

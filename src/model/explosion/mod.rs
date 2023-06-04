@@ -15,8 +15,8 @@ use crate::model::{Model, ModelAccessor};
 
 pub mod default;
 
-pub trait Explosion: ExplosionAccessor + Model + ModelAccessor {}
+pub trait Explosion: ExplosionAccessor + Model {}
 
-pub trait ExplosionAccessor {
+pub trait ExplosionAccessor: ModelAccessor {
   fn get_damage(&self) -> f64;
 }
