@@ -11,218 +11,33 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use self::events::RootUpdaterEvents;
+use self::events::RootUpdaterEventsAdapter;
+use self::inputs::RootUpdaterInputs;
+use self::inputs::RootUpdaterInputsAdapter;
+use self::options::RootUpdaterOptionsAdapter;
 use crate::engine::options::Options;
 use crate::engine::overlay::Overlay;
 use crate::engine::root::Root;
 use crate::preparer::world::WorldPreparer;
 use crate::updater::options::OptionsUpdater;
-use crate::updater::options::OptionsUpdaterInputs;
 use crate::updater::overlay::OverlayUpdater;
-use crate::updater::overlay::OverlayUpdaterEvents;
-use crate::updater::overlay::OverlayUpdaterInputs;
-use crate::updater::overlay::OverlayUpdaterOptions;
 use crate::updater::world::WorldUpdater;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
-use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
-use com_croftsoft_lib_animation::metronome::updater::{
-  MetronomeUpdater, MetronomeUpdaterEvents, MetronomeUpdaterInputs,
-};
+use com_croftsoft_lib_animation::metronome::updater::MetronomeUpdater;
 use com_croftsoft_lib_role::Preparer;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::rc::Rc;
 
+pub mod events;
+pub mod inputs;
+pub mod options;
+
 pub struct RootUpdaterConfiguration {
   pub update_period_millis_initial: f64,
-}
-
-pub trait RootUpdaterEvents {
-  fn get_updated(&self) -> bool;
-  fn get_time_to_update(&self) -> bool;
-  fn get_update_period_millis_changed(&self) -> Option<f64>;
-  fn set_time_to_update(&mut self);
-  fn set_update_period_millis_changed(
-    &mut self,
-    update_period_millis: f64,
-  );
-  fn set_updated(&mut self);
-}
-
-struct RootUpdaterEventsAdapter {
-  events: Rc<RefCell<dyn RootUpdaterEvents>>,
-}
-
-impl RootUpdaterEventsAdapter {
-  fn new(events: Rc<RefCell<dyn RootUpdaterEvents>>) -> Self {
-    Self {
-      events,
-    }
-  }
-}
-
-impl MetronomeUpdaterEvents for RootUpdaterEventsAdapter {
-  fn set_period_millis_changed(
-    &mut self,
-    update_period_millis: f64,
-  ) {
-    self
-      .events
-      .borrow_mut()
-      .set_update_period_millis_changed(update_period_millis);
-  }
-
-  fn set_tick(&mut self) {
-    self.events.borrow_mut().set_time_to_update();
-  }
-}
-
-impl OverlayUpdaterEvents for RootUpdaterEventsAdapter {
-  fn set_updated(&mut self) {
-    self.events.borrow_mut().set_updated();
-  }
-}
-
-pub trait RootUpdaterInputs {
-  fn get_current_time_millis(&self) -> f64;
-  fn get_pause_change_requested(&self) -> Option<bool>;
-  fn get_period_millis_change_requested(&self) -> Option<f64>;
-  fn get_reset_requested(&self) -> bool;
-  fn get_update_rate_display_change_requested(&self) -> Option<bool>;
-}
-
-struct RootUpdaterInputsAdapter {
-  events: Rc<RefCell<dyn RootUpdaterEvents>>,
-  inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
-}
-
-impl RootUpdaterInputsAdapter {
-  fn new(
-    events: Rc<RefCell<dyn RootUpdaterEvents>>,
-    inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
-  ) -> Self {
-    Self {
-      events,
-      inputs,
-    }
-  }
-}
-
-impl FrameRaterUpdaterInputs for RootUpdaterInputsAdapter {
-  fn get_frame_rate_display_change_requested(&self) -> Option<bool> {
-    self.inputs.borrow().get_update_rate_display_change_requested()
-  }
-
-  fn get_reset_requested(&self) -> bool {
-    self.inputs.borrow().get_reset_requested()
-  }
-
-  fn get_time_to_update(&self) -> bool {
-    self.events.borrow().get_time_to_update()
-  }
-
-  fn get_update_period_millis_changed(&self) -> Option<f64> {
-    self.events.borrow().get_update_period_millis_changed()
-  }
-
-  fn get_update_time_millis(&self) -> f64 {
-    self.inputs.borrow().get_current_time_millis()
-  }
-}
-
-impl MetronomeUpdaterInputs for RootUpdaterInputsAdapter {
-  fn get_current_time_millis(&self) -> f64 {
-    self.inputs.borrow().get_current_time_millis()
-  }
-
-  fn get_period_millis_change_requested(&self) -> Option<f64> {
-    self.inputs.borrow().get_period_millis_change_requested()
-  }
-
-  fn get_reset_requested(&self) -> bool {
-    self.inputs.borrow().get_reset_requested()
-  }
-}
-
-impl OptionsUpdaterInputs for RootUpdaterInputsAdapter {
-  fn get_pause_change_requested(&self) -> Option<bool> {
-    self.inputs.borrow().get_pause_change_requested()
-  }
-
-  fn get_reset_requested(&self) -> bool {
-    self.inputs.borrow().get_reset_requested()
-  }
-
-  // fn get_time_display_change_requested(&self) -> Option<bool> {
-  //   self.inputs.borrow().get_time_display_change_requested()
-  // }
-
-  fn get_time_to_update(&self) -> bool {
-    self.events.borrow().get_time_to_update()
-  }
-
-  fn get_update_period_millis_changed(&self) -> Option<f64> {
-    self.events.borrow().get_update_period_millis_changed()
-  }
-
-  fn get_update_rate_display_change_requested(&self) -> Option<bool> {
-    self.inputs.borrow().get_update_rate_display_change_requested()
-  }
-
-  fn get_update_time_millis(&self) -> f64 {
-    self.inputs.borrow().get_current_time_millis()
-  }
-}
-
-impl OverlayUpdaterInputs for RootUpdaterInputsAdapter {
-  fn get_current_time_millis(&self) -> f64 {
-    self.inputs.borrow().get_current_time_millis()
-  }
-
-  // fn get_pause_change_requested(&self) -> Option<bool> {
-  //   self.inputs.borrow().get_pause_change_requested()
-  // }
-
-  // fn get_reset_requested(&self) -> bool {
-  //   self.inputs.borrow().get_reset_requested()
-  // }
-
-  fn get_time_to_update(&self) -> bool {
-    self.events.borrow().get_time_to_update()
-  }
-
-  fn get_update_rate_display_change_requested(&self) -> Option<bool> {
-    self.inputs.borrow().get_update_rate_display_change_requested()
-  }
-}
-
-pub trait RootUpdaterOptions {
-  fn get_pause(&self) -> bool;
-  // fn get_time_display(&self) -> bool;
-  fn get_update_rate_display(&self) -> bool;
-}
-
-struct RootUpdaterOptionsAdapter {
-  options: Rc<RefCell<dyn RootUpdaterOptions>>,
-}
-
-impl RootUpdaterOptionsAdapter {
-  fn new(options: Rc<RefCell<dyn RootUpdaterOptions>>) -> Self {
-    Self {
-      options,
-    }
-  }
-}
-
-impl OverlayUpdaterOptions for RootUpdaterOptionsAdapter {
-  fn get_pause(&self) -> bool {
-    self.options.borrow().get_pause()
-  }
-
-  fn get_update_rate_display(&self) -> bool {
-    self.options.borrow().get_update_rate_display()
-  }
 }
 
 pub struct RootUpdater {

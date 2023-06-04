@@ -11,20 +11,8 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::updater::root::RootUpdaterOptions;
-
 #[derive(Default)]
 pub struct Options {
   pub pause: bool,
   pub update_rate_display: bool,
-}
-
-impl RootUpdaterOptions for Options {
-  fn get_pause(&self) -> bool {
-    self.pause
-  }
-
-  fn get_update_rate_display(&self) -> bool {
-    self.update_rate_display
-  }
 }
