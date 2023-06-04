@@ -12,8 +12,8 @@
 // =============================================================================
 
 use crate::constant::{FONT, OVERLAY_FILL_STYLE};
-use crate::engine::options::Options;
 use crate::engine::overlay::Overlay;
+use crate::options::Options;
 use com_croftsoft_lib_role::Painter;
 use core::cell::{Ref, RefCell};
 use std::rc::Rc;
