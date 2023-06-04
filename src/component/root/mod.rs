@@ -27,7 +27,7 @@ use crate::root::Root;
 use super::canvas::CanvasComponent;
 use super::update_rate::UpdateRateComponent;
 use crate::events::Events;
-use crate::message::inputs::Inputs;
+use crate::inputs::Inputs;
 use com_croftsoft_lib_animation::web_sys::{get_window, log};
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
 use core::cell::RefCell;

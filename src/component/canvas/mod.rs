@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::message::inputs::Inputs;
+use crate::inputs::Inputs;
 use crate::options::Options;
 use crate::painter::root::RootPainter;
 use crate::root::Root;

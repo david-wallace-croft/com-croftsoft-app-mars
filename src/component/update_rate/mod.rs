@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::Component;
-use crate::message::inputs::Inputs;
+use crate::inputs::Inputs;
 use com_croftsoft_lib_animation::web_sys::add_change_handler_by_id;
 use com_croftsoft_lib_role::{Initializer, Updater};
 use core::cell::RefCell;

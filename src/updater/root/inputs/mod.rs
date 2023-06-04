@@ -12,7 +12,7 @@
 // =============================================================================
 
 use super::events::RootUpdaterEvents;
-use crate::message::inputs::Inputs;
+use crate::inputs::Inputs;
 use crate::updater::options::OptionsUpdaterInputs;
 use crate::updater::overlay::OverlayUpdaterInputs;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
