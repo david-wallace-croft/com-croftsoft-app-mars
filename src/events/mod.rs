@@ -11,6 +11,8 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+// TODO: maybe refactor into individual messages in a queue
+
 #[derive(Default)]
 pub struct Events {
   pub time_to_update: bool,

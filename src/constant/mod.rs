@@ -1,5 +1,5 @@
 // =============================================================================
-//! - Constants for CroftSoft Mars
+//! - Constant values for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
