@@ -13,7 +13,7 @@
 
 use com_croftsoft_lib_animation::web_sys::log;
 use constant::INFO;
-use engine::looper::Looper;
+use looper::Looper;
 use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
@@ -21,7 +21,7 @@ pub mod ai;
 pub mod component;
 pub mod configuration;
 pub mod constant;
-pub mod engine;
+pub mod looper;
 pub mod message;
 pub mod model;
 pub mod options;
