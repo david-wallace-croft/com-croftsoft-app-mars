@@ -11,10 +11,10 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::engine::root::Root;
 use crate::message::inputs::Inputs;
 use crate::options::Options;
 use crate::painter::root::RootPainter;
+use crate::root::Root;
 use com_croftsoft_lib_animation::web_sys::{
   add_mouse_down_handler_by_id, get_canvas_xy, get_html_canvas_element_by_id,
 };

@@ -12,8 +12,8 @@
 // =============================================================================
 
 use super::Component;
-use crate::engine::root::Root;
 use crate::options::Options;
+use crate::root::Root;
 // use super::canvas::CanvasComponent;
 // use super::frame_rate::FrameRateComponent;
 // use super::pause::PauseComponent;

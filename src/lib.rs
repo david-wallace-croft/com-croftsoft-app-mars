@@ -28,6 +28,7 @@ pub mod options;
 pub mod overlay;
 pub mod painter;
 pub mod preparer;
+pub mod root;
 pub mod updater;
 
 #[cfg(feature = "wee_alloc")]

@@ -14,7 +14,6 @@
 use crate::component::root::RootComponent;
 use crate::configuration::Configuration;
 use crate::constant::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
-use crate::engine::root::Root;
 use crate::engine::world::director::WorldBuilderDirector;
 use crate::engine::world::factory::default::DefaultWorldFactory;
 use crate::engine::world::factory::WorldFactory;
@@ -23,6 +22,7 @@ use crate::engine::world::World;
 use crate::message::events::Events;
 use crate::message::inputs::Inputs;
 use crate::options::Options;
+use crate::root::Root;
 use crate::updater::root::{RootUpdater, RootUpdaterConfiguration};
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
