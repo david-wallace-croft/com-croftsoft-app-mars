@@ -14,7 +14,7 @@
 use crate::component::root::RootComponent;
 use crate::configuration::Configuration;
 use crate::constant::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
-use crate::message::events::Events;
+use crate::events::Events;
 use crate::message::inputs::Inputs;
 use crate::options::Options;
 use crate::root::Root;

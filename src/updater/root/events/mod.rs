@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::message::events::Events;
+use crate::events::Events;
 use crate::updater::overlay::OverlayUpdaterEvents;
 use com_croftsoft_lib_animation::metronome::updater::MetronomeUpdaterEvents;
 use core::cell::RefCell;

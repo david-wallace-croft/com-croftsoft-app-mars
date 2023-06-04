@@ -21,6 +21,7 @@ pub mod ai;
 pub mod component;
 pub mod configuration;
 pub mod constant;
+pub mod events;
 pub mod looper;
 pub mod message;
 pub mod model;
