@@ -11,8 +11,8 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::engine::overlay::Overlay;
 use crate::engine::world::World;
+use crate::overlay::Overlay;
 use core::cell::RefCell;
 use std::rc::Rc;
 

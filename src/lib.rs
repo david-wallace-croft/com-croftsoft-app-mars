@@ -25,6 +25,7 @@ pub mod engine;
 pub mod message;
 pub mod model;
 pub mod options;
+pub mod overlay;
 pub mod painter;
 pub mod preparer;
 pub mod updater;

@@ -12,7 +12,7 @@
 // =============================================================================
 
 use crate::constant::OVERLAY_REFRESH_PERIOD_MILLIS;
-use crate::engine::overlay::Overlay;
+use crate::overlay::Overlay;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
 use com_croftsoft_lib_animation::metronome::Metronome;
