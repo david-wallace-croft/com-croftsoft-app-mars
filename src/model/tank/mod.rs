@@ -37,21 +37,8 @@ pub trait SpaceTester {
 
 // trait TankConsole
 pub trait Tank: Model + SpaceTester + TankAccessor + TankMutator {
-  // fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
-
   // TODO: was PointXY
   fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
-
-  fn initialize(
-    &mut self,
-    center_x: f64,
-    center_y: f64,
-  );
-
-  // fn set_tank_operator(
-  //   &mut self,
-  //   tank_operator: Rc<RefCell<dyn TankOperator>>,
-  // );
 }
 
 pub trait TankAccessor: ModelAccessor {

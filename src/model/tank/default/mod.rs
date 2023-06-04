@@ -389,14 +389,6 @@ impl Tank for DefaultTank {
     }
     closest_ammo_dump_center
   }
-
-  fn initialize(
-    &mut self,
-    _center_x: f64,
-    _center_y: f64,
-  ) {
-    todo!()
-  }
 }
 
 impl TankAccessor for DefaultTank {
