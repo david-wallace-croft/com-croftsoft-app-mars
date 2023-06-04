@@ -11,10 +11,10 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{Impassable, ModelAccessor};
+use super::{Model, ModelAccessor};
 
 pub mod default;
 
-pub trait Obstacle: Impassable + ObstacleAccessor {}
+pub trait Obstacle: Model + ObstacleAccessor {}
 
 pub trait ObstacleAccessor: ModelAccessor {}

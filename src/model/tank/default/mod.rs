@@ -19,7 +19,7 @@ use crate::constant::{
   TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
 };
 use crate::model::bullet::Bullet;
-use crate::model::{Impassable, Model, ModelAccessor};
+use crate::model::{Model, ModelAccessor};
 use crate::world::factory::WorldFactory;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
@@ -273,8 +273,6 @@ impl DefaultTank {
     self.turret_heading = new_turret_heading;
   }
 }
-
-impl Impassable for DefaultTank {}
 
 impl Model for DefaultTank {
   fn set_center(

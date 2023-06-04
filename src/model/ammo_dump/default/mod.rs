@@ -16,7 +16,7 @@ use crate::constant::{
   AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
   AMMO_DUMP_Z,
 };
-use crate::model::{Impassable, Model, ModelAccessor};
+use crate::model::{Model, ModelAccessor};
 use crate::world::factory::WorldFactory;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
@@ -110,8 +110,6 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
     self.ammo
   }
 }
-
-impl Impassable for DefaultAmmoDump {}
 
 impl Model for DefaultAmmoDump {
   fn set_center(

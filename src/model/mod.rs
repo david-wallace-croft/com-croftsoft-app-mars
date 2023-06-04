@@ -20,8 +20,6 @@ pub mod explosion;
 pub mod obstacle;
 pub mod tank;
 
-pub trait Impassable: Model {}
-
 pub trait Model: ModelAccessor + Preparer {
   fn set_center(
     &mut self,

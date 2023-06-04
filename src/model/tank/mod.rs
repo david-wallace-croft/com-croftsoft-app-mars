@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{Impassable, Model, ModelAccessor};
+use super::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -36,9 +36,7 @@ pub trait SpaceTester {
 }
 
 // trait TankConsole
-pub trait Tank:
-  Impassable + Model + SpaceTester + TankAccessor + TankMutator
-{
+pub trait Tank: Model + SpaceTester + TankAccessor + TankMutator {
   // fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>>;
 
   // TODO: was PointXY

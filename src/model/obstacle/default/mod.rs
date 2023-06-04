@@ -15,7 +15,7 @@ use super::{Obstacle, ObstacleAccessor};
 use crate::constant::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
-use crate::model::{Impassable, Model, ModelAccessor};
+use crate::model::{Model, ModelAccessor};
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -74,8 +74,6 @@ impl DefaultObstacle {
     }
   }
 }
-
-impl Impassable for DefaultObstacle {}
 
 impl Model for DefaultObstacle {
   fn set_center(
