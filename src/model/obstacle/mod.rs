@@ -20,11 +20,6 @@ pub trait Obstacle: Impassable + ObstacleAccessor {
     &mut self,
     active: bool,
   );
-
-  fn set_radius(
-    &mut self,
-    radius: f64,
-  );
 }
 
 pub trait ObstacleAccessor: ModelAccessor {}

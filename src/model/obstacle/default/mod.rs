@@ -214,13 +214,6 @@ impl Obstacle for DefaultObstacle {
   ) {
     self.active = active;
   }
-
-  fn set_radius(
-    &mut self,
-    radius: f64,
-  ) {
-    self.circle.radius = radius;
-  }
 }
 
 impl ObstacleAccessor for DefaultObstacle {}
