@@ -15,11 +15,6 @@ use super::{Impassable, ModelAccessor};
 
 pub mod default;
 
-pub trait Obstacle: Impassable + ObstacleAccessor {
-  fn set_active(
-    &mut self,
-    active: bool,
-  );
-}
+pub trait Obstacle: Impassable + ObstacleAccessor {}
 
 pub trait ObstacleAccessor: ModelAccessor {}

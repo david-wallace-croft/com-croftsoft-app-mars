@@ -207,14 +207,7 @@ impl ModelAccessor for DefaultObstacle {
   }
 }
 
-impl Obstacle for DefaultObstacle {
-  fn set_active(
-    &mut self,
-    active: bool,
-  ) {
-    self.active = active;
-  }
-}
+impl Obstacle for DefaultObstacle {}
 
 impl ObstacleAccessor for DefaultObstacle {}
 
