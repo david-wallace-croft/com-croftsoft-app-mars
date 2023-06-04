@@ -1,5 +1,5 @@
 // =============================================================================
-//! - Ammo Dump Preparer for CroftSoft Mars
+//! - Obstacle Preparer for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
@@ -11,31 +11,31 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::AmmoDump;
+use crate::model::obstacle::Obstacle;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
-pub struct AmmoDumpPreparer {
-  ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
+pub struct ObstaclePreparer {
+  obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
 }
 
-impl AmmoDumpPreparer {
-  pub fn new(ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>) -> Self {
+impl ObstaclePreparer {
+  pub fn new(obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>) -> Self {
     Self {
-      ammo_dumps,
+      obstacles,
     }
   }
 }
 
-impl Preparer for AmmoDumpPreparer {
+impl Preparer for ObstaclePreparer {
   fn prepare(&mut self) {
-    let length = self.ammo_dumps.borrow().len();
-    for _ in 0..length {
-      let mut ammo_dump = self.ammo_dumps.borrow_mut().pop_front().unwrap();
-      ammo_dump.prepare();
-      self.ammo_dumps.borrow_mut().push_back(ammo_dump);
+    let length: usize = self.obstacles.borrow().len();
+    for _index in 0..length {
+      let mut obstacle = self.obstacles.borrow_mut().pop_front().unwrap();
+      obstacle.prepare();
+      self.obstacles.borrow_mut().push_back(obstacle);
     }
   }
 }

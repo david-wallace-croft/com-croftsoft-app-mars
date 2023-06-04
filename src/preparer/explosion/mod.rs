@@ -11,8 +11,8 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::Explosion;
 use crate::engine::world::World;
+use crate::model::explosion::Explosion;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;

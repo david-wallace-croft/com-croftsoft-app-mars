@@ -14,7 +14,6 @@
 use super::{Impassable, ModelAccessor};
 
 pub mod default;
-pub mod preparer;
 
 pub trait Obstacle: Impassable + ObstacleAccessor {
   fn set_active(

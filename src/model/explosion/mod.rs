@@ -14,7 +14,6 @@
 use crate::model::{Model, ModelAccessor};
 
 pub mod default;
-pub mod preparer;
 
 pub trait Explosion: ExplosionAccessor + Model + ModelAccessor {}
 

@@ -18,7 +18,6 @@ use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub mod default;
-pub mod preparer;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Color {

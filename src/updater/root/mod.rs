@@ -14,7 +14,7 @@
 use crate::engine::options::Options;
 use crate::engine::overlay::Overlay;
 use crate::engine::root::Root;
-use crate::engine::world::preparer::WorldPreparer;
+use crate::preparer::world::WorldPreparer;
 use crate::updater::options::OptionsUpdater;
 use crate::updater::options::OptionsUpdaterInputs;
 use crate::updater::overlay::OverlayUpdater;

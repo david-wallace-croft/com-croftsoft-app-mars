@@ -11,11 +11,11 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::World;
-use crate::model::ammo_dump::preparer::AmmoDumpPreparer;
-use crate::model::bullet::preparer::BulletPreparer;
-use crate::model::obstacle::preparer::ObstaclePreparer;
-use crate::model::tank::preparer::TankPreparer;
+use crate::engine::world::World;
+use crate::preparer::ammo_dump::AmmoDumpPreparer;
+use crate::preparer::bullet::BulletPreparer;
+use crate::preparer::obstacle::ObstaclePreparer;
+use crate::preparer::tank::TankPreparer;
 use com_croftsoft_lib_role::Preparer;
 use std::rc::Rc;
 

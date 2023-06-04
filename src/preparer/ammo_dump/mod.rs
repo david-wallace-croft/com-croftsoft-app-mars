@@ -1,5 +1,5 @@
 // =============================================================================
-//! - Bullet Preparer for CroftSoft Mars
+//! - Ammo Dump Preparer for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
@@ -11,31 +11,31 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::Bullet;
+use crate::model::ammo_dump::AmmoDump;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
-pub struct BulletPreparer {
-  bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
+pub struct AmmoDumpPreparer {
+  ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>,
 }
 
-impl BulletPreparer {
-  pub fn new(bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>) -> Self {
+impl AmmoDumpPreparer {
+  pub fn new(ammo_dumps: Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>) -> Self {
     Self {
-      bullets,
+      ammo_dumps,
     }
   }
 }
 
-impl Preparer for BulletPreparer {
+impl Preparer for AmmoDumpPreparer {
   fn prepare(&mut self) {
-    let length: usize = self.bullets.borrow().len();
-    for _index in 0..length {
-      let mut bullet = self.bullets.borrow_mut().pop_front().unwrap();
-      bullet.prepare();
-      self.bullets.borrow_mut().push_back(bullet);
+    let length = self.ammo_dumps.borrow().len();
+    for _ in 0..length {
+      let mut ammo_dump = self.ammo_dumps.borrow_mut().pop_front().unwrap();
+      ammo_dump.prepare();
+      self.ammo_dumps.borrow_mut().push_back(ammo_dump);
     }
   }
 }

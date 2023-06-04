@@ -24,6 +24,7 @@ pub mod engine;
 pub mod message;
 pub mod model;
 pub mod painter;
+pub mod preparer;
 pub mod updater;
 
 #[cfg(feature = "wee_alloc")]

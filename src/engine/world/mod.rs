@@ -26,7 +26,6 @@ pub mod builder;
 pub mod default;
 pub mod director;
 pub mod factory;
-pub mod preparer;
 pub mod seed;
 
 pub trait World {

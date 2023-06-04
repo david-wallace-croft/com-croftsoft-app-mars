@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::Tank;
+use crate::model::tank::Tank;
 use com_croftsoft_lib_role::Preparer;
 use core::cell::RefCell;
 use std::collections::VecDeque;
