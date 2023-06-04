@@ -18,6 +18,7 @@ use crate::updater::obstacle::ObstacleUpdater;
 use crate::updater::tank::TankUpdater;
 use crate::updater::tank_operator::TankOperatorUpdater;
 use crate::visitor::bullet::BulletVisitor;
+use crate::visitor::explosion::ExplosionVisitor;
 use crate::visitor::Visitor;
 use crate::world::World;
 use com_croftsoft_lib_role::Updater;
@@ -46,7 +47,11 @@ impl WorldUpdater {
       Box::new(bullet_updater),
     ];
     let bullet_visitor = BulletVisitor::new(world.clone());
-    let visitors: Vec<Box<dyn Visitor>> = vec![Box::new(bullet_visitor)];
+    let explosion_visitor = ExplosionVisitor::new(world.clone());
+    let visitors: Vec<Box<dyn Visitor>> = vec![
+      Box::new(explosion_visitor),
+      Box::new(bullet_visitor),
+    ];
     Self {
       child_updaters,
       visitors,

@@ -60,16 +60,6 @@ pub trait World: VisitorAcceptor {
     tank_operator: Rc<RefCell<dyn TankOperator>>,
   );
 
-  fn compute_bullet_damage(
-    &self,
-    circle: &dyn CircleAccessor,
-  ) -> f64;
-
-  fn compute_explosion_damage(
-    &self,
-    circle: &dyn CircleAccessor,
-  ) -> f64;
-
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>;
 
   fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>>;

@@ -132,12 +132,6 @@ impl Model for DefaultAmmoDump {
       self.state = DefaultAmmoDumpState::Nominal;
       return;
     }
-    let explosion_damage: f64 =
-      self.world.compute_explosion_damage(&self.circle);
-    self.add_damage(explosion_damage);
-    if self.state != DefaultAmmoDumpState::Nominal {
-      return;
-    }
     let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
     if new_ammo > self.ammo_max {
       new_ammo = self.ammo_max;

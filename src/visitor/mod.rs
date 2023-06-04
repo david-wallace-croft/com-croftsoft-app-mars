@@ -16,6 +16,7 @@ use crate::model::obstacle::Obstacle;
 use crate::model::tank::Tank;
 
 pub mod bullet;
+pub mod explosion;
 
 pub trait Visitor {
   fn visit_ammo_dump(

@@ -284,12 +284,6 @@ impl Model for DefaultTank {
     if !self.active {
       return;
     }
-    let explosion_damage: f64 =
-      self.world.compute_explosion_damage(&self.circle);
-    self.add_damage(explosion_damage);
-    if !self.active {
-      return;
-    }
     self.update_ammo();
     self.update_position(time_delta);
     self.update_sparking(time_delta);

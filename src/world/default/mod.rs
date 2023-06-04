@@ -94,35 +94,6 @@ impl World for DefaultWorld {
     self.tank_operators.borrow_mut().push_back(tank_operator);
   }
 
-  // TODO: remove
-  fn compute_bullet_damage(
-    &self,
-    circle: &dyn CircleAccessor,
-  ) -> f64 {
-    self
-      .bullets
-      .borrow_mut()
-      .iter_mut()
-      .filter(|bullet| bullet.intersects_circle(circle))
-      .fold(0., |damage, bullet| {
-        let updated_damage: f64 = damage + bullet.get_damage();
-        bullet.mark_spent();
-        updated_damage
-      })
-  }
-
-  fn compute_explosion_damage(
-    &self,
-    circle: &dyn CircleAccessor,
-  ) -> f64 {
-    self
-      .explosions
-      .borrow()
-      .iter()
-      .filter(|explosion| explosion.intersects_circle(circle))
-      .fold(0., |damage, explosion| damage + explosion.get_damage())
-  }
-
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>> {
     self.ammo_dumps.clone()
   }

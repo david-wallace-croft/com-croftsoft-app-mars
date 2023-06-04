@@ -85,11 +85,6 @@ impl Model for DefaultObstacle {
     if !self.active {
       return;
     }
-    let bullet_damage: f64 = self.world.compute_bullet_damage(&self.circle);
-    self.add_damage(bullet_damage);
-    if !self.active {
-      return;
-    }
     let mut thread_rng: ThreadRng = rand::thread_rng();
     let velocity_x_delta: f64 = thread_rng.gen_range(-1.0..=1.0)
       * OBSTACLE_JERK_MAGNITUDE_MAX
