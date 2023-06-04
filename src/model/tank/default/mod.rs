@@ -18,10 +18,10 @@ use crate::constant::{
   TANK_SPARKING_DURATION_SECONDS, TANK_SPEED_METERS_PER_SECOND,
   TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
 };
-use crate::engine::world::factory::WorldFactory;
-use crate::engine::world::World;
 use crate::model::bullet::Bullet;
 use crate::model::{Impassable, Model, ModelAccessor};
+use crate::world::factory::WorldFactory;
+use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_lib_role::Preparer;

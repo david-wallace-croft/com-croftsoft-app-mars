@@ -13,7 +13,7 @@
 
 use crate::ai::tank_operator::TankOperator;
 use crate::constant::TIME_DELTA;
-use crate::engine::world::World;
+use crate::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::{RefCell, RefMut};
 use std::collections::VecDeque;

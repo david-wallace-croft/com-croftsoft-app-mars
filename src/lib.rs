@@ -30,6 +30,7 @@ pub mod painter;
 pub mod preparer;
 pub mod root;
 pub mod updater;
+pub mod world;
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]

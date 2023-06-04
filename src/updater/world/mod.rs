@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::engine::world::World;
+use crate::world::World;
 use crate::updater::ammo_dump::AmmoDumpUpdater;
 use crate::updater::bullet::BulletUpdater;
 use crate::updater::explosion::ExplosionUpdater;

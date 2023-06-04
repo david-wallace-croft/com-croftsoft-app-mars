@@ -14,8 +14,8 @@
 use super::WorldFactory;
 use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::ai::tank_operator::TankOperator;
-use crate::engine::world::default::DefaultWorld;
-use crate::engine::world::World;
+use crate::world::default::DefaultWorld;
+use crate::world::World;
 use crate::model::bullet::default::DefaultBullet;
 use crate::model::bullet::Bullet;
 use crate::model::explosion::default::DefaultExplosion;
