@@ -368,28 +368,7 @@ impl SpaceTester for DefaultTank {
   }
 }
 
-impl Tank for DefaultTank {
-  // fn get_tank_operator(&self) -> Rc<RefCell<dyn TankOperator>> {
-  //   todo!()
-  // }
-
-  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
-    let mut closest_ammo_dump_center: Option<Point2DD> = None;
-    let tank_center = self.get_center();
-    let mut closest_distance: f64 = INFINITY;
-    let world = &self.world;
-    let ammo_dumps = world.get_ammo_dumps();
-    for ammo_dump in ammo_dumps.borrow().iter() {
-      let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();
-      let distance: f64 = tank_center.distance_to(&ammo_dump_center);
-      if distance < closest_distance {
-        closest_distance = distance;
-        closest_ammo_dump_center = Some(ammo_dump_center);
-      }
-    }
-    closest_ammo_dump_center
-  }
-}
+impl Tank for DefaultTank {}
 
 impl TankAccessor for DefaultTank {
   fn get_ammo(&self) -> usize {
@@ -408,10 +387,22 @@ impl TankAccessor for DefaultTank {
     Point2DD::new(self.circle.center_x, self.circle.center_y)
   }
 
-  // pub fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
-  //   // todo!()
-  //   None
-  // }
+  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
+    let mut closest_ammo_dump_center: Option<Point2DD> = None;
+    let tank_center = self.get_center();
+    let mut closest_distance: f64 = INFINITY;
+    let world = &self.world;
+    let ammo_dumps = world.get_ammo_dumps();
+    for ammo_dump in ammo_dumps.borrow().iter() {
+      let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();
+      let distance: f64 = tank_center.distance_to(&ammo_dump_center);
+      if distance < closest_distance {
+        closest_distance = distance;
+        closest_ammo_dump_center = Some(ammo_dump_center);
+      }
+    }
+    closest_ammo_dump_center
+  }
 
   fn get_closest_enemy_tank_center(
     &self,

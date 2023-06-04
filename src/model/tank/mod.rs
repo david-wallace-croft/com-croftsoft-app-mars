@@ -36,16 +36,15 @@ pub trait SpaceTester {
 }
 
 // trait TankConsole
-pub trait Tank: Model + SpaceTester + TankAccessor + TankMutator {
-  // TODO: was PointXY
-  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
-}
+pub trait Tank: Model + SpaceTester + TankAccessor + TankMutator {}
 
 pub trait TankAccessor: ModelAccessor {
   fn get_ammo(&self) -> usize;
   fn get_body_heading(&self) -> f64;
   fn get_body_rotation_speed(&self) -> f64;
   fn get_center(&self) -> Point2DD;
+  // TODO: was PointXY
+  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
   fn get_closest_enemy_tank_center(
     &self,
     tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
