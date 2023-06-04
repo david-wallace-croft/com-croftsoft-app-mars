@@ -19,6 +19,7 @@ use wee_alloc::WeeAlloc;
 
 pub mod ai;
 pub mod component;
+pub mod configuration;
 pub mod constant;
 pub mod engine;
 pub mod message;

@@ -11,8 +11,8 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::configuration::Configuration;
 use crate::component::root::RootComponent;
+use crate::configuration::Configuration;
 use crate::constant::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
 use crate::engine::options::Options;
 use crate::engine::root::Root;

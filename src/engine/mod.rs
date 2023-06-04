@@ -1,4 +1,3 @@
-pub mod configuration;
 pub mod looper;
 pub mod options;
 pub mod overlay;

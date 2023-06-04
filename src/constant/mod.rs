@@ -11,7 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::engine::configuration::Configuration;
+use crate::configuration::Configuration;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::f64::consts::TAU;
 
