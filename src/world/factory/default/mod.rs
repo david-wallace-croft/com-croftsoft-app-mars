@@ -4,8 +4,8 @@
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2022-05-17
-//! - Updated: 2023-06-03
+//! - Created: 2023-05-17
+//! - Updated: 2023-06-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,13 +14,13 @@
 use super::WorldFactory;
 use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::ai::tank_operator::TankOperator;
-use crate::world::default::DefaultWorld;
-use crate::world::World;
 use crate::model::bullet::default::DefaultBullet;
 use crate::model::bullet::Bullet;
 use crate::model::explosion::default::DefaultExplosion;
 use crate::model::explosion::Explosion;
 use crate::model::tank::Tank;
+use crate::world::default::DefaultWorld;
+use crate::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::{Cell, RefCell};
 use std::rc::Rc;

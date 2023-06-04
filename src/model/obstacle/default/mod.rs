@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,7 @@ use super::{Obstacle, ObstacleAccessor};
 use crate::constant::{
   OBSTACLE_JERK_MAGNITUDE_MAX, OBSTACLE_SPEED_MAX, OBSTACLE_Z,
 };
-use crate::model::{Model, ModelAccessor};
+use crate::model::{Damageable, Model, ModelAccessor};
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
@@ -38,22 +38,6 @@ pub struct DefaultObstacle {
 }
 
 impl DefaultObstacle {
-  fn add_damage(
-    &mut self,
-    damage: f64,
-  ) {
-    if !self.active || damage <= 0. {
-      return;
-    }
-    self.updated = true;
-    let radius = self.circle.radius - damage;
-    if radius < self.radius_min {
-      self.active = false;
-    } else {
-      self.circle.radius = radius;
-    }
-  }
-
   pub fn new(
     circle: Circle,
     drift_bounds: Rectangle,
@@ -75,6 +59,24 @@ impl DefaultObstacle {
   }
 }
 
+impl Damageable for DefaultObstacle {
+  fn add_damage(
+    &mut self,
+    damage: f64,
+  ) {
+    if !self.active || damage <= 0. {
+      return;
+    }
+    self.updated = true;
+    let radius = self.circle.radius - damage;
+    if radius < self.radius_min {
+      self.active = false;
+    } else {
+      self.circle.radius = radius;
+    }
+  }
+}
+
 impl Model for DefaultObstacle {
   fn update(
     &mut self,
@@ -85,12 +87,6 @@ impl Model for DefaultObstacle {
     }
     let bullet_damage: f64 = self.world.compute_bullet_damage(&self.circle);
     self.add_damage(bullet_damage);
-    if !self.active {
-      return;
-    }
-    let explosion_damage: f64 =
-      self.world.compute_explosion_damage(&self.circle);
-    self.add_damage(explosion_damage);
     if !self.active {
       return;
     }

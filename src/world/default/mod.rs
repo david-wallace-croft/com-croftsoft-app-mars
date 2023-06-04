@@ -4,8 +4,8 @@
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2022-04-29
-//! - Updated: 2023-06-03
+//! - Created: 2023-04-29
+//! - Updated: 2023-06-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use crate::model::bullet::Bullet;
 use crate::model::explosion::Explosion;
 use crate::model::obstacle::Obstacle;
 use crate::model::tank::Tank;
+use crate::visitor::{Visitor, VisitorAcceptor};
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -31,6 +32,23 @@ pub struct DefaultWorld {
   obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
   tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+}
+
+impl VisitorAcceptor for DefaultWorld {
+  fn accept_visitor(
+    &self,
+    visitor: &dyn Visitor,
+  ) {
+    for ammo_dump in self.ammo_dumps.borrow_mut().iter_mut() {
+      visitor.visit_ammo_dump(ammo_dump.as_mut());
+    }
+    for obstacle in self.obstacles.borrow_mut().iter_mut() {
+      visitor.visit_obstacle(obstacle.as_mut());
+    }
+    for tank in self.tanks.borrow_mut().iter_mut() {
+      visitor.visit_tank(&mut *tank.borrow_mut());
+    }
+  }
 }
 
 impl World for DefaultWorld {
@@ -76,6 +94,7 @@ impl World for DefaultWorld {
     self.tank_operators.borrow_mut().push_back(tank_operator);
   }
 
+  // TODO: remove
   fn compute_bullet_damage(
     &self,
     circle: &dyn CircleAccessor,

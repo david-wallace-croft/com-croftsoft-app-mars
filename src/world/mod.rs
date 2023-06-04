@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,6 +17,7 @@ use crate::model::bullet::Bullet;
 use crate::model::explosion::Explosion;
 use crate::model::obstacle::Obstacle;
 use crate::model::tank::Tank;
+use crate::visitor::VisitorAcceptor;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -28,7 +29,7 @@ pub mod director;
 pub mod factory;
 pub mod seed;
 
-pub trait World {
+pub trait World: VisitorAcceptor {
   fn add_ammo_dump(
     &self,
     ammo_dump: Box<dyn AmmoDump>,

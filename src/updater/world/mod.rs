@@ -5,24 +5,28 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::world::World;
 use crate::updater::ammo_dump::AmmoDumpUpdater;
 use crate::updater::bullet::BulletUpdater;
 use crate::updater::explosion::ExplosionUpdater;
 use crate::updater::obstacle::ObstacleUpdater;
 use crate::updater::tank::TankUpdater;
 use crate::updater::tank_operator::TankOperatorUpdater;
+use crate::visitor::bullet::BulletVisitor;
+use crate::visitor::Visitor;
+use crate::world::World;
 use com_croftsoft_lib_role::Updater;
 use std::rc::Rc;
 
 pub struct WorldUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
+  visitors: Vec<Box<dyn Visitor>>,
+  world: Rc<dyn World>,
 }
 
 impl WorldUpdater {
@@ -41,8 +45,12 @@ impl WorldUpdater {
       Box::new(obstacle_updater),
       Box::new(bullet_updater),
     ];
+    let bullet_visitor = BulletVisitor::new(world.clone());
+    let visitors: Vec<Box<dyn Visitor>> = vec![Box::new(bullet_visitor)];
     Self {
       child_updaters,
+      visitors,
+      world,
     }
   }
 }
@@ -50,5 +58,9 @@ impl WorldUpdater {
 impl Updater for WorldUpdater {
   fn update(&mut self) {
     self.child_updaters.iter_mut().for_each(|updater| updater.update());
+    self
+      .visitors
+      .iter()
+      .for_each(|visitor| self.world.accept_visitor(visitor.as_ref()));
   }
 }

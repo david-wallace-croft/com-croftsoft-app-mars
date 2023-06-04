@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,7 +19,7 @@ use crate::constant::{
   TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
 };
 use crate::model::bullet::Bullet;
-use crate::model::{Model, ModelAccessor};
+use crate::model::{Damageable, Model, ModelAccessor};
 use crate::world::factory::WorldFactory;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
@@ -53,22 +53,6 @@ pub struct DefaultTank {
 }
 
 impl DefaultTank {
-  fn add_damage(
-    &mut self,
-    new_damage: f64,
-  ) {
-    if !self.active || new_damage <= 0. {
-      return;
-    }
-    self.updated = true;
-    self.sparking = true;
-    self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
-    self.damage += new_damage;
-    if self.damage > TANK_DAMAGE_MAX {
-      self.active = false;
-    }
-  }
-
   pub fn initialize(
     &mut self,
     center_x: f64,
@@ -274,16 +258,29 @@ impl DefaultTank {
   }
 }
 
+impl Damageable for DefaultTank {
+  fn add_damage(
+    &mut self,
+    new_damage: f64,
+  ) {
+    if !self.active || new_damage <= 0. {
+      return;
+    }
+    self.updated = true;
+    self.sparking = true;
+    self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
+    self.damage += new_damage;
+    if self.damage > TANK_DAMAGE_MAX {
+      self.active = false;
+    }
+  }
+}
+
 impl Model for DefaultTank {
   fn update(
     &mut self,
     time_delta: f64,
   ) {
-    if !self.active {
-      return;
-    }
-    let bullet_damage: f64 = self.world.compute_bullet_damage(&self.circle);
-    self.add_damage(bullet_damage);
     if !self.active {
       return;
     }

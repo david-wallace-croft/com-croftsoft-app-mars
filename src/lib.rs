@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -31,6 +31,7 @@ pub mod painter;
 pub mod preparer;
 pub mod root;
 pub mod updater;
+pub mod visitor;
 pub mod world;
 
 #[cfg(feature = "wee_alloc")]
