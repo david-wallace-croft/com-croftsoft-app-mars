@@ -37,6 +37,8 @@ pub trait SpaceTester {
 
 // trait TankConsole
 pub trait Tank: Model + SpaceTester + TankAccessor {
+  // TODO: remove this mutator methods by moving TankOperator into Tank update
+
   fn fire(&mut self);
 
   fn go(
