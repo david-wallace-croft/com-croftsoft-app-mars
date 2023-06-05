@@ -355,6 +355,10 @@ impl SpaceTester for DefaultTank {
     let self_tank_color = self.get_color();
     for other_tank in self.world.get_tanks().borrow().iter() {
       let other_tank = other_tank.borrow();
+      // TODO: unremark when collision detection updated
+      // if !other_tank.is_active() {
+      //   continue;
+      // }
       if self_tank_color != other_tank.get_color() && self.get_ammo() > 0 {
         continue;
       }

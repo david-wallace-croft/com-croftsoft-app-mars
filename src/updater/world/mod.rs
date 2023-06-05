@@ -47,6 +47,7 @@ impl WorldUpdater {
       Box::new(bullet_updater),
     ];
     let bullet_visitor = BulletVisitor::new(world.clone());
+    // TODO: add a collision detection visitor
     let explosion_visitor = ExplosionVisitor::new(world.clone());
     let visitors: Vec<Box<dyn Visitor>> = vec![
       Box::new(explosion_visitor),
