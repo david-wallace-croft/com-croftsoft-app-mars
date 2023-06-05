@@ -23,6 +23,8 @@ use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
 use std::rc::Rc;
 
+pub mod state;
+
 #[derive(PartialEq)]
 enum DefaultAmmoDumpState {
   Cooling,
