@@ -96,6 +96,10 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
   fn get_ammo(&self) -> f64 {
     self.ammo
   }
+
+  fn is_nominal(&self) -> bool {
+    self.state == DefaultAmmoDumpState::Nominal
+  }
 }
 
 impl Damageable for DefaultAmmoDump {

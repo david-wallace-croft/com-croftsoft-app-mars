@@ -24,4 +24,6 @@ pub trait AmmoDump: AmmoDumpAccessor + Damageable + Model {
 
 pub trait AmmoDumpAccessor: ModelAccessor {
   fn get_ammo(&self) -> f64;
+
+  fn is_nominal(&self) -> bool;
 }
