@@ -24,6 +24,7 @@ pub struct ExplosionVisitor {
 }
 
 impl ExplosionVisitor {
+  // TODO: add a Damageable argument when Rust supports trait upcasting
   fn compute_explosion_damage(
     &self,
     circle: &dyn CircleAccessor,
