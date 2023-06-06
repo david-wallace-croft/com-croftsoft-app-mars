@@ -5,12 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use self::state::{DefaultAmmoDumpStateEvent, DefaultAmmoDumpStateMachine};
 use super::{AmmoDump, AmmoDumpAccessor};
 use crate::constant::{
   AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
@@ -25,13 +26,6 @@ use std::rc::Rc;
 
 pub mod state;
 
-#[derive(PartialEq)]
-enum DefaultAmmoDumpState {
-  Cooling,
-  Exploding,
-  Nominal,
-}
-
 pub struct DefaultAmmoDump {
   ammo: f64,
   ammo_growth_rate: f64,
@@ -39,7 +33,7 @@ pub struct DefaultAmmoDump {
   circle: Circle,
   factory: Rc<dyn WorldFactory>,
   id: usize,
-  state: DefaultAmmoDumpState,
+  state_machine: DefaultAmmoDumpStateMachine,
   updated: bool,
   world: Rc<dyn World>,
   z: f64,
@@ -66,7 +60,7 @@ impl DefaultAmmoDump {
       circle,
       factory,
       id,
-      state: DefaultAmmoDumpState::Nominal,
+      state_machine: DefaultAmmoDumpStateMachine::default(),
       updated: false,
       world,
       z: AMMO_DUMP_Z,
@@ -100,7 +94,7 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
   }
 
   fn is_nominal(&self) -> bool {
-    self.state == DefaultAmmoDumpState::Nominal
+    self.state_machine.is_nominal()
   }
 }
 
@@ -112,10 +106,9 @@ impl Damageable for DefaultAmmoDump {
     if damage <= 0. {
       return;
     }
-    if self.state == DefaultAmmoDumpState::Nominal {
-      self.state = DefaultAmmoDumpState::Exploding;
-      self.updated = true;
-    };
+    self.state_machine =
+      self.state_machine.transition(DefaultAmmoDumpStateEvent::Explode);
+    self.updated = true;
   }
 }
 
@@ -124,8 +117,9 @@ impl Model for DefaultAmmoDump {
     &mut self,
     time_delta: f64,
   ) {
-    if self.state == DefaultAmmoDumpState::Exploding {
-      self.state = DefaultAmmoDumpState::Cooling;
+    if self.state_machine.is_exploding() {
+      self.state_machine =
+        self.state_machine.transition(DefaultAmmoDumpStateEvent::Cool);
       let mut explosion_circle = Circle::default();
       explosion_circle.set_center_from_circle(&self.circle);
       explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
@@ -134,8 +128,9 @@ impl Model for DefaultAmmoDump {
       self.set_ammo(0.);
       return;
     }
-    if self.state == DefaultAmmoDumpState::Cooling {
-      self.state = DefaultAmmoDumpState::Nominal;
+    if self.state_machine.is_cooling() {
+      self.state_machine =
+        self.state_machine.transition(DefaultAmmoDumpStateEvent::Reset);
       return;
     }
     let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;

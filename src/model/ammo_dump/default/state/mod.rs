@@ -5,23 +5,23 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-05
-//! - Updated: 2023-06-05
+//! - Updated: 2023-06-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 #[derive(Clone, Copy)]
-struct Cooling;
+pub struct Cooling;
 
 #[derive(Clone, Copy)]
-struct Exploding;
+pub struct Exploding;
 
 #[derive(Clone, Copy)]
-struct Nominal;
+pub struct Nominal;
 
 #[derive(Clone, Copy)]
-struct DefaultAmmoDumpState<S> {
+pub struct DefaultAmmoDumpState<S> {
   _state: S,
 }
 
@@ -49,21 +49,34 @@ impl DefaultAmmoDumpState<Nominal> {
   }
 }
 
-enum DefaultAmmoDumpStateEvent {
+pub enum DefaultAmmoDumpStateEvent {
   Cool,
   Explode,
   Reset,
 }
 
+// TODO: Do we really need Copy here?
 #[derive(Clone, Copy)]
-enum DefaultAmmoDumpStateMachine {
+pub enum DefaultAmmoDumpStateMachine {
   Cooling(DefaultAmmoDumpState<Cooling>),
   Exploding(DefaultAmmoDumpState<Exploding>),
   Nominal(DefaultAmmoDumpState<Nominal>),
 }
 
 impl DefaultAmmoDumpStateMachine {
-  fn transition(
+  pub fn is_cooling(&self) -> bool {
+    matches!(self, DefaultAmmoDumpStateMachine::Cooling(_))
+  }
+
+  pub fn is_exploding(&self) -> bool {
+    matches!(self, DefaultAmmoDumpStateMachine::Exploding(_))
+  }
+
+  pub fn is_nominal(&self) -> bool {
+    matches!(self, DefaultAmmoDumpStateMachine::Nominal(_))
+  }
+
+  pub fn transition(
     self,
     event: DefaultAmmoDumpStateEvent,
   ) -> Self {
@@ -72,7 +85,23 @@ impl DefaultAmmoDumpStateMachine {
         DefaultAmmoDumpStateMachine::Nominal(state),
         DefaultAmmoDumpStateEvent::Explode,
       ) => DefaultAmmoDumpStateMachine::Exploding(state.explode()),
+      (
+        DefaultAmmoDumpStateMachine::Exploding(state),
+        DefaultAmmoDumpStateEvent::Cool,
+      ) => DefaultAmmoDumpStateMachine::Cooling(state.cool()),
+      (
+        DefaultAmmoDumpStateMachine::Cooling(state),
+        DefaultAmmoDumpStateEvent::Reset,
+      ) => DefaultAmmoDumpStateMachine::Nominal(state.reset()),
       _ => self,
     }
+  }
+}
+
+impl Default for DefaultAmmoDumpStateMachine {
+  fn default() -> Self {
+    DefaultAmmoDumpStateMachine::Nominal(DefaultAmmoDumpState {
+      _state: Nominal {},
+    })
   }
 }
