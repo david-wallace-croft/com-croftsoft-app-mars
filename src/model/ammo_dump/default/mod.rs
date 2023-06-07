@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-06-06
+//! - Updated: 2023-06-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use self::state::{DefaultAmmoDumpStateEvent, DefaultAmmoDumpStateMachine};
+use self::state::DefaultAmmoDumpStateMachine;
 use super::{AmmoDump, AmmoDumpAccessor};
 use crate::constant::{
   AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
@@ -94,7 +94,7 @@ impl AmmoDumpAccessor for DefaultAmmoDump {
   }
 
   fn is_nominal(&self) -> bool {
-    self.state_machine.is_nominal()
+    matches!(self.state_machine, DefaultAmmoDumpStateMachine::Nominal(_))
   }
 }
 
@@ -106,9 +106,11 @@ impl Damageable for DefaultAmmoDump {
     if damage <= 0. {
       return;
     }
-    self.state_machine =
-      self.state_machine.transition(DefaultAmmoDumpStateEvent::Explode);
-    self.updated = true;
+    if let DefaultAmmoDumpStateMachine::Nominal(state) = self.state_machine {
+      self.state_machine =
+        DefaultAmmoDumpStateMachine::Exploding(state.explode());
+      self.updated = true;
+    }
   }
 }
 
@@ -117,29 +119,31 @@ impl Model for DefaultAmmoDump {
     &mut self,
     time_delta: f64,
   ) {
-    if self.state_machine.is_exploding() {
-      self.state_machine =
-        self.state_machine.transition(DefaultAmmoDumpStateEvent::Cool);
-      let mut explosion_circle = Circle::default();
-      explosion_circle.set_center_from_circle(&self.circle);
-      explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
-      let explosion = self.factory.make_explosion(explosion_circle, self.ammo);
-      self.world.add_explosion(explosion);
-      self.set_ammo(0.);
-      return;
+    match self.state_machine {
+      DefaultAmmoDumpStateMachine::Cooling(state) => {
+        self.state_machine =
+          DefaultAmmoDumpStateMachine::Nominal(state.reset());
+      },
+      DefaultAmmoDumpStateMachine::Exploding(state) => {
+        self.state_machine = DefaultAmmoDumpStateMachine::Cooling(state.cool());
+        let mut explosion_circle = Circle::default();
+        explosion_circle.set_center_from_circle(&self.circle);
+        explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
+        let explosion =
+          self.factory.make_explosion(explosion_circle, self.ammo);
+        self.world.add_explosion(explosion);
+        self.set_ammo(0.);
+      },
+      DefaultAmmoDumpStateMachine::Nominal(_state) => {
+        let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
+        if new_ammo > self.ammo_max {
+          new_ammo = self.ammo_max;
+        } else if new_ammo < 0. {
+          new_ammo = 0.;
+        }
+        self.set_ammo(new_ammo);
+      },
     }
-    if self.state_machine.is_cooling() {
-      self.state_machine =
-        self.state_machine.transition(DefaultAmmoDumpStateEvent::Reset);
-      return;
-    }
-    let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
-    if new_ammo > self.ammo_max {
-      new_ammo = self.ammo_max;
-    } else if new_ammo < 0. {
-      new_ammo = 0.;
-    }
-    self.set_ammo(new_ammo);
   }
 }
 
