@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-06-07
+//! - Updated: 2023-06-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,8 +14,8 @@
 use self::state::DefaultAmmoDumpStateMachine;
 use super::{AmmoDump, AmmoDumpAccessor};
 use crate::constant::{
-  AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
-  AMMO_DUMP_Z,
+  AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX,
+  AMMO_DUMP_COOLING_TIME_SECONDS, AMMO_DUMP_EXPLOSION_FACTOR, AMMO_DUMP_Z,
 };
 use crate::model::{Damageable, Model, ModelAccessor};
 use crate::world::factory::WorldFactory;
@@ -31,6 +31,7 @@ pub struct DefaultAmmoDump {
   ammo_growth_rate: f64,
   ammo_max: f64,
   circle: Circle,
+  cooling_time_elapsed_seconds: f64,
   factory: Rc<dyn WorldFactory>,
   id: usize,
   state_machine: DefaultAmmoDumpStateMachine,
@@ -58,6 +59,7 @@ impl DefaultAmmoDump {
       ammo_growth_rate: AMMO_DUMP_AMMO_GROWTH_RATE,
       ammo_max: AMMO_DUMP_AMMO_MAX,
       circle,
+      cooling_time_elapsed_seconds: 0.,
       factory,
       id,
       state_machine: DefaultAmmoDumpStateMachine::default(),
@@ -121,8 +123,11 @@ impl Model for DefaultAmmoDump {
   ) {
     match self.state_machine {
       DefaultAmmoDumpStateMachine::Cooling(state) => {
-        self.state_machine =
-          DefaultAmmoDumpStateMachine::Nominal(state.reset());
+        self.cooling_time_elapsed_seconds += time_delta;
+        if self.cooling_time_elapsed_seconds >= AMMO_DUMP_COOLING_TIME_SECONDS {
+          self.state_machine =
+            DefaultAmmoDumpStateMachine::Nominal(state.reset());
+        }
       },
       DefaultAmmoDumpStateMachine::Exploding(state) => {
         self.state_machine = DefaultAmmoDumpStateMachine::Cooling(state.cool());
@@ -133,6 +138,7 @@ impl Model for DefaultAmmoDump {
           self.factory.make_explosion(explosion_circle, self.ammo);
         self.world.add_explosion(explosion);
         self.set_ammo(0.);
+        self.cooling_time_elapsed_seconds = 0.;
       },
       DefaultAmmoDumpStateMachine::Nominal(_state) => {
         let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;

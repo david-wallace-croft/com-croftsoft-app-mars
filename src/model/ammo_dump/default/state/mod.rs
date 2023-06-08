@@ -5,62 +5,60 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-05
-//! - Updated: 2023-06-07
+//! - Updated: 2023-06-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 #[derive(Clone, Copy)]
-pub struct Cooling;
+pub struct StateDiscriminantCooling;
 
 #[derive(Clone, Copy)]
-pub struct Exploding;
+pub struct StateDiscriminantExploding;
 
 #[derive(Clone, Copy)]
-pub struct Nominal;
+pub struct StateDiscriminantNominal;
 
 #[derive(Clone, Copy)]
 pub struct DefaultAmmoDumpState<S> {
-  _state: S,
+  _state_discriminant: S,
 }
 
-impl DefaultAmmoDumpState<Cooling> {
-  pub fn reset(self) -> DefaultAmmoDumpState<Nominal> {
+impl DefaultAmmoDumpState<StateDiscriminantCooling> {
+  pub fn reset(self) -> DefaultAmmoDumpState<StateDiscriminantNominal> {
     DefaultAmmoDumpState {
-      _state: Nominal {},
+      _state_discriminant: StateDiscriminantNominal {},
     }
   }
 }
 
-impl DefaultAmmoDumpState<Exploding> {
-  pub fn cool(self) -> DefaultAmmoDumpState<Cooling> {
+impl DefaultAmmoDumpState<StateDiscriminantExploding> {
+  pub fn cool(self) -> DefaultAmmoDumpState<StateDiscriminantCooling> {
     DefaultAmmoDumpState {
-      _state: Cooling {},
+      _state_discriminant: StateDiscriminantCooling {},
     }
   }
 }
 
-impl DefaultAmmoDumpState<Nominal> {
-  pub fn explode(self) -> DefaultAmmoDumpState<Exploding> {
+impl DefaultAmmoDumpState<StateDiscriminantNominal> {
+  pub fn explode(self) -> DefaultAmmoDumpState<StateDiscriminantExploding> {
     DefaultAmmoDumpState {
-      _state: Exploding {},
+      _state_discriminant: StateDiscriminantExploding {},
     }
   }
 }
 
-// TODO: Do we really need Copy here?
-#[derive(Clone, Copy)]
 pub enum DefaultAmmoDumpStateMachine {
-  Cooling(DefaultAmmoDumpState<Cooling>),
-  Exploding(DefaultAmmoDumpState<Exploding>),
-  Nominal(DefaultAmmoDumpState<Nominal>),
+  Cooling(DefaultAmmoDumpState<StateDiscriminantCooling>),
+  Exploding(DefaultAmmoDumpState<StateDiscriminantExploding>),
+  Nominal(DefaultAmmoDumpState<StateDiscriminantNominal>),
 }
 
 impl Default for DefaultAmmoDumpStateMachine {
   fn default() -> Self {
     DefaultAmmoDumpStateMachine::Nominal(DefaultAmmoDumpState {
-      _state: Nominal {},
+      _state_discriminant: StateDiscriminantNominal {},
     })
   }
 }

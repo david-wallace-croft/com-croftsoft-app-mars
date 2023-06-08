@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,6 +20,7 @@ pub const A_STAR_LOOPS: usize = 100;
 pub const A_STAR_STEP_SIZE: f64 = 10.;
 pub const AMMO_DUMP_AMMO_GROWTH_RATE: f64 = 0.5;
 pub const AMMO_DUMP_AMMO_MAX: f64 = 30.;
+pub const AMMO_DUMP_COOLING_TIME_SECONDS: f64 = 3.;
 pub const AMMO_DUMP_COUNT: usize = 5;
 pub const AMMO_DUMP_EXPLOSION_FACTOR: f64 = 3.;
 pub const AMMO_DUMP_FILL_STYLE: &str = "#b5a642";
