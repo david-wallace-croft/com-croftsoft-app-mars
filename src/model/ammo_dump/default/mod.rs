@@ -109,7 +109,8 @@ impl Damageable for DefaultAmmoDump {
       return;
     }
     if let StateMachine::Nominal(state) = self.state_machine {
-      self.state_machine = StateMachine::Exploding(state.explode());
+      self.state_machine =
+        StateMachine::Exploding(state.transit_to_exploding());
       self.updated = true;
     }
   }
@@ -124,11 +125,12 @@ impl Model for DefaultAmmoDump {
       StateMachine::Cooling(state) => {
         self.cooling_time_elapsed_seconds += time_delta;
         if self.cooling_time_elapsed_seconds >= AMMO_DUMP_COOLING_TIME_SECONDS {
-          self.state_machine = StateMachine::Nominal(state.reset());
+          self.state_machine =
+            StateMachine::Nominal(state.transit_to_nominal());
         }
       },
       StateMachine::Exploding(state) => {
-        self.state_machine = StateMachine::Cooling(state.cool());
+        self.state_machine = StateMachine::Cooling(state.transit_to_cooling());
         let mut explosion_circle = Circle::default();
         explosion_circle.set_center_from_circle(&self.circle);
         explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;

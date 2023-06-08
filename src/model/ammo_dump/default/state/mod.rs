@@ -26,7 +26,8 @@ pub struct State<S> {
 }
 
 impl State<StateDiscriminantCooling> {
-  pub fn reset(self) -> State<StateDiscriminantNominal> {
+  // TODO: Consider returning StateMachine::Nominal
+  pub fn transit_to_nominal(self) -> State<StateDiscriminantNominal> {
     State {
       _state_discriminant: StateDiscriminantNominal {},
     }
@@ -34,7 +35,7 @@ impl State<StateDiscriminantCooling> {
 }
 
 impl State<StateDiscriminantExploding> {
-  pub fn cool(self) -> State<StateDiscriminantCooling> {
+  pub fn transit_to_cooling(self) -> State<StateDiscriminantCooling> {
     State {
       _state_discriminant: StateDiscriminantCooling {},
     }
@@ -42,13 +43,14 @@ impl State<StateDiscriminantExploding> {
 }
 
 impl State<StateDiscriminantNominal> {
-  pub fn explode(self) -> State<StateDiscriminantExploding> {
+  pub fn transit_to_exploding(self) -> State<StateDiscriminantExploding> {
     State {
       _state_discriminant: StateDiscriminantExploding {},
     }
   }
 }
 
+// TODO: considering renaming to State
 pub enum StateMachine {
   Cooling(State<StateDiscriminantCooling>),
   Exploding(State<StateDiscriminantExploding>),
