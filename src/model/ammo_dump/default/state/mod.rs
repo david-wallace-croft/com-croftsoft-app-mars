@@ -21,43 +21,43 @@ pub struct StateDiscriminantExploding;
 pub struct StateDiscriminantNominal;
 
 #[derive(Clone, Copy)]
-pub struct DefaultAmmoDumpState<S> {
+pub struct State<S> {
   _state_discriminant: S,
 }
 
-impl DefaultAmmoDumpState<StateDiscriminantCooling> {
-  pub fn reset(self) -> DefaultAmmoDumpState<StateDiscriminantNominal> {
-    DefaultAmmoDumpState {
+impl State<StateDiscriminantCooling> {
+  pub fn reset(self) -> State<StateDiscriminantNominal> {
+    State {
       _state_discriminant: StateDiscriminantNominal {},
     }
   }
 }
 
-impl DefaultAmmoDumpState<StateDiscriminantExploding> {
-  pub fn cool(self) -> DefaultAmmoDumpState<StateDiscriminantCooling> {
-    DefaultAmmoDumpState {
+impl State<StateDiscriminantExploding> {
+  pub fn cool(self) -> State<StateDiscriminantCooling> {
+    State {
       _state_discriminant: StateDiscriminantCooling {},
     }
   }
 }
 
-impl DefaultAmmoDumpState<StateDiscriminantNominal> {
-  pub fn explode(self) -> DefaultAmmoDumpState<StateDiscriminantExploding> {
-    DefaultAmmoDumpState {
+impl State<StateDiscriminantNominal> {
+  pub fn explode(self) -> State<StateDiscriminantExploding> {
+    State {
       _state_discriminant: StateDiscriminantExploding {},
     }
   }
 }
 
-pub enum DefaultAmmoDumpStateMachine {
-  Cooling(DefaultAmmoDumpState<StateDiscriminantCooling>),
-  Exploding(DefaultAmmoDumpState<StateDiscriminantExploding>),
-  Nominal(DefaultAmmoDumpState<StateDiscriminantNominal>),
+pub enum StateMachine {
+  Cooling(State<StateDiscriminantCooling>),
+  Exploding(State<StateDiscriminantExploding>),
+  Nominal(State<StateDiscriminantNominal>),
 }
 
-impl Default for DefaultAmmoDumpStateMachine {
+impl Default for StateMachine {
   fn default() -> Self {
-    DefaultAmmoDumpStateMachine::Nominal(DefaultAmmoDumpState {
+    StateMachine::Nominal(State {
       _state_discriminant: StateDiscriminantNominal {},
     })
   }
