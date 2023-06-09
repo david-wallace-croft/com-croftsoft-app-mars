@@ -13,48 +13,48 @@
 
 use core::marker::PhantomData;
 
-pub struct CoolingState;
-pub struct ExplodingState;
-pub struct NominalState;
+pub struct FromCooling;
+pub struct FromExploding;
+pub struct FromNominal;
 
-pub struct FromState<D> {
-  phantom: PhantomData<D>,
+pub struct Transition<F> {
+  from: PhantomData<F>,
 }
 
-impl FromState<CoolingState> {
+impl Transition<FromCooling> {
   pub fn to_nominal(&self) -> State {
-    State::Nominal(FromState {
-      phantom: PhantomData,
+    State::Nominal(Transition {
+      from: PhantomData,
     })
   }
 }
 
-impl FromState<ExplodingState> {
+impl Transition<FromExploding> {
   pub fn to_cooling(&self) -> State {
-    State::Cooling(FromState {
-      phantom: PhantomData,
+    State::Cooling(Transition {
+      from: PhantomData,
     })
   }
 }
 
-impl FromState<NominalState> {
+impl Transition<FromNominal> {
   pub fn to_exploding(&self) -> State {
-    State::Exploding(FromState {
-      phantom: PhantomData,
+    State::Exploding(Transition {
+      from: PhantomData,
     })
   }
 }
 
 pub enum State {
-  Cooling(FromState<CoolingState>),
-  Exploding(FromState<ExplodingState>),
-  Nominal(FromState<NominalState>),
+  Cooling(Transition<FromCooling>),
+  Exploding(Transition<FromExploding>),
+  Nominal(Transition<FromNominal>),
 }
 
 impl Default for State {
   fn default() -> Self {
-    State::Nominal(FromState {
-      phantom: PhantomData,
+    State::Nominal(Transition {
+      from: PhantomData,
     })
   }
 }
