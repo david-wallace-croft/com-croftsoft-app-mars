@@ -15,43 +15,43 @@ pub struct StateDiscriminantCooling;
 pub struct StateDiscriminantExploding;
 pub struct StateDiscriminantNominal;
 
-pub struct StateSpecificOperator<D> {
+pub struct StateTransition<D> {
   _state_discriminant: D,
 }
 
-impl StateSpecificOperator<StateDiscriminantCooling> {
+impl StateTransition<StateDiscriminantCooling> {
   pub fn to_nominal(&self) -> State {
-    State::Nominal(StateSpecificOperator {
+    State::Nominal(StateTransition {
       _state_discriminant: StateDiscriminantNominal {},
     })
   }
 }
 
-impl StateSpecificOperator<StateDiscriminantExploding> {
+impl StateTransition<StateDiscriminantExploding> {
   pub fn to_cooling(&self) -> State {
-    State::Cooling(StateSpecificOperator {
+    State::Cooling(StateTransition {
       _state_discriminant: StateDiscriminantCooling {},
     })
   }
 }
 
-impl StateSpecificOperator<StateDiscriminantNominal> {
+impl StateTransition<StateDiscriminantNominal> {
   pub fn to_exploding(&self) -> State {
-    State::Exploding(StateSpecificOperator {
+    State::Exploding(StateTransition {
       _state_discriminant: StateDiscriminantExploding {},
     })
   }
 }
 
 pub enum State {
-  Cooling(StateSpecificOperator<StateDiscriminantCooling>),
-  Exploding(StateSpecificOperator<StateDiscriminantExploding>),
-  Nominal(StateSpecificOperator<StateDiscriminantNominal>),
+  Cooling(StateTransition<StateDiscriminantCooling>),
+  Exploding(StateTransition<StateDiscriminantExploding>),
+  Nominal(StateTransition<StateDiscriminantNominal>),
 }
 
 impl Default for State {
   fn default() -> Self {
-    State::Nominal(StateSpecificOperator {
+    State::Nominal(StateTransition {
       _state_discriminant: StateDiscriminantNominal {},
     })
   }
