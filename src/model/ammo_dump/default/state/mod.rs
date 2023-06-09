@@ -11,48 +11,50 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-pub struct StateDiscriminantCooling;
-pub struct StateDiscriminantExploding;
-pub struct StateDiscriminantNominal;
+use core::marker::PhantomData;
 
-pub struct StateTransition<D> {
-  _state_discriminant: D,
+pub struct CoolingState;
+pub struct ExplodingState;
+pub struct NominalState;
+
+pub struct FromState<D> {
+  phantom: PhantomData<D>,
 }
 
-impl StateTransition<StateDiscriminantCooling> {
+impl FromState<CoolingState> {
   pub fn to_nominal(&self) -> State {
-    State::Nominal(StateTransition {
-      _state_discriminant: StateDiscriminantNominal {},
+    State::Nominal(FromState {
+      phantom: PhantomData,
     })
   }
 }
 
-impl StateTransition<StateDiscriminantExploding> {
+impl FromState<ExplodingState> {
   pub fn to_cooling(&self) -> State {
-    State::Cooling(StateTransition {
-      _state_discriminant: StateDiscriminantCooling {},
+    State::Cooling(FromState {
+      phantom: PhantomData,
     })
   }
 }
 
-impl StateTransition<StateDiscriminantNominal> {
+impl FromState<NominalState> {
   pub fn to_exploding(&self) -> State {
-    State::Exploding(StateTransition {
-      _state_discriminant: StateDiscriminantExploding {},
+    State::Exploding(FromState {
+      phantom: PhantomData,
     })
   }
 }
 
 pub enum State {
-  Cooling(StateTransition<StateDiscriminantCooling>),
-  Exploding(StateTransition<StateDiscriminantExploding>),
-  Nominal(StateTransition<StateDiscriminantNominal>),
+  Cooling(FromState<CoolingState>),
+  Exploding(FromState<ExplodingState>),
+  Nominal(FromState<NominalState>),
 }
 
 impl Default for State {
   fn default() -> Self {
-    State::Nominal(StateTransition {
-      _state_discriminant: StateDiscriminantNominal {},
+    State::Nominal(FromState {
+      phantom: PhantomData,
     })
   }
 }
