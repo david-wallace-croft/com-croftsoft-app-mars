@@ -11,53 +11,47 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-#[derive(Clone, Copy)]
 pub struct StateDiscriminantCooling;
-
-#[derive(Clone, Copy)]
 pub struct StateDiscriminantExploding;
-
-#[derive(Clone, Copy)]
 pub struct StateDiscriminantNominal;
 
-#[derive(Clone, Copy)]
-pub struct StateOperator<S> {
-  _state_discriminant: S,
+pub struct StateSpecificOperator<D> {
+  _state_discriminant: D,
 }
 
-impl StateOperator<StateDiscriminantCooling> {
-  pub fn to_nominal(self) -> State {
-    State::Nominal(StateOperator {
+impl StateSpecificOperator<StateDiscriminantCooling> {
+  pub fn to_nominal(&self) -> State {
+    State::Nominal(StateSpecificOperator {
       _state_discriminant: StateDiscriminantNominal {},
     })
   }
 }
 
-impl StateOperator<StateDiscriminantExploding> {
-  pub fn to_cooling(self) -> State {
-    State::Cooling(StateOperator {
+impl StateSpecificOperator<StateDiscriminantExploding> {
+  pub fn to_cooling(&self) -> State {
+    State::Cooling(StateSpecificOperator {
       _state_discriminant: StateDiscriminantCooling {},
     })
   }
 }
 
-impl StateOperator<StateDiscriminantNominal> {
-  pub fn to_exploding(self) -> State {
-    State::Exploding(StateOperator {
+impl StateSpecificOperator<StateDiscriminantNominal> {
+  pub fn to_exploding(&self) -> State {
+    State::Exploding(StateSpecificOperator {
       _state_discriminant: StateDiscriminantExploding {},
     })
   }
 }
 
 pub enum State {
-  Cooling(StateOperator<StateDiscriminantCooling>),
-  Exploding(StateOperator<StateDiscriminantExploding>),
-  Nominal(StateOperator<StateDiscriminantNominal>),
+  Cooling(StateSpecificOperator<StateDiscriminantCooling>),
+  Exploding(StateSpecificOperator<StateDiscriminantExploding>),
+  Nominal(StateSpecificOperator<StateDiscriminantNominal>),
 }
 
 impl Default for State {
   fn default() -> Self {
-    State::Nominal(StateOperator {
+    State::Nominal(StateSpecificOperator {
       _state_discriminant: StateDiscriminantNominal {},
     })
   }

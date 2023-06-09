@@ -108,8 +108,8 @@ impl Damageable for DefaultAmmoDump {
     if damage <= 0. {
       return;
     }
-    if let State::Nominal(state_operator) = self.state {
-      self.state = state_operator.to_exploding();
+    if let State::Nominal(state_specific_operator) = &self.state {
+      self.state = state_specific_operator.to_exploding();
       self.updated = true;
     }
   }
@@ -120,15 +120,15 @@ impl Model for DefaultAmmoDump {
     &mut self,
     time_delta: f64,
   ) {
-    match self.state {
-      State::Cooling(state_operator) => {
+    match &self.state {
+      State::Cooling(state_specific_operator) => {
         self.cooling_time_elapsed_seconds += time_delta;
         if self.cooling_time_elapsed_seconds >= AMMO_DUMP_COOLING_TIME_SECONDS {
-          self.state = state_operator.to_nominal();
+          self.state = state_specific_operator.to_nominal();
         }
       },
-      State::Exploding(state_operator) => {
-        self.state = state_operator.to_cooling();
+      State::Exploding(state_specific_operator) => {
+        self.state = state_specific_operator.to_cooling();
         let mut explosion_circle = Circle::default();
         explosion_circle.set_center_from_circle(&self.circle);
         explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
@@ -138,7 +138,7 @@ impl Model for DefaultAmmoDump {
         self.set_ammo(0.);
         self.cooling_time_elapsed_seconds = 0.;
       },
-      State::Nominal(_state_operator) => {
+      State::Nominal(_state_specific_operator) => {
         let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
         if new_ammo > self.ammo_max {
           new_ammo = self.ammo_max;
