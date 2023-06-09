@@ -24,6 +24,7 @@ use crate::world::factory::WorldFactory;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
+use com_croftsoft_core::math::geom::point_xy::PointXY;
 use com_croftsoft_lib_role::Preparer;
 use core::f64::consts::{PI, TAU};
 use core::f64::INFINITY;
@@ -47,6 +48,8 @@ pub struct DefaultTank {
   sparking: bool,
   sparking_time_remaining: f64,
   target_point: Point2DD,
+  tread_offset_left: f64,
+  tread_offset_right: f64,
   turret_heading: f64,
   updated: bool,
   world: Rc<dyn World>,
@@ -95,6 +98,8 @@ impl DefaultTank {
       sparking: false,
       sparking_time_remaining: 0.,
       target_point: Point2DD::default(),
+      tread_offset_left: 0.,
+      tread_offset_right: 0.,
       turret_heading: 0.,
       updated: false,
       world,
@@ -104,6 +109,14 @@ impl DefaultTank {
   }
 
   // private update functions
+
+  fn is_turning_right(
+    body_heading_new: f64,
+    body_heading_old: f64,
+  ) -> bool {
+    // TODO
+    false
+  }
 
   fn rotate_toward_heading(
     current_heading: f64,
@@ -177,14 +190,15 @@ impl DefaultTank {
     if aim_heading < 0. {
       aim_heading += TAU;
     }
-    let new_body_heading: f64 = DefaultTank::rotate_toward_heading(
+    let body_heading_old: f64 = self.body_heading;
+    let body_heading_new: f64 = DefaultTank::rotate_toward_heading(
       self.body_heading,
       aim_heading,
       time_delta * TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND,
     );
-    if new_body_heading != self.body_heading {
+    if body_heading_new != self.body_heading {
       self.updated = true;
-      self.body_heading = new_body_heading;
+      self.body_heading = body_heading_new;
     }
     if self.body_heading != aim_heading {
       return;
@@ -199,6 +213,7 @@ impl DefaultTank {
     if move_y.abs() > delta_y.abs() {
       move_y = delta_y;
     }
+    let center_old = self.circle.get_center_point_2dd();
     let old_x = self.circle.center_x;
     let old_y = self.circle.center_y;
     let new_x = self.circle.center_x + move_x;
@@ -218,6 +233,13 @@ impl DefaultTank {
       // log(&format!("center updated {:?}", self.circle));
       self.updated = true;
     }
+    let center_new = self.circle.get_center_point_2dd();
+    self.update_tread_offsets(
+      body_heading_new,
+      body_heading_old,
+      center_new,
+      center_old,
+    );
   }
 
   fn update_sparking(
@@ -230,6 +252,35 @@ impl DefaultTank {
     self.sparking_time_remaining -= time_delta;
     if self.sparking_time_remaining <= 0. {
       self.sparking = false;
+    }
+  }
+
+  fn update_tread_offsets(
+    &mut self,
+    body_heading_new: f64,
+    body_heading_old: f64,
+    center_new: Point2DD,
+    center_old: Point2DD,
+  ) {
+    let mut treads_moving: bool = true;
+    if (body_heading_new - body_heading_old).abs() < TAU / 1000. {
+      if center_new.distance_xy(&center_old) < 0.25 {
+        treads_moving = false;
+      } else {
+        self.tread_offset_left += 1.;
+        self.tread_offset_right += 1.;
+        if self.tread_offset_left >= 8. {
+          self.tread_offset_left -= 8.;
+        }
+        if self.tread_offset_right >= 8. {
+          self.tread_offset_right -= 8.;
+        }
+      }
+    } else if DefaultTank::is_turning_right(body_heading_new, body_heading_old)
+    {
+      // TODO
+    } else {
+      // TODO
     }
   }
 
