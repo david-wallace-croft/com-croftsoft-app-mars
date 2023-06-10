@@ -5,18 +5,20 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use self::state::{FromBurning, State, Transition};
 use super::{Color, SpaceTester, Tank, TankAccessor};
 use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
-  TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_DAMAGE_MAX, TANK_RADIUS,
-  TANK_SPARKING_DURATION_SECONDS, TANK_SPEED_METERS_PER_SECOND,
-  TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
+  TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_BURNING_DURATION_SECONDS,
+  TANK_DAMAGE_MAX, TANK_RADIUS, TANK_SPARKING_DURATION_SECONDS,
+  TANK_SPEED_METERS_PER_SECOND, TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND,
+  TANK_Z,
 };
 use crate::model::bullet::Bullet;
 use crate::model::{Damageable, Model, ModelAccessor};
@@ -32,10 +34,12 @@ use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+pub mod state;
+
 pub struct DefaultTank {
-  active: bool,
   ammo: usize,
   body_heading: f64,
+  burning_time_remaining: f64,
   circle: Circle,
   color: Color,
   damage: f64,
@@ -45,8 +49,8 @@ pub struct DefaultTank {
   factory: Rc<dyn WorldFactory>,
   firing: bool,
   id: usize,
-  sparking: bool,
   sparking_time_remaining: f64,
+  state: State,
   target_point: Point2DD,
   tread_offset_left: f64,
   tread_offset_right: f64,
@@ -64,7 +68,6 @@ impl DefaultTank {
     self.ammo = TANK_AMMO_INITIAL;
     self.damage = 0.;
     self.prepare();
-    self.active = true;
     self.updated = true;
     self.circle.center_x = center_x;
     self.circle.center_y = center_y;
@@ -84,9 +87,9 @@ impl DefaultTank {
       radius: TANK_RADIUS,
     };
     let mut tank: DefaultTank = Self {
-      active: false,
       ammo: 0,
       body_heading: 0.,
+      burning_time_remaining: 0.,
       circle,
       color,
       damage: 0.,
@@ -95,8 +98,8 @@ impl DefaultTank {
       factory,
       firing: false,
       id,
-      sparking: false,
       sparking_time_remaining: 0.,
+      state: State::default(),
       target_point: Point2DD::default(),
       tread_offset_left: 0.,
       tread_offset_right: 0.,
@@ -167,6 +170,17 @@ impl DefaultTank {
         ammo_dump.set_ammo(dump_ammo - (dump_ammo as usize) as f64);
         ammo_needed = TANK_AMMO_MAX - self.ammo;
       }
+    }
+  }
+
+  fn update_burning(
+    &mut self,
+    time_delta: f64,
+    transition_from_burning: Transition<FromBurning>,
+  ) {
+    self.burning_time_remaining -= time_delta;
+    if self.burning_time_remaining <= 0. {
+      self.state = transition_from_burning.to_inactive();
     }
   }
 
@@ -246,12 +260,11 @@ impl DefaultTank {
     &mut self,
     time_delta: f64,
   ) {
-    if !self.sparking {
-      return;
-    }
-    self.sparking_time_remaining -= time_delta;
-    if self.sparking_time_remaining <= 0. {
-      self.sparking = false;
+    if let State::Sparking(transition_from_sparking) = self.state {
+      self.sparking_time_remaining -= time_delta;
+      if self.sparking_time_remaining <= 0. {
+        self.state = transition_from_sparking.to_nominal();
+      }
     }
   }
 
@@ -314,15 +327,32 @@ impl Damageable for DefaultTank {
     &mut self,
     new_damage: f64,
   ) {
-    if !self.active || new_damage <= 0. {
+    if new_damage <= 0. {
       return;
     }
-    self.updated = true;
-    self.sparking = true;
-    self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
-    self.damage += new_damage;
-    if self.damage > TANK_DAMAGE_MAX {
-      self.active = false;
+    match self.state {
+      State::Burning(_) | State::Inactive => (),
+      State::Nominal(transition_from_nominal) => {
+        self.updated = true;
+        self.damage += new_damage;
+        if self.damage > TANK_DAMAGE_MAX {
+          self.state = transition_from_nominal.to_burning();
+          self.burning_time_remaining = TANK_BURNING_DURATION_SECONDS;
+        } else {
+          self.state = transition_from_nominal.to_sparking();
+          self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
+        }
+      },
+      State::Sparking(transition_from_sparking) => {
+        self.updated = true;
+        self.damage += new_damage;
+        if self.damage > TANK_DAMAGE_MAX {
+          self.state = transition_from_sparking.to_burning();
+          self.burning_time_remaining = TANK_BURNING_DURATION_SECONDS;
+        } else {
+          self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
+        }
+      },
     }
   }
 }
@@ -332,13 +362,18 @@ impl Model for DefaultTank {
     &mut self,
     time_delta: f64,
   ) {
-    if !self.active {
-      return;
+    match self.state {
+      State::Burning(transition_from_burning) => {
+        self.update_burning(time_delta, transition_from_burning);
+      },
+      State::Inactive => (),
+      State::Nominal(_) | State::Sparking(_) => {
+        self.update_ammo();
+        self.update_position(time_delta);
+        self.update_sparking(time_delta);
+        self.update_turret_heading(time_delta);
+      },
     }
-    self.update_ammo();
-    self.update_position(time_delta);
-    self.update_sparking(time_delta);
-    self.update_turret_heading(time_delta);
   }
 }
 
@@ -371,7 +406,7 @@ impl ModelAccessor for DefaultTank {
   }
 
   fn is_active(&self) -> bool {
-    self.active
+    !matches!(self.state, State::Inactive)
   }
 
   fn is_updated(&self) -> bool {
@@ -406,10 +441,9 @@ impl SpaceTester for DefaultTank {
     let self_tank_color = self.get_color();
     for other_tank in self.world.get_tanks().borrow().iter() {
       let other_tank = other_tank.borrow();
-      // TODO: unremark when collision detection updated
-      // if !other_tank.is_active() {
-      //   continue;
-      // }
+      if !other_tank.is_active() {
+        continue;
+      }
       if self_tank_color != other_tank.get_color() && self.get_ammo() > 0 {
         continue;
       }
@@ -425,7 +459,10 @@ impl SpaceTester for DefaultTank {
 impl Tank for DefaultTank {
   // moved from TankConsole
   fn fire(&mut self) {
-    if !self.active || self.firing || self.dry_firing {
+    if matches!(self.state, State::Burning(_) | State::Inactive) {
+      return;
+    }
+    if self.firing || self.dry_firing {
       return;
     }
     self.updated = true;
@@ -532,7 +569,10 @@ impl TankAccessor for DefaultTank {
     let mut closest_enemy_tank_center = Point2DD::default();
     for i in 0..length {
       let tank = tanks[i].borrow();
-      if !tank.is_active() || tank.get_color() == self.color {
+      if tank.is_burning()
+        || !tank.is_active()
+        || tank.get_color() == self.color
+      {
         continue;
       }
       let enemy_tank_center = tank.get_center();
@@ -569,6 +609,10 @@ impl TankAccessor for DefaultTank {
     self.turret_heading
   }
 
+  fn is_burning(&self) -> bool {
+    matches!(self.state, State::Burning(_))
+  }
+
   fn is_dry_firing(&self) -> bool {
     self.dry_firing
   }
@@ -578,6 +622,6 @@ impl TankAccessor for DefaultTank {
   }
 
   fn is_sparking(&self) -> bool {
-    self.sparking
+    matches!(self.state, State::Sparking(_))
   }
 }

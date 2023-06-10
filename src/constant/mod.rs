@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-08
+//! - Updated: 2023-06-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -67,6 +67,7 @@ pub const OVERLAY_REFRESH_PERIOD_MILLIS: f64 = 1_000.;
 pub const TANK_AMMO_INITIAL: usize = TANK_DAMAGE_MAX as usize + 1;
 pub const TANK_AMMO_MAX: usize = 30;
 pub const TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND: f64 = TAU / 6.;
+pub const TANK_BURNING_DURATION_SECONDS: f64 = 5.;
 pub const TANK_DAMAGE_MAX: f64 = 2.;
 pub const TANK_DRIFT_PROBABILITY: f64 = 0.1;
 pub const TANK_FILL_STYLE_BLUE: &str = "rgb(99, 127, 255)";

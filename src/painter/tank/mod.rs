@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -140,7 +140,7 @@ impl TankPainter {
     context.fill();
     context.stroke();
     // sparking
-    if tank.is_sparking() || !tank.is_active() {
+    if tank.is_burning() || tank.is_sparking() {
       context.set_fill_style(&self.fill_style_sparking);
       context.begin_path();
       context.rect(-5., -5., 10., 10.);
@@ -157,6 +157,10 @@ impl Painter for TankPainter {
     let tanks: Ref<VecDeque<Rc<RefCell<dyn Tank>>>> = self.tanks.borrow();
     for tank in tanks.iter() {
       let tank: Ref<dyn Tank> = tank.borrow();
+      if !tank.is_active() {
+        // TODO: remove inactive tanks
+        continue;
+      }
       let _result = self.paint_tank(&*tank);
     }
   }

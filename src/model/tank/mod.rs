@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -84,6 +84,7 @@ pub trait TankAccessor: ModelAccessor {
   fn get_radius(&self) -> f64;
   fn get_tank_speed(&self) -> f64;
   fn get_turret_heading(&self) -> f64;
+  fn is_burning(&self) -> bool;
   fn is_dry_firing(&self) -> bool;
   fn is_firing(&self) -> bool;
   fn is_sparking(&self) -> bool;

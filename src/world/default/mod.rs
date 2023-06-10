@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-29
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -154,7 +154,7 @@ impl World for DefaultWorld {
   ) -> bool {
     // TODO: use a function to determine if there is one
     for tank in self.tanks.borrow().iter() {
-      if tank.borrow().intersects_circle(circle) {
+      if tank.borrow().is_active() && tank.borrow().intersects_circle(circle) {
         return true;
       }
     }

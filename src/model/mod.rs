@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-03
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-10
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -52,6 +52,7 @@ pub trait ModelAccessor {
     circle: &dyn CircleAccessor,
   ) -> bool;
 
+  // TODO: change to is_inactive()
   fn is_active(&self) -> bool;
 
   fn is_updated(&self) -> bool;
