@@ -353,7 +353,6 @@ impl Model for DefaultTank {
         self.update_turret_heading(time_delta);
       },
       State::Sparking(transition_from_sparking) => {
-        self.update_ammo();
         self.sparking_time_remaining -= time_delta;
         if self.sparking_time_remaining <= 0. {
           self.state = transition_from_sparking.to_nominal();
