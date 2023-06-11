@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-10
+//! - Updated: 2023-06-11
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use self::state::{FromBurning, State, Transition};
+use self::state::State;
 use super::{Color, SpaceTester, Tank, TankAccessor};
 use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
@@ -173,17 +173,6 @@ impl DefaultTank {
     }
   }
 
-  fn update_burning(
-    &mut self,
-    time_delta: f64,
-    transition_from_burning: Transition<FromBurning>,
-  ) {
-    self.burning_time_remaining -= time_delta;
-    if self.burning_time_remaining <= 0. {
-      self.state = transition_from_burning.to_inactive();
-    }
-  }
-
   fn update_position(
     &mut self,
     time_delta: f64,
@@ -254,18 +243,6 @@ impl DefaultTank {
       center_new,
       center_old,
     );
-  }
-
-  fn update_sparking(
-    &mut self,
-    time_delta: f64,
-  ) {
-    if let State::Sparking(transition_from_sparking) = self.state {
-      self.sparking_time_remaining -= time_delta;
-      if self.sparking_time_remaining <= 0. {
-        self.state = transition_from_sparking.to_nominal();
-      }
-    }
   }
 
   fn update_tread_offsets(
@@ -364,14 +341,23 @@ impl Model for DefaultTank {
   ) {
     match self.state {
       State::Burning(transition_from_burning) => {
-        self.update_burning(time_delta, transition_from_burning);
+        self.burning_time_remaining -= time_delta;
+        if self.burning_time_remaining <= 0. {
+          self.state = transition_from_burning.to_inactive();
+        }
       },
       State::Inactive => (),
-      State::Nominal(_) | State::Sparking(_) => {
+      State::Nominal(_) => {
         self.update_ammo();
         self.update_position(time_delta);
-        self.update_sparking(time_delta);
         self.update_turret_heading(time_delta);
+      },
+      State::Sparking(transition_from_sparking) => {
+        self.update_ammo();
+        self.sparking_time_remaining -= time_delta;
+        if self.sparking_time_remaining <= 0. {
+          self.state = transition_from_sparking.to_nominal();
+        }
       },
     }
   }
