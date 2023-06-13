@@ -120,10 +120,9 @@ impl Model for DefaultAmmoDump {
     &mut self,
     time_delta: f64,
   ) {
-    match &self.state {
+    match &mut self.state {
       State::Cooling(transition_from_cooling) => {
-        self.cooling_time_elapsed_seconds += time_delta;
-        if self.cooling_time_elapsed_seconds >= AMMO_DUMP_COOLING_TIME_SECONDS {
+        if transition_from_cooling.done_cooling(time_delta) {
           self.state = transition_from_cooling.to_nominal();
         }
       },
