@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-10
+//! - Updated: 2023-06-12
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -78,6 +78,7 @@ pub const TANK_RADIUS: f64 = 25.;
 pub const TANK_SPARKING_DURATION_SECONDS: f64 = 0.1;
 pub const TANK_SPEED_METERS_PER_SECOND: f64 = 30.;
 pub const TANK_STROKE_STYLE: &str = "black";
+pub const TANK_TREAD_LENGTH: f64 = 5.;
 pub const TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND: f64 = TAU / 2.;
 pub const TANK_Z: f64 = 1.;
 pub const TIME_DELTA: f64 = 1. / UPDATES_PER_SECOND;

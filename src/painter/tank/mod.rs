@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-06-10
+//! - Updated: 2023-06-12
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -91,12 +91,12 @@ impl TankPainter {
     context.fill();
     context.stroke();
     context.begin_path();
-    for index in -4..=4 {
+    for index in -5..=4 {
       let x: f64 = (index * 5) as f64;
-      context.move_to(x, -25.);
-      context.line_to(x, -15.);
-      context.move_to(x, 15.);
-      context.line_to(x, 25.);
+      context.move_to(x + tank.get_tread_offset_left(), -25.);
+      context.line_to(x + tank.get_tread_offset_left(), -15.);
+      context.move_to(x + tank.get_tread_offset_right(), 15.);
+      context.line_to(x + tank.get_tread_offset_right(), 25.);
     }
     context.stroke();
     // tank body

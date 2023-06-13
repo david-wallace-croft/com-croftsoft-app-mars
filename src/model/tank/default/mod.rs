@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-11
+//! - Updated: 2023-06-12
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,8 +17,8 @@ use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_BURNING_DURATION_SECONDS,
   TANK_DAMAGE_MAX, TANK_RADIUS, TANK_SPARKING_DURATION_SECONDS,
-  TANK_SPEED_METERS_PER_SECOND, TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND,
-  TANK_Z,
+  TANK_SPEED_METERS_PER_SECOND, TANK_TREAD_LENGTH,
+  TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
 };
 use crate::model::bullet::Bullet;
 use crate::model::{Damageable, Model, ModelAccessor};
@@ -117,8 +117,11 @@ impl DefaultTank {
     body_heading_new: f64,
     body_heading_old: f64,
   ) -> bool {
-    // TODO
-    false
+    if body_heading_old > body_heading_new {
+      body_heading_old - body_heading_new > PI
+    } else {
+      body_heading_new - body_heading_old < PI
+    }
   }
 
   fn rotate_toward_heading(
@@ -203,7 +206,16 @@ impl DefaultTank {
       self.updated = true;
       self.body_heading = body_heading_new;
     }
+    let center_old = self.circle.get_center_point_2dd();
     if self.body_heading != aim_heading {
+      let center_new = self.circle.get_center_point_2dd();
+      self.update_tread_offsets(
+        body_heading_new,
+        body_heading_old,
+        center_new,
+        center_old,
+        time_delta,
+      );
       return;
     }
     let mut move_x: f64 =
@@ -216,7 +228,6 @@ impl DefaultTank {
     if move_y.abs() > delta_y.abs() {
       move_y = delta_y;
     }
-    let center_old = self.circle.get_center_point_2dd();
     let old_x = self.circle.center_x;
     let old_y = self.circle.center_y;
     let new_x = self.circle.center_x + move_x;
@@ -242,6 +253,7 @@ impl DefaultTank {
       body_heading_old,
       center_new,
       center_old,
+      time_delta,
     );
   }
 
@@ -251,27 +263,35 @@ impl DefaultTank {
     body_heading_old: f64,
     center_new: Point2DD,
     center_old: Point2DD,
+    time_delta: f64,
   ) {
-    let mut treads_moving: bool = true;
+    let mut tread_direction_left = 1.;
+    let mut tread_direction_right = 1.;
     if (body_heading_new - body_heading_old).abs() < TAU / 1000. {
       if center_new.distance_xy(&center_old) < 0.25 {
-        treads_moving = false;
-      } else {
-        self.tread_offset_left += 1.;
-        self.tread_offset_right += 1.;
-        if self.tread_offset_left >= 8. {
-          self.tread_offset_left -= 8.;
-        }
-        if self.tread_offset_right >= 8. {
-          self.tread_offset_right -= 8.;
-        }
+        return;
       }
     } else if DefaultTank::is_turning_right(body_heading_new, body_heading_old)
     {
-      // TODO
+      tread_direction_right = -1.;
     } else {
-      // TODO
+      tread_direction_left = -1.;
     }
+    let tread_delta_left =
+      time_delta * TANK_SPEED_METERS_PER_SECOND * tread_direction_left;
+    let tread_delta_right =
+      time_delta * TANK_SPEED_METERS_PER_SECOND * tread_direction_right;
+    self.tread_offset_left =
+      (self.tread_offset_left + tread_delta_left) % TANK_TREAD_LENGTH;
+    if self.tread_offset_left < 0. {
+      self.tread_offset_left += TANK_TREAD_LENGTH;
+    }
+    self.tread_offset_right =
+      (self.tread_offset_right + tread_delta_right) % TANK_TREAD_LENGTH;
+    if self.tread_offset_right < 0. {
+      self.tread_offset_right += TANK_TREAD_LENGTH;
+    }
+    self.updated = true;
   }
 
   fn update_turret_heading(
@@ -588,6 +608,14 @@ impl TankAccessor for DefaultTank {
 
   fn get_tank_speed(&self) -> f64 {
     TANK_SPEED_METERS_PER_SECOND
+  }
+
+  fn get_tread_offset_left(&self) -> f64 {
+    self.tread_offset_left
+  }
+
+  fn get_tread_offset_right(&self) -> f64 {
+    self.tread_offset_right
   }
 
   fn get_turret_heading(&self) -> f64 {
