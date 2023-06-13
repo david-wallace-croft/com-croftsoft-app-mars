@@ -14,8 +14,8 @@
 use self::state::State;
 use super::{AmmoDump, AmmoDumpAccessor};
 use crate::constant::{
-  AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX,
-  AMMO_DUMP_COOLING_TIME_SECONDS, AMMO_DUMP_EXPLOSION_FACTOR, AMMO_DUMP_Z,
+  AMMO_DUMP_AMMO_GROWTH_RATE, AMMO_DUMP_AMMO_MAX, AMMO_DUMP_EXPLOSION_FACTOR,
+  AMMO_DUMP_Z,
 };
 use crate::model::{Damageable, Model, ModelAccessor};
 use crate::world::factory::WorldFactory;
@@ -31,7 +31,6 @@ pub struct DefaultAmmoDump {
   ammo_growth_rate: f64,
   ammo_max: f64,
   circle: Circle,
-  cooling_time_elapsed_seconds: f64,
   factory: Rc<dyn WorldFactory>,
   id: usize,
   state: State,
@@ -59,7 +58,6 @@ impl DefaultAmmoDump {
       ammo_growth_rate: AMMO_DUMP_AMMO_GROWTH_RATE,
       ammo_max: AMMO_DUMP_AMMO_MAX,
       circle,
-      cooling_time_elapsed_seconds: 0.,
       factory,
       id,
       state: State::default(),
@@ -108,8 +106,8 @@ impl Damageable for DefaultAmmoDump {
     if damage <= 0. {
       return;
     }
-    if let State::Nominal(transition_from_nominal) = &self.state {
-      self.state = transition_from_nominal.to_exploding();
+    if let State::Nominal(state_operator) = &self.state {
+      self.state = state_operator.to_exploding();
       self.updated = true;
     }
   }
@@ -121,13 +119,13 @@ impl Model for DefaultAmmoDump {
     time_delta: f64,
   ) {
     match &mut self.state {
-      State::Cooling(transition_from_cooling) => {
-        if transition_from_cooling.done_cooling(time_delta) {
-          self.state = transition_from_cooling.to_nominal();
+      State::Cooling(state_operator) => {
+        if state_operator.done_cooling(time_delta) {
+          self.state = state_operator.to_nominal();
         }
       },
-      State::Exploding(transition_from_exploding) => {
-        self.state = transition_from_exploding.to_cooling();
+      State::Exploding(state_operator) => {
+        self.state = state_operator.to_cooling();
         let mut explosion_circle = Circle::default();
         explosion_circle.set_center_from_circle(&self.circle);
         explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
@@ -135,12 +133,14 @@ impl Model for DefaultAmmoDump {
           self.factory.make_explosion(explosion_circle, self.ammo);
         self.world.add_explosion(explosion);
         self.set_ammo(0.);
-        self.cooling_time_elapsed_seconds = 0.;
       },
       State::Nominal(_) => {
+        let old_ammo: f64 = self.ammo;
         let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
         new_ammo = new_ammo.clamp(0., self.ammo_max);
-        self.set_ammo(new_ammo);
+        if new_ammo != old_ammo {
+          self.set_ammo(new_ammo);
+        }
       },
     }
   }
