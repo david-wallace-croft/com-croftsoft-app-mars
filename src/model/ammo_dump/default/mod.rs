@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-06-08
+//! - Updated: 2023-06-13
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -140,11 +140,7 @@ impl Model for DefaultAmmoDump {
       },
       State::Nominal(_) => {
         let mut new_ammo = self.ammo + time_delta * self.ammo_growth_rate;
-        if new_ammo > self.ammo_max {
-          new_ammo = self.ammo_max;
-        } else if new_ammo < 0. {
-          new_ammo = 0.;
-        }
+        new_ammo = new_ammo.clamp(0., self.ammo_max);
         self.set_ammo(new_ammo);
       },
     }
