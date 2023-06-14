@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-10
-//! - Updated: 2023-06-10
+//! - Updated: 2023-06-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,64 +13,60 @@
 
 use core::marker::PhantomData;
 
-#[derive(Clone, Copy)]
-pub struct FromBurning;
-#[derive(Clone, Copy)]
-pub struct FromNominal;
-#[derive(Clone, Copy)]
-pub struct FromSparking;
+pub struct DataBurning;
+pub struct DataNominal;
+pub struct DataSparking;
 
-#[derive(Clone, Copy)]
 pub enum State {
-  Burning(Transition<FromBurning>),
+  Burning(StateOperator<DataBurning>),
   Inactive,
-  Nominal(Transition<FromNominal>),
-  Sparking(Transition<FromSparking>),
+  Nominal(StateOperator<DataNominal>),
+  Sparking(StateOperator<DataSparking>),
 }
 
 impl Default for State {
   fn default() -> Self {
-    State::Nominal(Transition {
-      from: PhantomData,
+    State::Nominal(StateOperator {
+      _data: PhantomData,
     })
   }
 }
 
 #[derive(Clone, Copy)]
-pub struct Transition<F> {
-  from: PhantomData<F>,
+pub struct StateOperator<F> {
+  _data: PhantomData<F>,
 }
 
-impl Transition<FromBurning> {
-  pub fn to_inactive(self) -> State {
+impl StateOperator<DataBurning> {
+  pub fn to_inactive(&self) -> State {
     State::Inactive
   }
 }
 
-impl Transition<FromNominal> {
-  pub fn to_burning(self) -> State {
-    State::Burning(Transition {
-      from: PhantomData,
+impl StateOperator<DataNominal> {
+  pub fn to_burning(&self) -> State {
+    State::Burning(StateOperator {
+      _data: PhantomData,
     })
   }
 
-  pub fn to_sparking(self) -> State {
-    State::Sparking(Transition {
-      from: PhantomData,
+  pub fn to_sparking(&self) -> State {
+    State::Sparking(StateOperator {
+      _data: PhantomData,
     })
   }
 }
 
-impl Transition<FromSparking> {
-  pub fn to_burning(self) -> State {
-    State::Burning(Transition {
-      from: PhantomData,
+impl StateOperator<DataSparking> {
+  pub fn to_burning(&self) -> State {
+    State::Burning(StateOperator {
+      _data: PhantomData,
     })
   }
 
-  pub fn to_nominal(self) -> State {
-    State::Nominal(Transition {
-      from: PhantomData,
+  pub fn to_nominal(&self) -> State {
+    State::Nominal(StateOperator {
+      _data: PhantomData,
     })
   }
 }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-12
+//! - Updated: 2023-06-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -327,24 +327,24 @@ impl Damageable for DefaultTank {
     if new_damage <= 0. {
       return;
     }
-    match self.state {
+    match &mut self.state {
       State::Burning(_) | State::Inactive => (),
-      State::Nominal(transition_from_nominal) => {
+      State::Nominal(state_operator) => {
         self.updated = true;
         self.damage += new_damage;
         if self.damage > TANK_DAMAGE_MAX {
-          self.state = transition_from_nominal.to_burning();
+          self.state = state_operator.to_burning();
           self.burning_time_remaining = TANK_BURNING_DURATION_SECONDS;
         } else {
-          self.state = transition_from_nominal.to_sparking();
+          self.state = state_operator.to_sparking();
           self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
         }
       },
-      State::Sparking(transition_from_sparking) => {
+      State::Sparking(state_operator) => {
         self.updated = true;
         self.damage += new_damage;
         if self.damage > TANK_DAMAGE_MAX {
-          self.state = transition_from_sparking.to_burning();
+          self.state = state_operator.to_burning();
           self.burning_time_remaining = TANK_BURNING_DURATION_SECONDS;
         } else {
           self.sparking_time_remaining = TANK_SPARKING_DURATION_SECONDS;
@@ -359,11 +359,11 @@ impl Model for DefaultTank {
     &mut self,
     time_delta: f64,
   ) {
-    match self.state {
-      State::Burning(transition_from_burning) => {
+    match &mut self.state {
+      State::Burning(state_operator) => {
         self.burning_time_remaining -= time_delta;
         if self.burning_time_remaining <= 0. {
-          self.state = transition_from_burning.to_inactive();
+          self.state = state_operator.to_inactive();
         }
       },
       State::Inactive => (),
@@ -372,10 +372,10 @@ impl Model for DefaultTank {
         self.update_position(time_delta);
         self.update_turret_heading(time_delta);
       },
-      State::Sparking(transition_from_sparking) => {
+      State::Sparking(state_operator) => {
         self.sparking_time_remaining -= time_delta;
         if self.sparking_time_remaining <= 0. {
-          self.state = transition_from_sparking.to_nominal();
+          self.state = state_operator.to_nominal();
         }
       },
     }
