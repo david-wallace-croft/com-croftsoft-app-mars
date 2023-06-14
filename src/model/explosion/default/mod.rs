@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-15
-//! - Updated: 2023-06-10
+//! - Updated: 2023-06-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -59,18 +59,18 @@ impl Model for DefaultExplosion {
     &mut self,
     time_delta: f64,
   ) {
-    match self.state {
-      State::Exploding(transition_from_exploding) => {
-        self.state = transition_from_exploding.to_fading();
+    match &mut self.state {
+      State::Exploding(state_operator) => {
+        self.state = state_operator.to_fading();
         self.updated = true;
       },
-      State::Fading(transition_from_fading) => {
+      State::Fading(state_operator) => {
         let radius_delta = self.circle.radius * time_delta;
         // TODO: Make this a constant
         self.circle.radius -= 10. * radius_delta;
         // TODO: Make this a constant
         if self.circle.radius < 1. {
-          self.state = transition_from_fading.to_inactive();
+          self.state = state_operator.to_inactive();
         }
         self.updated = true;
       },
