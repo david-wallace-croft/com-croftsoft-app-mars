@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-03
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,6 +15,7 @@ use super::builder::WorldBuilder;
 use super::factory::WorldFactory;
 use super::seed::WorldSeed;
 use super::World;
+use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::constant::{
   AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,
   OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
@@ -96,8 +97,13 @@ impl WorldBuilderDirector {
   }
 
   fn direct_tank_operators(&self) {
+    // TODO: Get rid of this method
     self.world_builder.world.get_tanks().borrow().iter().for_each(|tank| {
-      self.world_builder.build_tank_operator(tank.clone());
+      let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::new(
+        tank.borrow().get_id(),
+        tank.clone(),
+      )));
+      tank.borrow_mut().set_tank_operator(tank_operator);
     });
   }
 

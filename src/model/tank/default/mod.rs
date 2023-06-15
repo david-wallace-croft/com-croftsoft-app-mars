@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-14
+//! - Updated: 2023-06-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use self::state::State;
 use super::{Color, SpaceTester, Tank, TankAccessor};
+use crate::ai::tank_operator::TankOperator;
 use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_BURNING_DURATION_SECONDS,
@@ -51,6 +52,7 @@ pub struct DefaultTank {
   id: usize,
   sparking_time_remaining: f64,
   state: State,
+  tank_operator: Option<Rc<RefCell<dyn TankOperator>>>,
   target_point: Point2DD,
   tread_offset_left: f64,
   tread_offset_right: f64,
@@ -100,6 +102,7 @@ impl DefaultTank {
       id,
       sparking_time_remaining: 0.,
       state: State::default(),
+      tank_operator: None,
       target_point: Point2DD::default(),
       tread_offset_left: 0.,
       tread_offset_right: 0.,
@@ -520,6 +523,13 @@ impl Tank for DefaultTank {
     self.body_heading = body_heading;
   }
 
+  fn set_tank_operator(
+    &mut self,
+    tank_operator: Rc<RefCell<dyn TankOperator>>,
+  ) {
+    self.tank_operator = Some(tank_operator);
+  }
+
   fn set_turret_heading(
     &mut self,
     turret_heading: f64,
@@ -604,6 +614,10 @@ impl TankAccessor for DefaultTank {
 
   fn get_radius(&self) -> f64 {
     self.circle.radius
+  }
+
+  fn get_tank_operator(&self) -> Option<Rc<RefCell<dyn TankOperator>>> {
+    self.tank_operator.clone()
   }
 
   fn get_tank_speed(&self) -> f64 {

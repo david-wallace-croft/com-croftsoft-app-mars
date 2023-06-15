@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,6 @@
 
 use super::factory::WorldFactory;
 use super::World;
-use crate::ai::tank_operator::TankOperator;
 use crate::constant::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
 use crate::model::ammo_dump::default::DefaultAmmoDump;
 use crate::model::obstacle::default::DefaultObstacle;
@@ -84,15 +83,6 @@ impl WorldBuilder {
     // TODO: model_array_keep.insert(seriTank) was in the old code here
     self.world.add_tank(tank_state.clone());
     tank_state
-  }
-
-  pub fn build_tank_operator(
-    &self,
-    tank: Rc<RefCell<dyn Tank>>,
-  ) {
-    let tank_operator: Rc<RefCell<dyn TankOperator>> =
-      self.factory.make_tank_operator(tank);
-    self.world.add_tank_operator(tank_operator);
   }
 
   pub fn new(factory: Rc<dyn WorldFactory>) -> Self {

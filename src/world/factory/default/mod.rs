@@ -5,24 +5,21 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-17
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-15
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::WorldFactory;
-use crate::ai::tank_operator::default::DefaultTankOperator;
-use crate::ai::tank_operator::TankOperator;
 use crate::model::bullet::default::DefaultBullet;
 use crate::model::bullet::Bullet;
 use crate::model::explosion::default::DefaultExplosion;
 use crate::model::explosion::Explosion;
-use crate::model::tank::Tank;
 use crate::world::default::DefaultWorld;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
-use core::cell::{Cell, RefCell};
+use core::cell::Cell;
 use std::rc::Rc;
 
 #[derive(Default)]
@@ -30,7 +27,6 @@ pub struct DefaultWorldFactory {
   // TODO: maybe use an atomic instead of Cell for interior mutability
   id_next_bullet: Cell<usize>,
   id_next_explosion: Cell<usize>,
-  id_next_tank_operator: Cell<usize>,
 }
 
 impl WorldFactory for DefaultWorldFactory {
@@ -55,16 +51,6 @@ impl WorldFactory for DefaultWorldFactory {
     self.id_next_explosion.set(id + 1);
     let explosion = DefaultExplosion::new(circle, damage, id);
     Box::new(explosion)
-  }
-
-  fn make_tank_operator(
-    &self,
-    tank: Rc<RefCell<dyn Tank>>,
-  ) -> Rc<RefCell<dyn TankOperator>> {
-    let id = self.id_next_tank_operator.get();
-    self.id_next_tank_operator.set(id + 1);
-    let tank_operator = DefaultTankOperator::new(id, tank);
-    Rc::new(RefCell::new(tank_operator))
   }
 
   fn make_world(&self) -> Rc<dyn World> {
