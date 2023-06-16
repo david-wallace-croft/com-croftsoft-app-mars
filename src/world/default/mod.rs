@@ -30,7 +30,6 @@ pub struct DefaultWorld {
   bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
   obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
-  tank_operators: Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>,
   tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
 }
 
@@ -87,13 +86,6 @@ impl World for DefaultWorld {
     self.tanks.borrow_mut().push_back(tank);
   }
 
-  fn add_tank_operator(
-    &self,
-    tank_operator: Rc<RefCell<dyn TankOperator>>,
-  ) {
-    self.tank_operators.borrow_mut().push_back(tank_operator);
-  }
-
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>> {
     self.ammo_dumps.clone()
   }
@@ -108,12 +100,6 @@ impl World for DefaultWorld {
 
   fn get_obstacles(&self) -> Rc<RefCell<VecDeque<Box<dyn Obstacle>>>> {
     self.obstacles.clone()
-  }
-
-  fn get_tank_operators(
-    &self
-  ) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>> {
-    self.tank_operators.clone()
   }
 
   fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>> {

@@ -55,11 +55,6 @@ pub trait World: VisitorAcceptor {
     tank: Rc<RefCell<dyn Tank>>,
   );
 
-  fn add_tank_operator(
-    &self,
-    tank_operator: Rc<RefCell<dyn TankOperator>>,
-  );
-
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>;
 
   fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>>;
@@ -67,10 +62,6 @@ pub trait World: VisitorAcceptor {
   fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>>;
 
   fn get_obstacles(&self) -> Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>;
-
-  fn get_tank_operators(
-    &self
-  ) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn TankOperator>>>>>;
 
   fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>;
 
