@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,13 +19,13 @@ use crate::constant::{
   TANK_FIRING_PROBABILITY,
 };
 use crate::model::tank::Tank;
+use crate::world::World;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use rand::rngs::ThreadRng;
-use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct DefaultTankOperator {
@@ -38,6 +38,7 @@ pub struct DefaultTankOperator {
   start_state_space_node: StateSpaceNode,
   tank: Rc<RefCell<dyn Tank>>,
   tank_cartographer: Rc<RefCell<TankCartographer>>,
+  world: Rc<dyn World>,
 }
 
 impl DefaultTankOperator {
@@ -68,6 +69,7 @@ impl DefaultTankOperator {
   pub fn new(
     id: usize,
     tank: Rc<RefCell<dyn Tank>>,
+    world: Rc<dyn World>,
   ) -> Self {
     let tank_cartographer = Rc::new(RefCell::new(TankCartographer::new(
       id,
@@ -89,6 +91,7 @@ impl DefaultTankOperator {
       start_state_space_node,
       tank_cartographer,
       tank,
+      world,
     }
   }
 }
@@ -109,7 +112,6 @@ impl TankOperator for DefaultTankOperator {
 
   fn update(
     &mut self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
     time_delta: f64,
   ) {
     // TODO: Is this clone necessary?
@@ -117,7 +119,8 @@ impl TankOperator for DefaultTankOperator {
     {
       let mut tank: RefMut<dyn Tank> = tank.borrow_mut();
       self.center = tank.get_center();
-      self.enemy_center = tank.get_closest_enemy_tank_center(tanks);
+      self.enemy_center =
+        tank.get_closest_enemy_tank_center(self.world.get_tanks());
       tank.rotate_turret(&self.enemy_center);
     }
     {

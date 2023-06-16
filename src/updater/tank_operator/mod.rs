@@ -44,7 +44,7 @@ impl Updater for TankOperatorUpdater {
       let tank = tanks.borrow_mut().pop_front().unwrap();
       let tank_operator = tank.borrow().get_tank_operator();
       if let Some(tank_operator) = tank_operator {
-        tank_operator.borrow_mut().update(self.world.get_tanks(), TIME_DELTA);
+        tank_operator.borrow_mut().update(TIME_DELTA);
       }
       tanks.borrow_mut().push_back(tank);
     }

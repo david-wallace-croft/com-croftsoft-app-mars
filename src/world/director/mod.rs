@@ -102,6 +102,7 @@ impl WorldBuilderDirector {
       let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::new(
         tank.borrow().get_id(),
         tank.clone(),
+        self.world_builder.world.clone(),
       )));
       tank.borrow_mut().set_tank_operator(tank_operator);
     });
