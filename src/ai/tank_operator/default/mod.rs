@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-06-16
+//! - Updated: 2023-06-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -114,9 +114,9 @@ impl TankOperator for DefaultTankOperator {
     &mut self,
     time_delta: f64,
   ) {
-    // TODO: Is this clone necessary?
     let tank: Rc<RefCell<dyn Tank>> = self.tank.clone();
     {
+      // Rotate turret toward nearest enemy tank
       let mut tank: RefMut<dyn Tank> = tank.borrow_mut();
       self.center = tank.get_center();
       self.enemy_center =
@@ -124,6 +124,7 @@ impl TankOperator for DefaultTankOperator {
       tank.rotate_turret(&self.enemy_center);
     }
     {
+      // Move toward nearest ammo dump
       let ammo: usize = tank.borrow().get_ammo();
       if ammo < 1 {
         let closest_ammo_dump_center_option: Option<Point2DD> =
@@ -139,28 +140,27 @@ impl TankOperator for DefaultTankOperator {
         return;
       }
     }
+    // Move toward nearest enemy tank
     let mut thread_rng: ThreadRng = rand::thread_rng();
     let uniform = Uniform::from(0.0..1.);
     if let Some(enemy_center) = self.enemy_center {
       let destination: Point2DD =
         self.get_first_step(&enemy_center, tank.borrow().get_body_heading());
       tank.borrow_mut().go(&destination);
+    } else {
+      // Move randomly
       let random_number = uniform.sample(&mut thread_rng);
-      if random_number < time_delta * TANK_FIRING_PROBABILITY {
-        tank.borrow_mut().fire();
+      if random_number < time_delta * TANK_DRIFT_PROBABILITY {
+        let uniform_drift = Uniform::from(-1.0..=1.0);
+        let drift_x = uniform_drift.sample(&mut thread_rng);
+        let drift_y = uniform_drift.sample(&mut thread_rng);
+        let destination_x = self.center.x + drift_x;
+        let destination_y = self.center.y + drift_y;
+        self.destination.set_xy(destination_x, destination_y);
+        tank.borrow_mut().go(&self.destination);
       }
-      return;
     }
-    let random_number = uniform.sample(&mut thread_rng);
-    if random_number < time_delta * TANK_DRIFT_PROBABILITY {
-      let uniform_drift = Uniform::from(-1.0..=1.0);
-      let drift_x = uniform_drift.sample(&mut thread_rng);
-      let drift_y = uniform_drift.sample(&mut thread_rng);
-      let destination_x = self.center.x + drift_x;
-      let destination_y = self.center.y + drift_y;
-      self.destination.set_xy(destination_x, destination_y);
-      tank.borrow_mut().go(&self.destination);
-    }
+    // Fire randomly
     let random_number = uniform.sample(&mut thread_rng);
     if random_number < time_delta * TANK_FIRING_PROBABILITY {
       tank.borrow_mut().fire();
