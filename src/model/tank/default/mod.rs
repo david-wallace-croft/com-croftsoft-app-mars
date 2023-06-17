@@ -48,6 +48,7 @@ pub struct DefaultTank {
   destination: Option<Point2DD>,
   dry_firing: bool,
   factory: Rc<dyn WorldFactory>,
+  fire_requested: bool,
   firing: bool,
   id: usize,
   sparking_time_remaining: f64,
@@ -98,6 +99,7 @@ impl DefaultTank {
       destination: None,
       dry_firing: false,
       factory,
+      fire_requested: false,
       firing: false,
       id,
       sparking_time_remaining: 0.,
@@ -177,6 +179,33 @@ impl DefaultTank {
         ammo_needed = TANK_AMMO_MAX - self.ammo;
       }
     }
+  }
+
+  fn update_fire(&mut self) {
+    if !self.fire_requested {
+      return;
+    }
+    self.fire_requested = false;
+    if self.firing || self.dry_firing {
+      return;
+    }
+    self.updated = true;
+    if self.ammo < 1 {
+      self.dry_firing = true;
+      return;
+    }
+    self.ammo -= 1;
+    self.firing = true;
+    let bullet_origin_x: f64 =
+      self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
+    let bullet_origin_y: f64 =
+      self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
+    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
+      self.turret_heading,
+      bullet_origin_x,
+      bullet_origin_y,
+    );
+    self.world.add_bullet(bullet);
   }
 
   fn update_position(
@@ -374,6 +403,7 @@ impl Model for DefaultTank {
         self.update_ammo();
         self.update_position(time_delta);
         self.update_turret_heading(time_delta);
+        self.update_fire();
       },
       State::Sparking(state_operator) => {
         self.sparking_time_remaining -= time_delta;
@@ -467,29 +497,7 @@ impl SpaceTester for DefaultTank {
 impl Tank for DefaultTank {
   // moved from TankConsole
   fn fire(&mut self) {
-    if matches!(self.state, State::Burning(_) | State::Inactive) {
-      return;
-    }
-    if self.firing || self.dry_firing {
-      return;
-    }
-    self.updated = true;
-    if self.ammo < 1 {
-      self.dry_firing = true;
-      return;
-    }
-    self.ammo -= 1;
-    self.firing = true;
-    let bullet_origin_x: f64 =
-      self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
-    let bullet_origin_y: f64 =
-      self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
-      self.turret_heading,
-      bullet_origin_x,
-      bullet_origin_y,
-    );
-    self.world.add_bullet(bullet);
+    self.fire_requested = true;
   }
 
   fn go(
