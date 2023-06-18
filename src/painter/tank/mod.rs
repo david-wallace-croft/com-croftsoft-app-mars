@@ -5,16 +5,15 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-06-12
+//! - Updated: 2023-06-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::ai::state_space_node::StateSpaceNode;
 use crate::constant::{
   TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_FILL_STYLE_SPARKING,
-  TANK_STROKE_STYLE, TANK_RADIUS,
+  TANK_STROKE_STYLE,
 };
 use crate::model::tank::{Color, Tank};
 use com_croftsoft_core::math::geom::circle::Circle;
@@ -147,29 +146,8 @@ impl TankPainter {
       context.rect(-5., -5., 10., 10.);
       context.fill();
     }
-    // end tank
-    context.restore();
-    // path
-    context.save();
-    let stroke_style = match tank.get_color() {
-      Color::RED => &self.fill_style_red,
-      Color::BLUE => &self.fill_style_blue,
-    };
-    context.set_stroke_style(stroke_style);
-    context.set_line_width(3.);
-    if let Some(tank_operator) = tank.get_tank_operator() {
-      let tank_operator = tank_operator.borrow();
-      let state_space_nodes: Vec<StateSpaceNode> = tank_operator.get_path();
-      state_space_nodes.iter().for_each(|state_space_node| {
-        let point_2dd = state_space_node.get_point_xy();
-        // TODO: show state space node heading
-        context.begin_path();
-        let _result = context.arc(point_2dd.x, point_2dd.y, TANK_RADIUS, 0., TAU);
-        context.stroke();
-      });
-    }
-    context.restore();
     // end
+    context.restore();
     Ok(())
   }
 }

@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::ammo_dump::AmmoDumpPainter;
+use super::{ammo_dump::AmmoDumpPainter, path::PathPainter};
 use super::bullet::BulletPainter;
 use super::explosion::ExplosionPainter;
 use super::obstacle::ObstaclePainter;
@@ -67,6 +67,7 @@ impl RootPainter {
       ObstaclePainter::new(context.clone(), root_state.world.get_obstacles());
     let overlay_painter =
       OverlayPainter::new(context.clone(), options, root_state.overlay.clone());
+    let path_painter = PathPainter::new(context.clone(), root_state.world.get_tanks());
     let tank_painter = TankPainter::new(context, root_state.world.get_tanks());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
@@ -74,9 +75,10 @@ impl RootPainter {
       Box::new(ammo_dump_painter),
       Box::new(tank_painter),
       Box::new(obstacle_painter),
-      Box::new(overlay_painter),
       Box::new(bullet_painter),
       Box::new(explosion_painter),
+      Box::new(path_painter),
+      Box::new(overlay_painter),
     ];
     Self {
       painters,
