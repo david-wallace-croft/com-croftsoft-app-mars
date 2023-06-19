@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-15
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -63,11 +63,6 @@ pub trait Tank: Damageable + Model + SpaceTester + TankAccessor {
     body_heading: f64,
   );
 
-  fn set_tank_operator(
-    &mut self,
-    tank_operator: Rc<RefCell<dyn TankOperator>>,
-  );
-
   fn set_turret_heading(
     &mut self,
     turret_heading: f64,
@@ -81,14 +76,14 @@ pub trait TankAccessor: ModelAccessor {
   fn get_center(&self) -> Point2DD;
   // TODO: was PointXY
   fn get_closest_ammo_dump_center(&self) -> Option<Point2DD>;
+  // TODO: move this out of Tank
   fn get_closest_enemy_tank_center(
     &self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+    tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Option<Point2DD>;
   fn get_color(&self) -> Color;
   fn get_damage(&self) -> f64;
   fn get_radius(&self) -> f64;
-  fn get_tank_operator(&self) -> Option<Rc<RefCell<dyn TankOperator>>>;
   fn get_tank_speed(&self) -> f64;
   fn get_tread_offset_left(&self) -> f64;
   fn get_tread_offset_right(&self) -> f64;

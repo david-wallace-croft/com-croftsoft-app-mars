@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,6 @@ use crate::model::ammo_dump::AmmoDump;
 use crate::model::bullet::Bullet;
 use crate::model::explosion::Explosion;
 use crate::model::obstacle::Obstacle;
-use crate::model::tank::Tank;
 use crate::visitor::VisitorAcceptor;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
@@ -50,9 +49,9 @@ pub trait World: VisitorAcceptor {
     obstacle: Box<dyn Obstacle>,
   );
 
-  fn add_tank(
+  fn add_tank_operator(
     &self,
-    tank: Rc<RefCell<dyn Tank>>,
+    tank_operator: Box<dyn TankOperator>,
   );
 
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>;
@@ -63,7 +62,7 @@ pub trait World: VisitorAcceptor {
 
   fn get_obstacles(&self) -> Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>;
 
-  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>;
+  fn get_tank_operators(&self) -> Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>;
 
   fn is_blocked_by_ammo_dump(
     &self,

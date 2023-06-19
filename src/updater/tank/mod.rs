@@ -5,21 +5,22 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-06-15
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use crate::ai::tank_operator::TankOperator;
 use crate::constant::TIME_DELTA;
-use crate::model::tank::Tank;
+use crate::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct TankUpdater {
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+  world: Rc<dyn World>,
 }
 
 impl TankUpdater {
@@ -27,13 +28,13 @@ impl TankUpdater {
     // events: Rc<RefCell<dyn ClockUpdaterEvents>>,
     // inputs: Rc<RefCell<dyn ClockUpdaterInputs>>,
     // options: Rc<RefCell<dyn ClockUpdaterOptions>>,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+    world: Rc<dyn World>,
   ) -> Self {
     Self {
       // events,
       // inputs,
       // options,
-      tanks,
+      world,
     }
   }
 }
@@ -49,13 +50,19 @@ impl Updater for TankUpdater {
     // if !inputs.get_time_to_update() || self.options.borrow().get_pause() {
     //   return;
     // }
-    let length = self.tanks.borrow().len();
+
+    let tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>> =
+      self.world.get_tank_operators();
+    let length: usize = tank_operators.borrow().len();
     for _index in 0..length {
-      let tank = self.tanks.borrow_mut().pop_front().unwrap();
-      // log("TankUpdater.update()");
-      tank.borrow_mut().update(TIME_DELTA);
-      if tank.borrow().is_active() {
-        self.tanks.borrow_mut().push_back(tank);
+      // TOOD: Do we still need to pop?
+      let tank_operator: Box<dyn TankOperator> =
+        tank_operators.borrow_mut().pop_front().unwrap();
+      let tank = tank_operator.get_tank();
+      let mut tank = tank.borrow_mut();
+      tank.update(TIME_DELTA);
+      if tank.is_active() {
+        tank_operators.borrow_mut().push_back(tank_operator);
       }
     }
   }

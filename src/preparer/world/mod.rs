@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,7 +28,7 @@ impl WorldPreparer {
     let ammo_dump_preparer = AmmoDumpPreparer::new(world.get_ammo_dumps());
     let bullet_preparer = BulletPreparer::new(world.get_bullets());
     let obstacle_preparer = ObstaclePreparer::new(world.get_obstacles());
-    let tank_preparer = TankPreparer::new(world.get_tanks());
+    let tank_preparer = TankPreparer::new(world.get_tank_operators());
     let child_preparers: Vec<Box<dyn Preparer>> = vec![
       Box::new(ammo_dump_preparer),
       Box::new(tank_preparer),

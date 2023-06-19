@@ -5,18 +5,18 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-18
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::{ammo_dump::AmmoDumpPainter, path::PathPainter};
 use super::bullet::BulletPainter;
 use super::explosion::ExplosionPainter;
 use super::obstacle::ObstaclePainter;
 use super::overlay::OverlayPainter;
 use super::tank::TankPainter;
+use super::{ammo_dump::AmmoDumpPainter, path::PathPainter};
 use crate::constant::BACKGROUND_FILL_STYLE;
 use crate::options::Options;
 use crate::root::Root;
@@ -67,8 +67,10 @@ impl RootPainter {
       ObstaclePainter::new(context.clone(), root_state.world.get_obstacles());
     let overlay_painter =
       OverlayPainter::new(context.clone(), options, root_state.overlay.clone());
-    let path_painter = PathPainter::new(context.clone(), root_state.world.get_tanks());
-    let tank_painter = TankPainter::new(context, root_state.world.get_tanks());
+    let path_painter: PathPainter =
+      PathPainter::new(context.clone(), root_state.world.get_tank_operators());
+    let tank_painter: TankPainter =
+      TankPainter::new(context, root_state.world.get_tank_operators());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
       // TODO: maybe wrap in a world painter

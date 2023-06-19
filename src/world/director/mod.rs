@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-03
-//! - Updated: 2023-06-15
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,18 +15,17 @@ use super::builder::WorldBuilder;
 use super::factory::WorldFactory;
 use super::seed::WorldSeed;
 use super::World;
-use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::constant::{
   AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,
   OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
   OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
 };
-use crate::model::tank::{Color, Tank};
+use crate::model::tank::Color;
 use com_croftsoft_core::math::geom::circle::Circle;
-use core::cell::RefCell;
 use core::f64::consts::TAU;
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
+use rand::rngs::ThreadRng;
 use std::rc::Rc;
 
 pub struct WorldBuilderDirector {
@@ -36,7 +35,6 @@ pub struct WorldBuilderDirector {
 
 impl WorldBuilderDirector {
   pub fn direct(&self) -> Rc<dyn World> {
-    self.direct_tanks();
     self.direct_tank_operators();
     self.direct_obstacles();
     self.direct_ammo_dumps();
@@ -44,17 +42,17 @@ impl WorldBuilderDirector {
   }
 
   fn direct_ammo_dumps(&self) {
-    let world = &self.world_builder.world;
-    let mut rng = rand::thread_rng();
+    let world: &Rc<dyn World> = &self.world_builder.world;
+    let mut rng: ThreadRng = rand::thread_rng();
     for index in 0..self.seed.ammo_dump_count {
       let mut circle = Circle {
         center_x: 0.,
         center_y: 0.,
         radius: AMMO_DUMP_AMMO_MAX,
       };
-      let x_min = self.seed.bounds.x_min + circle.radius + 1.;
-      let x_max = self.seed.bounds.x_max - circle.radius - 1.;
-      let center_uniform = Uniform::from(x_min..=x_max);
+      let x_min: f64 = self.seed.bounds.x_min + circle.radius + 1.;
+      let x_max: f64 = self.seed.bounds.x_max - circle.radius - 1.;
+      let center_uniform: Uniform<f64> = Uniform::from(x_min..=x_max);
       for _ in 0..AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX {
         circle.center_x = center_uniform.sample(&mut rng);
         circle.center_y = center_uniform.sample(&mut rng);
@@ -97,18 +95,6 @@ impl WorldBuilderDirector {
   }
 
   fn direct_tank_operators(&self) {
-    // TODO: Get rid of this method
-    self.world_builder.world.get_tanks().borrow().iter().for_each(|tank| {
-      let tank_operator = Rc::new(RefCell::new(DefaultTankOperator::new(
-        tank.borrow().get_id(),
-        tank.clone(),
-        self.world_builder.world.clone(),
-      )));
-      tank.borrow_mut().set_tank_operator(tank_operator);
-    });
-  }
-
-  fn direct_tanks(&self) {
     for index in 0..6 {
       let center_x: f64 = if index >= 3 {
         (index * 200 - 500) as f64
@@ -125,10 +111,16 @@ impl WorldBuilderDirector {
       } else {
         Color::BLUE
       };
-      let tank: Rc<RefCell<dyn Tank>> =
-        self.world_builder.build_tank(center_x, center_y, color, index);
-      tank.borrow_mut().set_body_heading(((index) as f64) * TAU / 8.);
-      tank.borrow_mut().set_turret_heading(((index) as f64) * TAU / 4.);
+      let body_heading = ((index) as f64) * TAU / 8.;
+      let turret_heading = ((index) as f64) * TAU / 4.;
+      self.world_builder.build_tank_operator(
+        body_heading,
+        center_x,
+        center_y,
+        color,
+        index,
+        turret_heading,
+      );
     }
   }
 

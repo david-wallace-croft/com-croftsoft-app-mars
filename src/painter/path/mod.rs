@@ -5,20 +5,18 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-18
-//! - Updated: 2023-06-18
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::ai::state_space_node::StateSpaceNode;
-use crate::constant::{
-  TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED,
-  TANK_RADIUS,
-};
-use crate::model::tank::{Color, Tank};
+use crate::ai::tank_operator::TankOperator;
+use crate::constant::{TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_RADIUS};
+use crate::model::tank::Color;
 use com_croftsoft_lib_role::Painter;
-use core::cell::{Ref, RefCell};
+use core::cell::RefCell;
 use core::f64::consts::TAU;
 use std::collections::VecDeque;
 use std::rc::Rc;
@@ -29,13 +27,13 @@ pub struct PathPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style_blue: JsValue,
   fill_style_red: JsValue,
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+  tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
 
 impl PathPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+    tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
     let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
@@ -43,15 +41,16 @@ impl PathPainter {
       context,
       fill_style_blue,
       fill_style_red,
-      tanks,
+      tank_operators,
     }
   }
 
   fn paint_path(
     &self,
-    // TODO: Can this take TankAccessor
-    tank: &dyn Tank,
+    tank_operator: &Box<dyn TankOperator>,
   ) -> Result<(), JsValue> {
+    let tank = tank_operator.get_tank();
+    let tank = tank.borrow();
     let context = self.context.borrow();
     context.save();
     let stroke_style = match tank.get_color() {
@@ -60,17 +59,14 @@ impl PathPainter {
     };
     context.set_stroke_style(stroke_style);
     context.set_line_width(3.);
-    if let Some(tank_operator) = tank.get_tank_operator() {
-      let tank_operator = tank_operator.borrow();
-      let state_space_nodes: Vec<StateSpaceNode> = tank_operator.get_path();
-      state_space_nodes.iter().for_each(|state_space_node| {
-        let point_2dd = state_space_node.get_point_xy();
-        // TODO: show state space node heading
-        context.begin_path();
-        let _result = context.arc(point_2dd.x, point_2dd.y, TANK_RADIUS, 0., TAU);
-        context.stroke();
-      });
-    }
+    let state_space_nodes: Vec<StateSpaceNode> = tank_operator.get_path();
+    state_space_nodes.iter().for_each(|state_space_node| {
+      let point_2dd = state_space_node.get_point_xy();
+      // TODO: show state space node heading
+      context.begin_path();
+      let _result = context.arc(point_2dd.x, point_2dd.y, TANK_RADIUS, 0., TAU);
+      context.stroke();
+    });
     context.restore();
     Ok(())
   }
@@ -78,10 +74,9 @@ impl PathPainter {
 
 impl Painter for PathPainter {
   fn paint(&mut self) {
-    let tanks: Ref<VecDeque<Rc<RefCell<dyn Tank>>>> = self.tanks.borrow();
-    for tank in tanks.iter() {
-      let tank: Ref<dyn Tank> = tank.borrow();
-      let _result = self.paint_path(&*tank);
+    let tank_operators = self.tank_operators.borrow();
+    for tank_operator in tank_operators.iter() {
+      let _result = self.paint_path(tank_operator);
     }
   }
 }

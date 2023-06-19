@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-06-04
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -37,7 +37,7 @@ impl WorldUpdater {
     let explosion_updater = ExplosionUpdater::new(world.get_explosions());
     let obstacle_updater = ObstacleUpdater::new(world.get_obstacles());
     let tank_operator_updater = TankOperatorUpdater::new(world.clone());
-    let tank_updater = TankUpdater::new(world.get_tanks());
+    let tank_updater = TankUpdater::new(world.clone());
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(explosion_updater),
       Box::new(ammo_dump_updater),

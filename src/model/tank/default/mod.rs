@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-15
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -53,7 +53,6 @@ pub struct DefaultTank {
   id: usize,
   sparking_time_remaining: f64,
   state: State,
-  tank_operator: Option<Rc<RefCell<dyn TankOperator>>>,
   target_point: Point2DD,
   tread_offset_left: f64,
   tread_offset_right: f64,
@@ -104,7 +103,6 @@ impl DefaultTank {
       id,
       sparking_time_remaining: 0.,
       state: State::default(),
-      tank_operator: None,
       target_point: Point2DD::default(),
       tread_offset_left: 0.,
       tread_offset_right: 0.,
@@ -477,7 +475,8 @@ impl SpaceTester for DefaultTank {
       }
     }
     let self_tank_color = self.get_color();
-    for other_tank in self.world.get_tanks().borrow().iter() {
+    for other_tank_operator in self.world.get_tank_operators().borrow().iter() {
+      let other_tank = other_tank_operator.get_tank();
       let other_tank = other_tank.borrow();
       if !other_tank.is_active() {
         continue;
@@ -531,13 +530,6 @@ impl Tank for DefaultTank {
     self.body_heading = body_heading;
   }
 
-  fn set_tank_operator(
-    &mut self,
-    tank_operator: Rc<RefCell<dyn TankOperator>>,
-  ) {
-    self.tank_operator = Some(tank_operator);
-  }
-
   fn set_turret_heading(
     &mut self,
     turret_heading: f64,
@@ -582,16 +574,17 @@ impl TankAccessor for DefaultTank {
 
   fn get_closest_enemy_tank_center(
     &self,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+    tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Option<Point2DD> {
     let mut closest_distance: f64 = INFINITY;
     let mut found = false;
-    let tanks = tanks.borrow();
-    let length = tanks.len();
+    let tank_operators = tank_operators.borrow();
+    let length = tank_operators.len();
     let tank_center = Point2DD::new(self.circle.center_x, self.circle.center_y);
     let mut closest_enemy_tank_center = Point2DD::default();
     for i in 0..length {
-      let tank = tanks[i].borrow();
+      let tank = tank_operators[i].get_tank();
+      let tank = tank.borrow();
       if tank.is_burning()
         || !tank.is_active()
         || tank.get_color() == self.color
@@ -622,10 +615,6 @@ impl TankAccessor for DefaultTank {
 
   fn get_radius(&self) -> f64 {
     self.circle.radius
-  }
-
-  fn get_tank_operator(&self) -> Option<Rc<RefCell<dyn TankOperator>>> {
-    self.tank_operator.clone()
   }
 
   fn get_tank_speed(&self) -> f64 {

@@ -5,12 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-06-18
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use crate::ai::tank_operator::TankOperator;
 use crate::constant::{
   TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_FILL_STYLE_SPARKING,
   TANK_STROKE_STYLE,
@@ -31,13 +32,13 @@ pub struct TankPainter {
   fill_style_red: JsValue,
   fill_style_sparking: JsValue,
   stroke_style: JsValue,
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+  tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
 
 impl TankPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+    tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
     let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
@@ -50,7 +51,7 @@ impl TankPainter {
       fill_style_red,
       fill_style_sparking,
       stroke_style,
-      tanks,
+      tank_operators,
     }
   }
 
@@ -154,10 +155,12 @@ impl TankPainter {
 
 impl Painter for TankPainter {
   fn paint(&mut self) {
-    let tanks: Ref<VecDeque<Rc<RefCell<dyn Tank>>>> = self.tanks.borrow();
-    for tank in tanks.iter() {
-      let tank: Ref<dyn Tank> = tank.borrow();
-      let _result = self.paint_tank(&*tank);
+    let tank_operators: Ref<VecDeque<Box<dyn TankOperator>>> =
+      self.tank_operators.borrow();
+    for tank_operator in tank_operators.iter() {
+      let tank = tank_operator.get_tank();
+      let tank = tank.borrow();
+      let _result: Result<(), JsValue> = self.paint_tank(&*tank);
     }
   }
 }

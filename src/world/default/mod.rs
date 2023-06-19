@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-29
-//! - Updated: 2023-06-10
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,6 @@ use crate::model::ammo_dump::AmmoDump;
 use crate::model::bullet::Bullet;
 use crate::model::explosion::Explosion;
 use crate::model::obstacle::Obstacle;
-use crate::model::tank::Tank;
 use crate::visitor::{Visitor, VisitorAcceptor};
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use core::cell::RefCell;
@@ -30,7 +29,7 @@ pub struct DefaultWorld {
   bullets: Rc<RefCell<VecDeque<Box<dyn Bullet>>>>,
   explosions: Rc<RefCell<VecDeque<Box<dyn Explosion>>>>,
   obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
-  tanks: Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>>,
+  tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
 
 impl VisitorAcceptor for DefaultWorld {
@@ -44,7 +43,8 @@ impl VisitorAcceptor for DefaultWorld {
     for obstacle in self.obstacles.borrow_mut().iter_mut() {
       visitor.visit_obstacle(obstacle.as_mut());
     }
-    for tank in self.tanks.borrow_mut().iter_mut() {
+    for tank_operator in self.tank_operators.borrow().iter() {
+      let tank = tank_operator.get_tank();
       visitor.visit_tank(&mut *tank.borrow_mut());
     }
   }
@@ -79,11 +79,11 @@ impl World for DefaultWorld {
     self.obstacles.borrow_mut().push_back(obstacle);
   }
 
-  fn add_tank(
+  fn add_tank_operator(
     &self,
-    tank: Rc<RefCell<dyn Tank>>,
+    tank_operator: Box<dyn TankOperator>,
   ) {
-    self.tanks.borrow_mut().push_back(tank);
+    self.tank_operators.borrow_mut().push_back(tank_operator);
   }
 
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>> {
@@ -102,8 +102,8 @@ impl World for DefaultWorld {
     self.obstacles.clone()
   }
 
-  fn get_tanks(&self) -> Rc<RefCell<VecDeque<Rc<RefCell<dyn Tank>>>>> {
-    self.tanks.clone()
+  fn get_tank_operators(&self) -> Rc<RefCell<VecDeque<Box<dyn TankOperator>>>> {
+    self.tank_operators.clone()
   }
 
   fn is_blocked_by_ammo_dump(
@@ -139,7 +139,8 @@ impl World for DefaultWorld {
     circle: &dyn CircleAccessor,
   ) -> bool {
     // TODO: use a function to determine if there is one
-    for tank in self.tanks.borrow().iter() {
+    for tank_operator in self.tank_operators.borrow().iter() {
+      let tank = tank_operator.get_tank();
       if tank.borrow().is_active() && tank.borrow().intersects_circle(circle) {
         return true;
       }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-06-17
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -110,6 +110,10 @@ impl TankOperator for DefaultTankOperator {
     self.a_star.get_path()
   }
 
+  fn get_tank(&self) -> Rc<RefCell<dyn Tank>> {
+    self.tank.clone()
+  }
+
   fn update(
     &mut self,
     time_delta: f64,
@@ -120,7 +124,7 @@ impl TankOperator for DefaultTankOperator {
       let mut tank: RefMut<dyn Tank> = tank.borrow_mut();
       self.center = tank.get_center();
       self.enemy_center =
-        tank.get_closest_enemy_tank_center(self.world.get_tanks());
+        tank.get_closest_enemy_tank_center(self.world.get_tank_operators());
       tank.rotate_turret(&self.enemy_center);
     }
     {
