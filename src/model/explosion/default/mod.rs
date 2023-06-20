@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-15
-//! - Updated: 2023-06-14
+//! - Updated: 2023-06-20
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use self::state::State;
 use super::{Explosion, ExplosionAccessor};
+use crate::constant::{EXPLOSION_RADIUS_DECAY_RATE, EXPLOSION_RADIUS_MINIMUM};
 use crate::model::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
@@ -66,10 +67,8 @@ impl Model for DefaultExplosion {
       },
       State::Fading(state_operator) => {
         let radius_delta = self.circle.radius * time_delta;
-        // TODO: Make this a constant
-        self.circle.radius -= 10. * radius_delta;
-        // TODO: Make this a constant
-        if self.circle.radius < 1. {
+        self.circle.radius -= EXPLOSION_RADIUS_DECAY_RATE * radius_delta;
+        if self.circle.radius < EXPLOSION_RADIUS_MINIMUM {
           self.state = state_operator.to_inactive();
         }
         self.updated = true;
