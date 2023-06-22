@@ -55,6 +55,9 @@ impl PathPainter {
   ) -> Result<(), JsValue> {
     let tank = tank_operator.get_tank();
     let tank = tank.borrow();
+    if tank.is_burning() || !tank.is_active() {
+      return Ok(());
+    }
     let context = self.context.borrow();
     context.save();
     let stroke_style = match tank.get_color() {
