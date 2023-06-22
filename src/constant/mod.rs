@@ -16,7 +16,7 @@ use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::f64::consts::TAU;
 
 pub const A_STAR_DIRECTIONS: usize = 8;
-pub const A_STAR_LOOPS: usize = 100;
+pub const A_STAR_LOOPS: usize = 10;
 pub const A_STAR_STEP_SIZE: f64 = 10.;
 pub const AMMO_DUMP_AMMO_GROWTH_RATE: f64 = 0.5;
 pub const AMMO_DUMP_AMMO_MAX: f64 = 30.;

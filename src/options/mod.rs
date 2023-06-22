@@ -11,9 +11,18 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-#[derive(Default)]
 pub struct Options {
   pub path_display: bool,
   pub pause: bool,
   pub update_rate_display: bool,
+}
+
+impl Default for Options {
+  fn default() -> Self {
+    Self {
+      path_display: true,
+      pause: false,
+      update_rate_display: false,
+    }
+  }
 }

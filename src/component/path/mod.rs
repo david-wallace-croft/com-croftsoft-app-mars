@@ -53,7 +53,10 @@ impl PathComponent {
 
 impl Component for PathComponent {
   fn make_html(&self) -> String {
-    format!("Display paths <input id=\"{}\" type=\"checkbox\">", self.id)
+    format!(
+      "Display paths <input checked id=\"{}\" type=\"checkbox\">",
+      self.id
+    )
   }
 }
 
