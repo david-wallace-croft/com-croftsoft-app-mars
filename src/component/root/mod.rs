@@ -5,12 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::path::PathComponent;
 use super::Component;
 use crate::options::Options;
 use crate::root::Root;
@@ -28,7 +29,7 @@ use super::canvas::CanvasComponent;
 use super::update_rate::UpdateRateComponent;
 use crate::events::Events;
 use crate::inputs::Inputs;
-use com_croftsoft_lib_animation::web_sys::{get_window, log};
+use com_croftsoft_lib_animation::web_sys::get_window;
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -36,8 +37,9 @@ use web_sys::{Document, HtmlCollection};
 
 pub struct RootComponent {
   canvas_component: Rc<RefCell<CanvasComponent>>,
-  components: [Rc<RefCell<dyn Component>>; 2],
+  components: [Rc<RefCell<dyn Component>>; 3],
   events: Rc<RefCell<Events>>,
+  path_component: Rc<RefCell<PathComponent>>,
   update_rate_component: Rc<RefCell<UpdateRateComponent>>,
   // pause_component: Rc<RefCell<PauseComponent>>,
   // reset_component: Rc<RefCell<ResetComponent>>,
@@ -58,6 +60,8 @@ impl RootComponent {
       options,
       root_state,
     )));
+    let path_component =
+      Rc::new(RefCell::new(PathComponent::new("path", inputs.clone())));
     let update_rate_component = Rc::new(RefCell::new(
       UpdateRateComponent::new("update-rate", inputs),
     ));
@@ -67,8 +71,9 @@ impl RootComponent {
     //   Rc::new(RefCell::new(ResetComponent::new("reset", inputs.clone())));
     // let speed_component =
     //   Rc::new(RefCell::new(SpeedComponent::new("speed", inputs.clone())));
-    let components: [Rc<RefCell<dyn Component>>; 2] = [
+    let components: [Rc<RefCell<dyn Component>>; 3] = [
       canvas_component.clone(),
+      path_component.clone(),
       update_rate_component.clone(),
       // frame_rate_component.clone(),
       // pause_component.clone(),
@@ -78,6 +83,7 @@ impl RootComponent {
       canvas_component,
       components,
       events,
+      path_component,
       update_rate_component,
       // pause_component,
       // reset_component,
@@ -88,6 +94,7 @@ impl RootComponent {
 impl Component for RootComponent {
   fn make_html(&self) -> String {
     let canvas_html: String = self.canvas_component.borrow().make_html();
+    let path_html: String = self.path_component.borrow().make_html();
     let update_rate_html: String =
       self.update_rate_component.borrow().make_html();
     // let pause_html: String = self.pause_component.borrow().make_html();
@@ -100,6 +107,7 @@ impl Component for RootComponent {
       // reset_html,
       // String::from("<br>"),
       // speed_html,
+      path_html,
       update_rate_html,
       // time_html,
       // pause_html,

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-18
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,6 +15,7 @@ use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_operator::TankOperator;
 use crate::constant::{TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_RADIUS};
 use crate::model::tank::Color;
+use crate::options::Options;
 use com_croftsoft_lib_role::Painter;
 use core::cell::RefCell;
 use core::f64::consts::TAU;
@@ -27,12 +28,14 @@ pub struct PathPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style_blue: JsValue,
   fill_style_red: JsValue,
+  options: Rc<RefCell<Options>>,
   tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
 
 impl PathPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
+    options: Rc<RefCell<Options>>,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
@@ -41,6 +44,7 @@ impl PathPainter {
       context,
       fill_style_blue,
       fill_style_red,
+      options,
       tank_operators,
     }
   }
@@ -74,6 +78,10 @@ impl PathPainter {
 
 impl Painter for PathPainter {
   fn paint(&mut self) {
+    let options = self.options.borrow();
+    if !options.path_display {
+      return;
+    }
     let tank_operators = self.tank_operators.borrow();
     for tank_operator in tank_operators.iter() {
       let _result = self.paint_path(tank_operator);

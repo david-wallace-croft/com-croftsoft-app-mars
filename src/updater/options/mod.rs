@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,6 +17,7 @@ use core::cell::{Ref, RefCell};
 use std::rc::Rc;
 
 pub trait OptionsUpdaterInputs {
+  fn get_path_display_change_requested(&self) -> Option<bool>;
   fn get_pause_change_requested(&self) -> Option<bool>;
   fn get_reset_requested(&self) -> bool;
   // fn get_time_display_change_requested(&self) -> Option<bool>;
@@ -50,6 +51,9 @@ impl Updater for OptionsUpdater {
       inputs.get_update_rate_display_change_requested()
     {
       self.options.borrow_mut().update_rate_display = frame_rate_display;
+    }
+    if let Some(path_display) = inputs.get_path_display_change_requested() {
+      self.options.borrow_mut().path_display = path_display;
     }
     if let Some(pause) = inputs.get_pause_change_requested() {
       self.options.borrow_mut().pause = pause;

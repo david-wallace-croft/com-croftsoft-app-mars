@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-22
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -65,10 +65,16 @@ impl RootPainter {
       ExplosionPainter::new(context.clone(), root_state.world.get_explosions());
     let obstacle_painter =
       ObstaclePainter::new(context.clone(), root_state.world.get_obstacles());
-    let overlay_painter =
-      OverlayPainter::new(context.clone(), options, root_state.overlay.clone());
-    let path_painter: PathPainter =
-      PathPainter::new(context.clone(), root_state.world.get_tank_operators());
+    let overlay_painter = OverlayPainter::new(
+      context.clone(),
+      options.clone(),
+      root_state.overlay.clone(),
+    );
+    let path_painter: PathPainter = PathPainter::new(
+      context.clone(),
+      options,
+      root_state.world.get_tank_operators(),
+    );
     let tank_painter: TankPainter =
       TankPainter::new(context, root_state.world.get_tank_operators());
     let painters: Vec<Box<dyn Painter>> = vec![
