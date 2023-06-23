@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -94,9 +94,6 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
     let distance_from_start: f64 = node.distance(&self.start_state_space_node);
     let mut step_size: f64 =
       (distance_from_start / self.init_step_size).trunc() * self.init_step_size;
-    // TODO: This scaling should not be necessary; check distance_from_start
-    // TODO: Also, tanks seem to be head straight instead of taking first step
-    step_size /= 3.;
     step_size = step_size.max(self.init_step_size);
     if distance_to_goal <= step_size {
       adjacent_list.push(StateSpaceNode::new(

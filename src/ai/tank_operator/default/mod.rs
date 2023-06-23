@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -50,6 +50,11 @@ impl DefaultTankOperator {
     self.start_state_space_node.set_point_xy(&self.center);
     self.start_state_space_node.set_heading(heading);
     self.a_star.reset(self.start_state_space_node);
+    // TODO: How was this passed in the original code?
+    self
+      .tank_cartographer
+      .borrow_mut()
+      .set_start_state_space_node(self.start_state_space_node);
     self.tank_cartographer.borrow_mut().set_goal_point_xy(destination);
     for _ in 0..A_STAR_LOOPS {
       if !self.a_star.loop_once() {
