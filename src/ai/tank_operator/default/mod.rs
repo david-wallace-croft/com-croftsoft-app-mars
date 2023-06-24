@@ -62,9 +62,10 @@ impl DefaultTankOperator {
         break;
       }
     }
-    if !self.a_star.is_goal_found() {
-      return *destination;
-    }
+    // TODO
+    // if !self.a_star.is_goal_found() {
+    //   return *destination;
+    // }
     if let Some(state_space_node) = self.a_star.get_first_step() {
       state_space_node.get_point_xy()
     } else {
