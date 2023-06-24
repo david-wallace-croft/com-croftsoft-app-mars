@@ -1,6 +1,7 @@
 pub mod ammo_dump;
 pub mod bullet;
 pub mod explosion;
+pub mod node;
 pub mod obstacle;
 pub mod overlay;
 pub mod path;

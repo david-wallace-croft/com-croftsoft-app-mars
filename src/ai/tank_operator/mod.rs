@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-04
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,6 +22,8 @@ pub trait TankOperator {
   fn fire(&mut self);
 
   fn get_id(&self) -> usize;
+
+  fn get_nodes(&self) -> Vec<StateSpaceNode>;
 
   // TODO: was iterator
   fn get_path(&self) -> Vec<StateSpaceNode>;

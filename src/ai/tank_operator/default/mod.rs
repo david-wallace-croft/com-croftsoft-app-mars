@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-06-23
+//! - Updated: 2023-06-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,6 +22,7 @@ use crate::model::tank::Tank;
 use crate::world::World;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
+use com_croftsoft_lib_animation::web_sys::log;
 use core::cell::{RefCell, RefMut};
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
@@ -108,6 +109,15 @@ impl TankOperator for DefaultTankOperator {
 
   fn get_id(&self) -> usize {
     self.id
+  }
+
+  fn get_nodes(&self) -> Vec<StateSpaceNode> {
+    let mut nodes = Vec::<StateSpaceNode>::new();
+    for node in self.a_star.node_to_node_info_map.keys() {
+      nodes.push(*node);
+    }
+    log(&format!("{}", nodes.len()));
+    nodes
   }
 
   // TODO: was iterator

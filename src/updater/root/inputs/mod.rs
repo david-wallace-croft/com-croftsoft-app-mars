@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-03
-//! - Updated: 2023-06-22
+//! - Updated: 2023-06-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,6 +22,7 @@ use std::rc::Rc;
 
 pub trait RootUpdaterInputs {
   fn get_current_time_millis(&self) -> f64;
+  fn get_node_display_change_requested(&self) -> Option<bool>;
   fn get_path_display_change_requested(&self) -> Option<bool>;
   fn get_pause_change_requested(&self) -> Option<bool>;
   fn get_period_millis_change_requested(&self) -> Option<f64>;
@@ -32,6 +33,10 @@ pub trait RootUpdaterInputs {
 impl RootUpdaterInputs for Inputs {
   fn get_current_time_millis(&self) -> f64 {
     self.current_time_millis
+  }
+
+  fn get_node_display_change_requested(&self) -> Option<bool> {
+    self.node_display_change_requested
   }
 
   fn get_path_display_change_requested(&self) -> Option<bool> {
@@ -109,6 +114,10 @@ impl MetronomeUpdaterInputs for RootUpdaterInputsAdapter {
 }
 
 impl OptionsUpdaterInputs for RootUpdaterInputsAdapter {
+  fn get_node_display_change_requested(&self) -> Option<bool> {
+    self.inputs.borrow().get_node_display_change_requested()
+  }
+
   fn get_path_display_change_requested(&self) -> Option<bool> {
     self.inputs.borrow().get_path_display_change_requested()
   }
