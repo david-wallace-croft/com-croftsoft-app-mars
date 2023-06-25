@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-18
-//! - Updated: 2023-06-22
+//! - Updated: 2023-06-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -66,7 +66,7 @@ impl PathPainter {
     };
     context.set_stroke_style(stroke_style);
     context.set_line_width(3.);
-    let state_space_nodes: Vec<StateSpaceNode> = tank_operator.get_path();
+    let state_space_nodes: VecDeque<StateSpaceNode> = tank_operator.get_path();
     state_space_nodes.iter().for_each(|state_space_node| {
       let point_2dd = state_space_node.get_point_xy();
       // TODO: show state space node heading

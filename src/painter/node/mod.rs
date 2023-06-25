@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-24
-//! - Updated: 2023-06-24
+//! - Updated: 2023-06-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,7 @@
 use crate::ai::state_space_node::StateSpaceNode;
 use crate::ai::tank_operator::TankOperator;
 use crate::constant::{
-  NODE_STROKE_STYLE, TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED, TANK_RADIUS,
+  NODE_STROKE_STYLE, TANK_FILL_STYLE_BLUE, TANK_FILL_STYLE_RED,
 };
 use crate::model::tank::Color;
 use crate::options::Options;

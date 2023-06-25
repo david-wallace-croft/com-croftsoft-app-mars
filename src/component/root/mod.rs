@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-24
+//! - Updated: 2023-06-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -37,7 +37,7 @@ use web_sys::{Document, HtmlCollection};
 pub struct RootComponent {
   canvas_component: Rc<RefCell<CanvasComponent>>,
   components: [Rc<RefCell<dyn Component>>; 4],
-  events: Rc<RefCell<Events>>,
+  // events: Rc<RefCell<Events>>,
   node_component: Rc<RefCell<NodeComponent>>,
   path_component: Rc<RefCell<PathComponent>>,
   update_rate_component: Rc<RefCell<UpdateRateComponent>>,
@@ -47,7 +47,8 @@ pub struct RootComponent {
 
 impl RootComponent {
   pub fn new(
-    events: Rc<RefCell<Events>>,
+    // TODO
+    _events: Rc<RefCell<Events>>,
     // TODO: do something with the ID
     _id: &str,
     inputs: Rc<RefCell<Inputs>>,
@@ -85,7 +86,7 @@ impl RootComponent {
     Self {
       canvas_component,
       components,
-      events,
+      // events,
       node_component,
       path_component,
       update_rate_component,

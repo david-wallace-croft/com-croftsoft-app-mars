@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-06-24
+//! - Updated: 2023-06-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,6 +26,7 @@ use core::cell::{RefCell, RefMut};
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use rand::rngs::ThreadRng;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 pub struct DefaultTankOperator {
@@ -119,7 +120,7 @@ impl TankOperator for DefaultTankOperator {
   }
 
   // TODO: was iterator
-  fn get_path(&self) -> Vec<StateSpaceNode> {
+  fn get_path(&self) -> VecDeque<StateSpaceNode> {
     self.a_star.get_path()
   }
 

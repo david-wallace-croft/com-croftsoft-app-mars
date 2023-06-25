@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-24
+//! - Updated: 2023-06-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::f64::consts::TAU;
 
 pub const A_STAR_DIRECTIONS: usize = 8;
-pub const A_STAR_LOOPS: usize = 100;
+pub const A_STAR_LOOPS: usize = 20;
 pub const A_STAR_STEP_SIZE: f64 = TANK_RADIUS;
 pub const AMMO_DUMP_AMMO_GROWTH_RATE: f64 = 0.5;
 pub const AMMO_DUMP_AMMO_MAX: f64 = 30.;

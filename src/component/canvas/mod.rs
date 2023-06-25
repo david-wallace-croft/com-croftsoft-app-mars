@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,19 +16,20 @@ use crate::options::Options;
 use crate::painter::root::RootPainter;
 use crate::root::Root;
 use com_croftsoft_lib_animation::web_sys::{
-  add_mouse_down_handler_by_id, get_canvas_xy, get_html_canvas_element_by_id,
+  add_mouse_down_handler_by_id, get_canvas_xy,
 };
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
 use core::cell::RefCell;
 use futures::channel::mpsc::{TryRecvError, UnboundedReceiver};
 use std::rc::Rc;
-use web_sys::{HtmlCanvasElement, MouseEvent};
+use web_sys::MouseEvent;
 
 use super::Component;
 
 pub struct CanvasComponent {
   id: String,
-  inputs: Rc<RefCell<Inputs>>,
+  // TODO
+  // inputs: Rc<RefCell<Inputs>>,
   options: Rc<RefCell<Options>>,
   root_model: Rc<RefCell<Root>>,
   root_painter_option: Option<RootPainter>,
@@ -48,13 +49,14 @@ impl CanvasComponent {
 
   pub fn new(
     id: &str,
-    inputs: Rc<RefCell<Inputs>>,
+    // TODO
+    _inputs: Rc<RefCell<Inputs>>,
     options: Rc<RefCell<Options>>,
     root_model: Rc<RefCell<Root>>,
   ) -> Self {
     Self {
       id: String::from(id),
-      inputs,
+      // inputs,
       options,
       unbounded_receiver_option: None,
       root_painter_option: None,
@@ -130,7 +132,8 @@ impl Updater for CanvasComponent {
   fn update(&mut self) {
     let mouse_event_option = self.poll_mouse_event();
     if let Some(mouse_event) = mouse_event_option {
-      let (canvas_x, canvas_y) = get_canvas_xy(&mouse_event);
+      let (_canvas_x, _canvas_y) = get_canvas_xy(&mouse_event);
+      // TODO
       // let index = self.to_world_index_from_canvas_xy(canvas_x, canvas_y);
       // self.inputs.borrow_mut().bug_requested = Some(index);
     }
