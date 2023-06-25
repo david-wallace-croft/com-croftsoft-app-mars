@@ -53,10 +53,7 @@ impl NodeComponent {
 
 impl Component for NodeComponent {
   fn make_html(&self) -> String {
-    format!(
-      "Display nodes <input checked id=\"{}\" type=\"checkbox\">",
-      self.id
-    )
+    format!("Display nodes <input id=\"{}\" type=\"checkbox\">", self.id)
   }
 }
 

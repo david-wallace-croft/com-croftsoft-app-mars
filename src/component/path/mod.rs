@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-22
-//! - Updated: 2023-06-22
+//! - Updated: 2023-06-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -53,10 +53,7 @@ impl PathComponent {
 
 impl Component for PathComponent {
   fn make_html(&self) -> String {
-    format!(
-      "Display paths <input checked id=\"{}\" type=\"checkbox\">",
-      self.id
-    )
+    format!("Display paths <input id=\"{}\" type=\"checkbox\">", self.id)
   }
 }
 

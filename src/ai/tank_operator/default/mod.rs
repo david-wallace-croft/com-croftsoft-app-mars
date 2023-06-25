@@ -22,7 +22,6 @@ use crate::model::tank::Tank;
 use crate::world::World;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
-use com_croftsoft_lib_animation::web_sys::log;
 use core::cell::{RefCell, RefMut};
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
@@ -62,10 +61,9 @@ impl DefaultTankOperator {
         break;
       }
     }
-    // TODO
-    // if !self.a_star.is_goal_found() {
-    //   return *destination;
-    // }
+    if !self.a_star.is_goal_found() {
+      return *destination;
+    }
     if let Some(state_space_node) = self.a_star.get_first_step() {
       state_space_node.get_point_xy()
     } else {
@@ -117,7 +115,6 @@ impl TankOperator for DefaultTankOperator {
     for node in self.a_star.node_to_node_info_map.keys() {
       nodes.push(*node);
     }
-    log(&format!("{}", nodes.len()));
     nodes
   }
 
