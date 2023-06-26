@@ -51,6 +51,7 @@ impl DefaultTankOperator {
     self.start_state_space_node.set_point_xy(&self.center);
     self.start_state_space_node.set_heading(heading);
     self.a_star.reset(self.start_state_space_node);
+    self.tank_cartographer.borrow().reset();
     // TODO: How was this passed in the original code?
     self
       .tank_cartographer
@@ -177,6 +178,9 @@ impl TankOperator for DefaultTankOperator {
         self.destination.set_xy(destination_x, destination_y);
         tank.borrow_mut().go(&self.destination);
       }
+      // Clears the node animation
+      // TODO: Is this the best way to do this?
+      self.a_star.reset(self.start_state_space_node);
     }
     // Fire randomly
     let random_number = uniform.sample(&mut thread_rng);

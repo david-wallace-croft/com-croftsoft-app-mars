@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-06-23
+//! - Updated: 2023-06-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,6 +21,7 @@ use std::f64::consts::PI;
 use std::rc::Rc;
 
 pub struct TankCartographer {
+  adjacent_nodes: RefCell<Vec<StateSpaceNode>>,
   directions: usize,
   goal_state_space_node: StateSpaceNode,
   id: usize,
@@ -53,6 +54,7 @@ impl TankCartographer {
     let goal_state_space_node = StateSpaceNode::new(0., Point2DD::default());
     let start_state_space_node = StateSpaceNode::new(0., Point2DD::default());
     TankCartographer {
+      adjacent_nodes: RefCell::new(Vec::new()),
       directions,
       goal_state_space_node,
       id,
@@ -60,6 +62,25 @@ impl TankCartographer {
       start_state_space_node,
       tank,
     }
+  }
+
+  pub fn push_adjacent_node(
+    &self,
+    adjacent_node: &StateSpaceNode,
+  ) -> bool {
+    let mut adjacent_nodes = self.adjacent_nodes.borrow_mut();
+    for previous_node in adjacent_nodes.iter() {
+      if previous_node.distance(adjacent_node) < self.init_step_size / 2. {
+        // TODO: Is this incorrectly filtering out different headings?
+        return false;
+      }
+    }
+    adjacent_nodes.push(*adjacent_node);
+    true
+  }
+
+  pub fn reset(&self) {
+    self.adjacent_nodes.borrow_mut().clear();
   }
 
   pub fn set_goal_point_xy(
@@ -96,10 +117,11 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
       (distance_from_start / self.init_step_size).trunc() * self.init_step_size;
     step_size = step_size.max(self.init_step_size);
     if distance_to_goal <= step_size {
-      adjacent_list.push(StateSpaceNode::new(
+      let adjacent_state_space_node = StateSpaceNode::new(
         self.goal_state_space_node.get_heading(),
         self.goal_state_space_node.get_point_xy(),
-      ));
+      );
+      adjacent_list.push(adjacent_state_space_node);
       return adjacent_list;
     }
     let point_xy: Point2DD = node.get_point_xy();
@@ -122,7 +144,8 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
       if self.tank.borrow().is_space_available(
         adjacent_state_space_node.get_point_xy().get_x(),
         adjacent_state_space_node.get_point_xy().get_y(),
-      ) {
+      ) && self.push_adjacent_node(&adjacent_state_space_node)
+      {
         adjacent_list.push(adjacent_state_space_node);
       }
     }
