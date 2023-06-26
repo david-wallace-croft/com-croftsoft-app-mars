@@ -16,6 +16,7 @@ use com_croftsoft_lib_role::{Initializer, Updater};
 pub mod canvas;
 pub mod node;
 pub mod path;
+pub mod reset;
 pub mod root;
 pub mod update_rate;
 
