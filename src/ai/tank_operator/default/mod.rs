@@ -180,6 +180,7 @@ impl TankOperator for DefaultTankOperator {
       }
       // Clears the node animation
       // TODO: Is this the best way to do this?
+      self.start_state_space_node.set_point_xy(&self.center);
       self.a_star.reset(self.start_state_space_node);
     }
     // Fire randomly
