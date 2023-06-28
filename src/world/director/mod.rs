@@ -5,14 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-03
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::builder::WorldBuilder;
-use super::factory::WorldFactory;
 use super::seed::WorldSeed;
 use super::World;
 use crate::constant::{
@@ -29,16 +28,16 @@ use rand::rngs::ThreadRng;
 use std::rc::Rc;
 
 pub struct WorldBuilderDirector {
-  seed: WorldSeed,
-  world_builder: WorldBuilder,
+  pub seed: WorldSeed,
+  pub world_builder: WorldBuilder,
 }
 
 impl WorldBuilderDirector {
-  pub fn direct(&self) -> Rc<dyn World> {
+  pub fn direct(&self) {
+    self.world_builder.world.clear();
     self.direct_tank_operators();
     self.direct_obstacles();
     self.direct_ammo_dumps();
-    self.world_builder.world.clone()
   }
 
   fn direct_ammo_dumps(&self) {
@@ -121,17 +120,6 @@ impl WorldBuilderDirector {
         index,
         turret_heading,
       );
-    }
-  }
-
-  pub fn new(
-    factory: Rc<dyn WorldFactory>,
-    seed: WorldSeed,
-  ) -> Self {
-    let world_builder = WorldBuilder::new(factory);
-    Self {
-      seed,
-      world_builder,
     }
   }
 }

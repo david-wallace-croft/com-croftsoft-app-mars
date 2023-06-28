@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,17 +13,14 @@
 
 use crate::component::root::RootComponent;
 use crate::configuration::Configuration;
-use crate::constant::{AMMO_DUMP_COUNT, CONFIGURATION, OBSTACLE_COUNT};
+use crate::constant::CONFIGURATION;
 use crate::events::Events;
 use crate::inputs::Inputs;
 use crate::options::Options;
 use crate::root::Root;
-use crate::updater::root::{RootUpdater, RootUpdaterConfiguration};
-use crate::world::director::WorldBuilderDirector;
+use crate::updater::root::RootUpdater;
 use crate::world::factory::default::DefaultWorldFactory;
 use crate::world::factory::WorldFactory;
-use crate::world::seed::WorldSeed;
-use crate::world::World;
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
@@ -47,27 +44,14 @@ impl Looper {
   }
 
   pub fn new(configuration: Configuration) -> Self {
-    let Configuration {
-      bounds,
-      update_period_millis_initial,
-    } = configuration;
-    let root_updater_configuration = RootUpdaterConfiguration {
-      update_period_millis_initial,
-    };
     let frame_rater: Rc<RefCell<dyn FrameRater>> = Rc::new(RefCell::new(
-      SimpleFrameRater::new(update_period_millis_initial),
+      SimpleFrameRater::new(configuration.update_period_millis_initial),
     ));
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
     let factory: Rc<dyn WorldFactory> = Rc::new(DefaultWorldFactory::default());
-    let seed = WorldSeed {
-      ammo_dump_count: AMMO_DUMP_COUNT,
-      bounds,
-      obstacle_count: OBSTACLE_COUNT,
-    };
-    let world_builder_director = WorldBuilderDirector::new(factory, seed);
-    let world: Rc<dyn World> = world_builder_director.direct();
+    let world = factory.make_world();
     let root_state = Rc::new(RefCell::new(Root::new(world)));
     let root_component = RootComponent::new(
       events.clone(),
@@ -77,8 +61,9 @@ impl Looper {
       root_state.clone(),
     );
     let root_updater = RootUpdater::new(
-      root_updater_configuration,
+      configuration,
       events.clone(),
+      factory,
       frame_rater,
       inputs.clone(),
       options,

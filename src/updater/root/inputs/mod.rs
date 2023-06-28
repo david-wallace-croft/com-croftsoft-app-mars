@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-03
-//! - Updated: 2023-06-24
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,6 +15,7 @@ use super::events::RootUpdaterEvents;
 use crate::inputs::Inputs;
 use crate::updater::options::OptionsUpdaterInputs;
 use crate::updater::overlay::OverlayUpdaterInputs;
+use crate::updater::world::WorldUpdaterInputs;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdaterInputs;
 use com_croftsoft_lib_animation::metronome::updater::MetronomeUpdaterInputs;
 use core::cell::RefCell;
@@ -170,5 +171,11 @@ impl OverlayUpdaterInputs for RootUpdaterInputsAdapter {
 
   fn get_update_rate_display_change_requested(&self) -> Option<bool> {
     self.inputs.borrow().get_update_rate_display_change_requested()
+  }
+}
+
+impl WorldUpdaterInputs for RootUpdaterInputsAdapter {
+  fn get_reset_requested(&self) -> bool {
+    self.inputs.borrow().get_reset_requested()
   }
 }

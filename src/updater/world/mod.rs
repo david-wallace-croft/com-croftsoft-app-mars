@@ -5,12 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use crate::configuration::Configuration;
+use crate::constant::{AMMO_DUMP_COUNT, OBSTACLE_COUNT};
 use crate::updater::ammo_dump::AmmoDumpUpdater;
 use crate::updater::bullet::BulletUpdater;
 use crate::updater::explosion::ExplosionUpdater;
@@ -20,18 +22,35 @@ use crate::updater::tank_operator::TankOperatorUpdater;
 use crate::visitor::bullet::BulletVisitor;
 use crate::visitor::explosion::ExplosionVisitor;
 use crate::visitor::Visitor;
+use crate::world::builder::WorldBuilder;
+use crate::world::director::WorldBuilderDirector;
+use crate::world::factory::WorldFactory;
+use crate::world::seed::WorldSeed;
 use crate::world::World;
 use com_croftsoft_lib_role::Updater;
+use core::cell::RefCell;
 use std::rc::Rc;
+
+pub trait WorldUpdaterInputs {
+  fn get_reset_requested(&self) -> bool;
+}
 
 pub struct WorldUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
+  configuration: Configuration,
+  factory: Rc<dyn WorldFactory>,
+  inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
   visitors: Vec<Box<dyn Visitor>>,
   world: Rc<dyn World>,
 }
 
 impl WorldUpdater {
-  pub fn new(world: Rc<dyn World>) -> Self {
+  pub fn new(
+    configuration: Configuration,
+    factory: Rc<dyn WorldFactory>,
+    inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
+    world: Rc<dyn World>,
+  ) -> Self {
     let ammo_dump_updater = AmmoDumpUpdater::new(world.get_ammo_dumps());
     let bullet_updater = BulletUpdater::new(world.get_bullets());
     let explosion_updater = ExplosionUpdater::new(world.get_explosions());
@@ -55,6 +74,9 @@ impl WorldUpdater {
     ];
     Self {
       child_updaters,
+      configuration,
+      factory,
+      inputs,
       visitors,
       world,
     }
@@ -63,6 +85,23 @@ impl WorldUpdater {
 
 impl Updater for WorldUpdater {
   fn update(&mut self) {
+    if self.inputs.borrow().get_reset_requested() {
+      let world_builder = WorldBuilder {
+        factory: self.factory.clone(),
+        world: self.world.clone(),
+      };
+      let seed = WorldSeed {
+        ammo_dump_count: AMMO_DUMP_COUNT,
+        bounds: self.configuration.bounds,
+        obstacle_count: OBSTACLE_COUNT,
+      };
+      let world_builder_director = WorldBuilderDirector {
+        seed,
+        world_builder,
+      };
+      world_builder_director.direct();
+      return;
+    }
     self.child_updaters.iter_mut().for_each(|updater| updater.update());
     self
       .visitors

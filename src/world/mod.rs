@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -53,6 +53,8 @@ pub trait World: VisitorAcceptor {
     &self,
     tank_operator: Box<dyn TankOperator>,
   );
+
+  fn clear(&self);
 
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>>;
 

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-06-03
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,6 +16,7 @@ use self::events::RootUpdaterEventsAdapter;
 use self::inputs::RootUpdaterInputs;
 use self::inputs::RootUpdaterInputsAdapter;
 use self::options::RootUpdaterOptionsAdapter;
+use crate::configuration::Configuration;
 use crate::options::Options;
 use crate::overlay::Overlay;
 use crate::preparer::world::WorldPreparer;
@@ -23,6 +24,7 @@ use crate::root::Root;
 use crate::updater::options::OptionsUpdater;
 use crate::updater::overlay::OverlayUpdater;
 use crate::updater::world::WorldUpdater;
+use crate::world::factory::WorldFactory;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
@@ -36,10 +38,6 @@ pub mod events;
 pub mod inputs;
 pub mod options;
 
-pub struct RootUpdaterConfiguration {
-  pub update_period_millis_initial: f64,
-}
-
 pub struct RootUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
   world_preparer: WorldPreparer,
@@ -47,8 +45,9 @@ pub struct RootUpdater {
 
 impl RootUpdater {
   pub fn new(
-    configuration: RootUpdaterConfiguration,
+    configuration: Configuration,
     events: Rc<RefCell<dyn RootUpdaterEvents>>,
+    factory: Rc<dyn WorldFactory>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
     options: Rc<RefCell<Options>>,
@@ -83,10 +82,15 @@ impl RootUpdater {
     }));
     let metronome_updater = MetronomeUpdater::new(
       root_updater_events_adapter,
-      root_updater_inputs_adapter,
+      root_updater_inputs_adapter.clone(),
       metronome,
     );
-    let world_updater = WorldUpdater::new(root_state.borrow().world.clone());
+    let world_updater = WorldUpdater::new(
+      configuration,
+      factory,
+      root_updater_inputs_adapter,
+      root_state.borrow().world.clone(),
+    );
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),

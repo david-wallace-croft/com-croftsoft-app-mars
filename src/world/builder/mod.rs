@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,7 +26,7 @@ use core::cell::RefCell;
 use std::rc::Rc;
 
 pub struct WorldBuilder {
-  factory: Rc<dyn WorldFactory>,
+  pub factory: Rc<dyn WorldFactory>,
   pub world: Rc<dyn World>,
 }
 
@@ -91,13 +91,5 @@ impl WorldBuilder {
       self.world.clone(),
     );
     self.world.add_tank_operator(Box::new(tank_operator));
-  }
-
-  pub fn new(factory: Rc<dyn WorldFactory>) -> Self {
-    let world = factory.make_world();
-    Self {
-      factory,
-      world,
-    }
   }
 }

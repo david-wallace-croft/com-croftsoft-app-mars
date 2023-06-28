@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-29
-//! - Updated: 2023-06-19
+//! - Updated: 2023-06-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -84,6 +84,14 @@ impl World for DefaultWorld {
     tank_operator: Box<dyn TankOperator>,
   ) {
     self.tank_operators.borrow_mut().push_back(tank_operator);
+  }
+
+  fn clear(&self) {
+    self.ammo_dumps.borrow_mut().clear();
+    self.bullets.borrow_mut().clear();
+    self.explosions.borrow_mut().clear();
+    self.obstacles.borrow_mut().clear();
+    self.tank_operators.borrow_mut().clear();
   }
 
   fn get_ammo_dumps(&self) -> Rc<RefCell<VecDeque<Box<dyn AmmoDump>>>> {
