@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-06-28
+//! - Updated: 2023-07-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use crate::configuration::Configuration;
 use crate::constant::{AMMO_DUMP_COUNT, OBSTACLE_COUNT};
+use crate::options::Options;
 use crate::updater::ammo_dump::AmmoDumpUpdater;
 use crate::updater::bullet::BulletUpdater;
 use crate::updater::explosion::ExplosionUpdater;
@@ -40,6 +41,7 @@ pub struct WorldUpdater {
   configuration: Configuration,
   factory: Rc<dyn WorldFactory>,
   inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
+  options: Rc<RefCell<Options>>,
   visitors: Vec<Box<dyn Visitor>>,
   world: Rc<dyn World>,
 }
@@ -49,6 +51,7 @@ impl WorldUpdater {
     configuration: Configuration,
     factory: Rc<dyn WorldFactory>,
     inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
+    options: Rc<RefCell<Options>>,
     world: Rc<dyn World>,
   ) -> Self {
     let ammo_dump_updater = AmmoDumpUpdater::new(world.get_ammo_dumps());
@@ -77,6 +80,7 @@ impl WorldUpdater {
       configuration,
       factory,
       inputs,
+      options,
       visitors,
       world,
     }
@@ -100,6 +104,9 @@ impl Updater for WorldUpdater {
         world_builder,
       };
       world_builder_director.direct();
+      return;
+    }
+    if self.options.borrow().pause {
       return;
     }
     self.child_updaters.iter_mut().for_each(|updater| updater.update());

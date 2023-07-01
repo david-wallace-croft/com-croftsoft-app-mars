@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-25
+//! - Updated: 2023-07-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,18 +13,12 @@
 
 use super::node::NodeComponent;
 use super::path::PathComponent;
+use super::pause::PauseComponent;
 use super::reset::ResetComponent;
 use super::Component;
 use crate::options::Options;
 use crate::root::Root;
-// use super::pause::PauseComponent;
-// use super::reset::ResetComponent;
 // use super::speed::SpeedComponent;
-// use crate::engine::traits::Component;
-// use crate::messages::events::Events;
-// use crate::messages::inputs::Inputs;
-// use crate::models::options::Options;
-// use crate::models::root::Root;
 use super::canvas::CanvasComponent;
 use super::update_rate::UpdateRateComponent;
 use crate::events::Events;
@@ -37,10 +31,11 @@ use web_sys::{Document, HtmlCollection};
 
 pub struct RootComponent {
   canvas_component: Rc<RefCell<CanvasComponent>>,
-  components: [Rc<RefCell<dyn Component>>; 5],
+  components: [Rc<RefCell<dyn Component>>; 6],
   // events: Rc<RefCell<Events>>,
   node_component: Rc<RefCell<NodeComponent>>,
   path_component: Rc<RefCell<PathComponent>>,
+  pause_component: Rc<RefCell<PauseComponent>>,
   reset_component: Rc<RefCell<ResetComponent>>,
   update_rate_component: Rc<RefCell<UpdateRateComponent>>,
   // pause_component: Rc<RefCell<PauseComponent>>,
@@ -66,6 +61,8 @@ impl RootComponent {
       Rc::new(RefCell::new(NodeComponent::new("node", inputs.clone())));
     let path_component =
       Rc::new(RefCell::new(PathComponent::new("path", inputs.clone())));
+    let pause_component =
+      Rc::new(RefCell::new(PauseComponent::new("pause", inputs.clone())));
     let reset_component =
       Rc::new(RefCell::new(ResetComponent::new("reset", inputs.clone())));
     let update_rate_component = Rc::new(RefCell::new(
@@ -77,10 +74,11 @@ impl RootComponent {
     //   Rc::new(RefCell::new(ResetComponent::new("reset", inputs.clone())));
     // let speed_component =
     //   Rc::new(RefCell::new(SpeedComponent::new("speed", inputs.clone())));
-    let components: [Rc<RefCell<dyn Component>>; 5] = [
+    let components: [Rc<RefCell<dyn Component>>; 6] = [
       canvas_component.clone(),
       node_component.clone(),
       path_component.clone(),
+      pause_component.clone(),
       reset_component.clone(),
       update_rate_component.clone(),
       // frame_rate_component.clone(),
@@ -93,10 +91,9 @@ impl RootComponent {
       // events,
       node_component,
       path_component,
+      pause_component,
       reset_component,
       update_rate_component,
-      // pause_component,
-      // reset_component,
     }
   }
 }
@@ -106,6 +103,7 @@ impl Component for RootComponent {
     let canvas_html: String = self.canvas_component.borrow().make_html();
     let node_html: String = self.node_component.borrow().make_html();
     let path_html: String = self.path_component.borrow().make_html();
+    let pause_html: String = self.pause_component.borrow().make_html();
     let reset_html: String = self.reset_component.borrow().make_html();
     let update_rate_html: String =
       self.update_rate_component.borrow().make_html();
@@ -121,7 +119,7 @@ impl Component for RootComponent {
       path_html,
       update_rate_html,
       // time_html,
-      // pause_html,
+      pause_html,
       String::from("</div>"),
     ]
     .join("\n")

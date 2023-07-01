@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-06-28
+//! - Updated: 2023-07-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -68,7 +68,7 @@ impl RootUpdater {
       root_updater_inputs_adapter.clone(),
     );
     let options_updater =
-      OptionsUpdater::new(root_updater_inputs_adapter.clone(), options);
+      OptionsUpdater::new(root_updater_inputs_adapter.clone(), options.clone());
     let overlay_updater = OverlayUpdater::new(
       root_updater_events_adapter.clone(),
       frame_rater,
@@ -89,6 +89,7 @@ impl RootUpdater {
       configuration,
       factory,
       root_updater_inputs_adapter,
+      options,
       root_state.borrow().world.clone(),
     );
     let child_updaters: Vec<Box<dyn Updater>> = vec![
