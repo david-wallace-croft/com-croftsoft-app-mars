@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-07-01
+//! - Updated: 2023-07-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use crate::configuration::Configuration;
 use crate::constant::{AMMO_DUMP_COUNT, OBSTACLE_COUNT};
+use crate::game::Game;
 use crate::options::Options;
 use crate::updater::ammo_dump::AmmoDumpUpdater;
 use crate::updater::bullet::BulletUpdater;
@@ -40,6 +41,7 @@ pub struct WorldUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
   configuration: Configuration,
   factory: Rc<dyn WorldFactory>,
+  game: Rc<RefCell<Game>>,
   inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
   options: Rc<RefCell<Options>>,
   visitors: Vec<Box<dyn Visitor>>,
@@ -50,6 +52,7 @@ impl WorldUpdater {
   pub fn new(
     configuration: Configuration,
     factory: Rc<dyn WorldFactory>,
+    game: Rc<RefCell<Game>>,
     inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
     options: Rc<RefCell<Options>>,
     world: Rc<dyn World>,
@@ -79,31 +82,37 @@ impl WorldUpdater {
       child_updaters,
       configuration,
       factory,
+      game,
       inputs,
       options,
       visitors,
       world,
     }
   }
+
+  fn reset(&self) {
+    let world_builder = WorldBuilder {
+      factory: self.factory.clone(),
+      world: self.world.clone(),
+    };
+    let seed = WorldSeed {
+      ammo_dump_count: AMMO_DUMP_COUNT,
+      bounds: self.configuration.bounds,
+      level: self.game.borrow().level,
+      obstacle_count: OBSTACLE_COUNT,
+    };
+    let world_builder_director = WorldBuilderDirector {
+      seed,
+      world_builder,
+    };
+    world_builder_director.direct();
+  }
 }
 
 impl Updater for WorldUpdater {
   fn update(&mut self) {
     if self.inputs.borrow().get_reset_requested() {
-      let world_builder = WorldBuilder {
-        factory: self.factory.clone(),
-        world: self.world.clone(),
-      };
-      let seed = WorldSeed {
-        ammo_dump_count: AMMO_DUMP_COUNT,
-        bounds: self.configuration.bounds,
-        obstacle_count: OBSTACLE_COUNT,
-      };
-      let world_builder_director = WorldBuilderDirector {
-        seed,
-        world_builder,
-      };
-      world_builder_director.direct();
+      self.reset();
       return;
     }
     if self.options.borrow().pause {

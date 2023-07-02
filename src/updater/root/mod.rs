@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-07-01
+//! - Updated: 2023-07-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -88,6 +88,7 @@ impl RootUpdater {
     let world_updater = WorldUpdater::new(
       configuration,
       factory,
+      root_state.borrow().game.clone(),
       root_updater_inputs_adapter,
       options,
       root_state.borrow().world.clone(),
