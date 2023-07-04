@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,6 +15,7 @@ use self::events::RootUpdaterEvents;
 use self::events::RootUpdaterEventsAdapter;
 use self::inputs::RootUpdaterInputs;
 use self::inputs::RootUpdaterInputsAdapter;
+use crate::options::OptionsMutator;
 use crate::overlay::Overlay;
 use crate::preparer::world::WorldPreparer;
 use crate::root::Root;
@@ -43,6 +44,7 @@ impl RootUpdater {
     events: Rc<RefCell<dyn RootUpdaterEvents>>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
+    options_mutator: Rc<dyn OptionsMutator>,
     root: Rc<dyn Root>,
   ) -> Self {
     let root_updater_events_adapter =
@@ -50,6 +52,7 @@ impl RootUpdater {
     let root_updater_inputs_adapter = Rc::new(RefCell::new(
       RootUpdaterInputsAdapter::new(events.clone(), inputs.clone()),
     ));
+    // TODO: Should OptionsMutator extend Options?
     let options = root.get_options();
     let overlay: Rc<RefCell<Overlay>> = root.get_overlay();
     let frame_rater_updater = FrameRaterUpdater::new(
@@ -58,7 +61,7 @@ impl RootUpdater {
       root_updater_inputs_adapter.clone(),
     );
     let options_updater =
-      OptionsUpdater::new(root_updater_inputs_adapter.clone(), options.clone());
+      OptionsUpdater::new(root_updater_inputs_adapter.clone(), options_mutator);
     let overlay_updater = OverlayUpdater::new(
       root_updater_events_adapter.clone(),
       frame_rater,

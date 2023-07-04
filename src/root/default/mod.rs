@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,6 @@
 use crate::configuration::Configuration;
 use crate::game::default::DefaultGame;
 use crate::game::Game;
-use crate::options::default::DefaultOptions;
 use crate::options::Options;
 use crate::overlay::Overlay;
 use crate::world::factory::default::DefaultWorldFactory;
@@ -35,10 +34,12 @@ pub struct DefaultRoot {
 }
 
 impl DefaultRoot {
-  pub fn new(configuration: Configuration) -> Self {
+  pub fn new(
+    configuration: Configuration,
+    options: Rc<dyn Options>,
+  ) -> Self {
     let factory: Rc<dyn WorldFactory> = Rc::new(DefaultWorldFactory::default());
     let game = Rc::new(DefaultGame::default());
-    let options = Rc::new(DefaultOptions::default());
     let overlay = Default::default();
     let world = factory.make_world();
     Self {

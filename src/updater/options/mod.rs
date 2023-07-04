@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::options::Options;
+use crate::options::OptionsMutator;
 use com_croftsoft_lib_role::Updater;
 use core::cell::{Ref, RefCell};
 use std::rc::Rc;
@@ -20,6 +20,7 @@ pub trait OptionsUpdaterInputs {
   fn get_node_display_change_requested(&self) -> Option<bool>;
   fn get_path_display_change_requested(&self) -> Option<bool>;
   fn get_pause_change_requested(&self) -> Option<bool>;
+  // TODO: Are some of these unused?
   fn get_reset_requested(&self) -> bool;
   // fn get_time_display_change_requested(&self) -> Option<bool>;
   fn get_time_to_update(&self) -> bool;
@@ -30,13 +31,13 @@ pub trait OptionsUpdaterInputs {
 
 pub struct OptionsUpdater {
   inputs: Rc<RefCell<dyn OptionsUpdaterInputs>>,
-  options: Rc<dyn Options>,
+  options: Rc<dyn OptionsMutator>,
 }
 
 impl OptionsUpdater {
   pub fn new(
     inputs: Rc<RefCell<dyn OptionsUpdaterInputs>>,
-    options: Rc<dyn Options>,
+    options: Rc<dyn OptionsMutator>,
   ) -> Self {
     Self {
       inputs,
@@ -46,6 +47,7 @@ impl OptionsUpdater {
 }
 
 impl Updater for OptionsUpdater {
+  // TODO: Does self need to be mutable?
   fn update(&mut self) {
     let inputs: Ref<dyn OptionsUpdaterInputs> = self.inputs.borrow();
     if let Some(frame_rate_display) =

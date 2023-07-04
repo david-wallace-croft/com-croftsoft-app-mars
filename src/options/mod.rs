@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,9 +21,9 @@ pub trait Options {
   fn get_pause(&self) -> bool;
 
   fn get_update_rate_display(&self) -> bool;
+}
 
-  // TODO: Can we get rid of these mutator methods?
-
+pub trait OptionsMutator {
   fn set_node_display(
     &self,
     node_display: bool,

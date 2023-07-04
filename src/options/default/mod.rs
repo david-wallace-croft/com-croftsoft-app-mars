@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::Options;
+use super::{Options, OptionsMutator};
 use core::cell::Cell;
 
 #[derive(Default)]
@@ -38,7 +38,9 @@ impl Options for DefaultOptions {
   fn get_update_rate_display(&self) -> bool {
     self.update_rate_display.get()
   }
+}
 
+impl OptionsMutator for DefaultOptions {
   fn set_node_display(
     &self,
     node_display: bool,
