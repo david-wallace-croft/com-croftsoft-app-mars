@@ -11,6 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use crate::configuration::Configuration;
 use crate::game::default::DefaultGame;
 use crate::game::Game;
 use crate::overlay::Overlay;
@@ -23,19 +24,21 @@ use std::rc::Rc;
 use super::Root;
 
 pub struct DefaultRoot {
+  configuration: Configuration,
   factory: Rc<dyn WorldFactory>,
   game: Rc<dyn Game>,
   overlay: Rc<RefCell<Overlay>>,
   world: Rc<dyn World>,
 }
 
-impl Default for DefaultRoot {
-  fn default() -> Self {
+impl DefaultRoot {
+  pub fn new(configuration: Configuration) -> Self {
     let factory: Rc<dyn WorldFactory> = Rc::new(DefaultWorldFactory::default());
     let game = Rc::new(DefaultGame::default());
     let overlay = Default::default();
     let world = factory.make_world();
     Self {
+      configuration,
       factory,
       game,
       overlay,
@@ -45,6 +48,10 @@ impl Default for DefaultRoot {
 }
 
 impl Root for DefaultRoot {
+  fn get_configuration(&self) -> Configuration {
+    self.configuration.clone()
+  }
+
   fn get_factory(&self) -> Rc<dyn WorldFactory> {
     self.factory.clone()
   }

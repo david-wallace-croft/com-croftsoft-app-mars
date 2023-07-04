@@ -16,7 +16,6 @@ use self::events::RootUpdaterEventsAdapter;
 use self::inputs::RootUpdaterInputs;
 use self::inputs::RootUpdaterInputsAdapter;
 use self::options::RootUpdaterOptionsAdapter;
-use crate::configuration::Configuration;
 use crate::options::Options;
 use crate::overlay::Overlay;
 use crate::preparer::world::WorldPreparer;
@@ -44,7 +43,6 @@ pub struct RootUpdater {
 
 impl RootUpdater {
   pub fn new(
-    configuration: Configuration,
     events: Rc<RefCell<dyn RootUpdaterEvents>>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
@@ -74,6 +72,7 @@ impl RootUpdater {
       root_updater_options_adapter,
       overlay,
     );
+    let configuration = root.get_configuration();
     let metronome = Rc::new(RefCell::new(DeltaMetronome {
       period_millis: configuration.update_period_millis_initial,
       time_millis_next_tick: 0.,

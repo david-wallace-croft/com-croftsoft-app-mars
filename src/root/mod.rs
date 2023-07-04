@@ -11,6 +11,7 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use crate::configuration::Configuration;
 use crate::game::Game;
 use crate::overlay::Overlay;
 use crate::world::factory::WorldFactory;
@@ -21,6 +22,8 @@ use std::rc::Rc;
 pub mod default;
 
 pub trait Root {
+  fn get_configuration(&self) -> Configuration;
+
   fn get_factory(&self) -> Rc<dyn WorldFactory>;
 
   fn get_game(&self) -> Rc<dyn Game>;

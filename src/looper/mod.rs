@@ -48,7 +48,7 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-    let root = Rc::new(DefaultRoot::default());
+    let root = Rc::new(DefaultRoot::new(configuration));
     let root_component = RootComponent::new(
       events.clone(),
       "root",
@@ -57,7 +57,6 @@ impl Looper {
       root.clone(),
     );
     let root_updater = RootUpdater::new(
-      configuration,
       events.clone(),
       frame_rater,
       inputs.clone(),
