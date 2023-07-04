@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-24
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -39,7 +39,7 @@ impl RootPainter {
   pub fn new(
     canvas_element_id: &str,
     options: Rc<RefCell<Options>>,
-    root_state: &Root,
+    root: Rc<dyn Root>,
   ) -> Self {
     let document: Document = window().unwrap().document().unwrap();
     let element: Element =
@@ -58,31 +58,26 @@ impl RootPainter {
       context.clone(),
       BACKGROUND_FILL_STYLE,
     );
+    let world = root.get_world();
     let ammo_dump_painter =
-      AmmoDumpPainter::new(context.clone(), root_state.world.get_ammo_dumps());
+      AmmoDumpPainter::new(context.clone(), world.get_ammo_dumps());
     let bullet_painter =
-      BulletPainter::new(root_state.world.get_bullets(), context.clone());
+      BulletPainter::new(world.get_bullets(), context.clone());
     let explosion_painter =
-      ExplosionPainter::new(context.clone(), root_state.world.get_explosions());
+      ExplosionPainter::new(context.clone(), world.get_explosions());
     let node_painter: NodePainter = NodePainter::new(
       context.clone(),
       options.clone(),
-      root_state.world.get_tank_operators(),
+      world.get_tank_operators(),
     );
     let obstacle_painter =
-      ObstaclePainter::new(context.clone(), root_state.world.get_obstacles());
-    let overlay_painter = OverlayPainter::new(
-      context.clone(),
-      options.clone(),
-      root_state.overlay.clone(),
-    );
-    let path_painter: PathPainter = PathPainter::new(
-      context.clone(),
-      options,
-      root_state.world.get_tank_operators(),
-    );
+      ObstaclePainter::new(context.clone(), world.get_obstacles());
+    let overlay_painter =
+      OverlayPainter::new(context.clone(), options.clone(), root.get_overlay());
+    let path_painter: PathPainter =
+      PathPainter::new(context.clone(), options, world.get_tank_operators());
     let tank_painter: TankPainter =
-      TankPainter::new(context, root_state.world.get_tank_operators());
+      TankPainter::new(context, world.get_tank_operators());
     let painters: Vec<Box<dyn Painter>> = vec![
       Box::new(background_painter),
       // TODO: maybe wrap in a world painter

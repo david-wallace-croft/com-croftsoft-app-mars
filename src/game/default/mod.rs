@@ -1,5 +1,5 @@
 // =============================================================================
-//! - Root trait for CroftSoft Mars
+//! - Default Game structure for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
@@ -11,21 +11,16 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use crate::game::Game;
-use crate::overlay::Overlay;
-use crate::world::factory::WorldFactory;
-use crate::world::World;
-use core::cell::RefCell;
-use std::rc::Rc;
+use super::Game;
+use core::cell::Cell;
 
-pub mod default;
+#[derive(Default)]
+pub struct DefaultGame {
+  level: Cell<usize>,
+}
 
-pub trait Root {
-  fn get_factory(&self) -> Rc<dyn WorldFactory>;
-
-  fn get_game(&self) -> Rc<dyn Game>;
-
-  fn get_overlay(&self) -> Rc<RefCell<Overlay>>;
-
-  fn get_world(&self) -> Rc<dyn World>;
+impl Game for DefaultGame {
+  fn get_level(&self) -> usize {
+    self.level.get()
+  }
 }

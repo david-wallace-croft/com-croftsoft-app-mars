@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-01
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -49,13 +49,13 @@ impl RootComponent {
     _id: &str,
     inputs: Rc<RefCell<Inputs>>,
     options: Rc<RefCell<Options>>,
-    root_state: Rc<RefCell<Root>>,
+    root: Rc<dyn Root>,
   ) -> Self {
     let canvas_component = Rc::new(RefCell::new(CanvasComponent::new(
       "canvas",
       inputs.clone(),
       options,
-      root_state,
+      root,
     )));
     let node_component =
       Rc::new(RefCell::new(NodeComponent::new("node", inputs.clone())));

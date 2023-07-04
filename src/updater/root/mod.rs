@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-07-02
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -24,7 +24,6 @@ use crate::root::Root;
 use crate::updater::options::OptionsUpdater;
 use crate::updater::overlay::OverlayUpdater;
 use crate::updater::world::WorldUpdater;
-use crate::world::factory::WorldFactory;
 use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
@@ -47,11 +46,10 @@ impl RootUpdater {
   pub fn new(
     configuration: Configuration,
     events: Rc<RefCell<dyn RootUpdaterEvents>>,
-    factory: Rc<dyn WorldFactory>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
     options: Rc<RefCell<Options>>,
-    root_state: Rc<RefCell<Root>>,
+    root: Rc<dyn Root>,
   ) -> Self {
     let root_updater_events_adapter =
       Rc::new(RefCell::new(RootUpdaterEventsAdapter::new(events.clone())));
@@ -61,7 +59,7 @@ impl RootUpdater {
     let root_updater_options_adapter = Rc::new(RefCell::new(
       RootUpdaterOptionsAdapter::new(options.clone()),
     ));
-    let overlay: Rc<RefCell<Overlay>> = root_state.borrow().overlay.clone();
+    let overlay: Rc<RefCell<Overlay>> = root.get_overlay();
     let frame_rater_updater = FrameRaterUpdater::new(
       false,
       frame_rater.clone(),
@@ -87,11 +85,11 @@ impl RootUpdater {
     );
     let world_updater = WorldUpdater::new(
       configuration,
-      factory,
-      root_state.borrow().game.clone(),
+      root.get_factory().clone(),
+      root.get_game().clone(),
       root_updater_inputs_adapter,
       options,
-      root_state.borrow().world.clone(),
+      root.get_world().clone(),
     );
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
@@ -100,7 +98,7 @@ impl RootUpdater {
       Box::new(frame_rater_updater),
       Box::new(overlay_updater),
     ];
-    let world_preparer = WorldPreparer::new(root_state.borrow().world.clone());
+    let world_preparer = WorldPreparer::new(root.get_world().clone());
     Self {
       child_updaters,
       world_preparer,

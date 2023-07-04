@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-07-02
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -41,7 +41,7 @@ pub struct WorldUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
   configuration: Configuration,
   factory: Rc<dyn WorldFactory>,
-  game: Rc<RefCell<Game>>,
+  game: Rc<dyn Game>,
   inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
   options: Rc<RefCell<Options>>,
   visitors: Vec<Box<dyn Visitor>>,
@@ -52,7 +52,7 @@ impl WorldUpdater {
   pub fn new(
     configuration: Configuration,
     factory: Rc<dyn WorldFactory>,
-    game: Rc<RefCell<Game>>,
+    game: Rc<dyn Game>,
     inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
     options: Rc<RefCell<Options>>,
     world: Rc<dyn World>,
@@ -98,7 +98,7 @@ impl WorldUpdater {
     let seed = WorldSeed {
       ammo_dump_count: AMMO_DUMP_COUNT,
       bounds: self.configuration.bounds,
-      level: self.game.borrow().level,
+      level: self.game.get_level(),
       obstacle_count: OBSTACLE_COUNT,
     };
     let world_builder_director = WorldBuilderDirector {

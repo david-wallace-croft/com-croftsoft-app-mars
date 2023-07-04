@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-25
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -31,7 +31,7 @@ pub struct CanvasComponent {
   // TODO
   // inputs: Rc<RefCell<Inputs>>,
   options: Rc<RefCell<Options>>,
-  root_model: Rc<RefCell<Root>>,
+  root: Rc<dyn Root>,
   root_painter_option: Option<RootPainter>,
   unbounded_receiver_option: Option<UnboundedReceiver<MouseEvent>>,
 }
@@ -52,7 +52,7 @@ impl CanvasComponent {
     // TODO
     _inputs: Rc<RefCell<Inputs>>,
     options: Rc<RefCell<Options>>,
-    root_model: Rc<RefCell<Root>>,
+    root: Rc<dyn Root>,
   ) -> Self {
     Self {
       id: String::from(id),
@@ -60,7 +60,7 @@ impl CanvasComponent {
       options,
       unbounded_receiver_option: None,
       root_painter_option: None,
-      root_model,
+      root,
     }
   }
 
@@ -115,7 +115,7 @@ impl Initializer for CanvasComponent {
     self.root_painter_option = Some(RootPainter::new(
       "canvas",
       self.options.clone(),
-      &self.root_model.borrow(),
+      self.root.clone(),
     ));
   }
 }

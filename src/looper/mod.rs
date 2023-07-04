@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-06-28
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,10 +17,8 @@ use crate::constant::CONFIGURATION;
 use crate::events::Events;
 use crate::inputs::Inputs;
 use crate::options::Options;
-use crate::root::Root;
+use crate::root::default::DefaultRoot;
 use crate::updater::root::RootUpdater;
-use crate::world::factory::default::DefaultWorldFactory;
-use crate::world::factory::WorldFactory;
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::web_sys::{spawn_local_loop, LoopUpdater};
@@ -50,24 +48,21 @@ impl Looper {
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
     let options = Rc::new(RefCell::new(Options::default()));
-    let factory: Rc<dyn WorldFactory> = Rc::new(DefaultWorldFactory::default());
-    let world = factory.make_world();
-    let root_state = Rc::new(RefCell::new(Root::new(world)));
+    let root = Rc::new(DefaultRoot::default());
     let root_component = RootComponent::new(
       events.clone(),
       "root",
       inputs.clone(),
       options.clone(),
-      root_state.clone(),
+      root.clone(),
     );
     let root_updater = RootUpdater::new(
       configuration,
       events.clone(),
-      factory,
       frame_rater,
       inputs.clone(),
       options,
-      root_state,
+      root,
     );
     Self {
       events,

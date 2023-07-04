@@ -4,13 +4,15 @@
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2023-07-02
-//! - Updated: 2023-07-02
+//! - Created: 2023-07-03
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-pub struct Game {
-  pub level: usize,
+pub mod default;
+
+pub trait Game {
+  fn get_level(&self) -> usize;
 }
