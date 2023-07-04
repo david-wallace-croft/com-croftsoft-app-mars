@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-06-03
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,14 +23,14 @@ use web_sys::CanvasRenderingContext2d;
 pub struct OverlayPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style: JsValue,
-  options: Rc<RefCell<Options>>,
+  options: Rc<dyn Options>,
   overlay: Rc<RefCell<Overlay>>,
 }
 
 impl OverlayPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    options: Rc<RefCell<Options>>,
+    options: Rc<dyn Options>,
     overlay: Rc<RefCell<Overlay>>,
   ) -> Self {
     let fill_style: JsValue = JsValue::from_str(OVERLAY_FILL_STYLE);
@@ -45,8 +45,7 @@ impl OverlayPainter {
 
 impl Painter for OverlayPainter {
   fn paint(&mut self) {
-    let options = self.options.borrow();
-    if !options.update_rate_display || options.pause {
+    if self.options.get_pause() || !self.options.get_update_rate_display() {
       return;
     }
     let context = self.context.borrow();

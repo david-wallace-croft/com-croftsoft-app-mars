@@ -15,8 +15,6 @@ use self::events::RootUpdaterEvents;
 use self::events::RootUpdaterEventsAdapter;
 use self::inputs::RootUpdaterInputs;
 use self::inputs::RootUpdaterInputsAdapter;
-use self::options::RootUpdaterOptionsAdapter;
-use crate::options::Options;
 use crate::overlay::Overlay;
 use crate::preparer::world::WorldPreparer;
 use crate::root::Root;
@@ -34,7 +32,6 @@ use std::rc::Rc;
 
 pub mod events;
 pub mod inputs;
-pub mod options;
 
 pub struct RootUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
@@ -46,7 +43,6 @@ impl RootUpdater {
     events: Rc<RefCell<dyn RootUpdaterEvents>>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn RootUpdaterInputs>>,
-    options: Rc<RefCell<Options>>,
     root: Rc<dyn Root>,
   ) -> Self {
     let root_updater_events_adapter =
@@ -54,9 +50,7 @@ impl RootUpdater {
     let root_updater_inputs_adapter = Rc::new(RefCell::new(
       RootUpdaterInputsAdapter::new(events.clone(), inputs.clone()),
     ));
-    let root_updater_options_adapter = Rc::new(RefCell::new(
-      RootUpdaterOptionsAdapter::new(options.clone()),
-    ));
+    let options = root.get_options();
     let overlay: Rc<RefCell<Overlay>> = root.get_overlay();
     let frame_rater_updater = FrameRaterUpdater::new(
       false,
@@ -69,7 +63,7 @@ impl RootUpdater {
       root_updater_events_adapter.clone(),
       frame_rater,
       root_updater_inputs_adapter.clone(),
-      root_updater_options_adapter,
+      options,
       overlay,
     );
     let configuration = root.get_configuration();
@@ -84,11 +78,8 @@ impl RootUpdater {
     );
     let world_updater = WorldUpdater::new(
       configuration,
-      root.get_factory().clone(),
-      root.get_game().clone(),
       root_updater_inputs_adapter,
-      options,
-      root.get_world().clone(),
+      root.clone(),
     );
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
@@ -97,7 +88,7 @@ impl RootUpdater {
       Box::new(frame_rater_updater),
       Box::new(overlay_updater),
     ];
-    let world_preparer = WorldPreparer::new(root.get_world().clone());
+    let world_preparer = WorldPreparer::new(root.get_world());
     Self {
       child_updaters,
       world_preparer,

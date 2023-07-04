@@ -16,7 +16,6 @@ use super::path::PathComponent;
 use super::pause::PauseComponent;
 use super::reset::ResetComponent;
 use super::Component;
-use crate::options::Options;
 use crate::root::Root;
 // use super::speed::SpeedComponent;
 use super::canvas::CanvasComponent;
@@ -48,13 +47,11 @@ impl RootComponent {
     // TODO: do something with the ID
     _id: &str,
     inputs: Rc<RefCell<Inputs>>,
-    options: Rc<RefCell<Options>>,
     root: Rc<dyn Root>,
   ) -> Self {
     let canvas_component = Rc::new(RefCell::new(CanvasComponent::new(
       "canvas",
       inputs.clone(),
-      options,
       root,
     )));
     let node_component =

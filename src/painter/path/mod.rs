@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-18
-//! - Updated: 2023-06-25
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,14 +28,14 @@ pub struct PathPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style_blue: JsValue,
   fill_style_red: JsValue,
-  options: Rc<RefCell<Options>>,
+  options: Rc<dyn Options>,
   tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
 
 impl PathPainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    options: Rc<RefCell<Options>>,
+    options: Rc<dyn Options>,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
@@ -81,8 +81,7 @@ impl PathPainter {
 
 impl Painter for PathPainter {
   fn paint(&mut self) {
-    let options = self.options.borrow();
-    if !options.path_display {
+    if !self.options.get_path_display() {
       return;
     }
     let tank_operators = self.tank_operators.borrow();

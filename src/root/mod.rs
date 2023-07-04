@@ -13,6 +13,7 @@
 
 use crate::configuration::Configuration;
 use crate::game::Game;
+use crate::options::Options;
 use crate::overlay::Overlay;
 use crate::world::factory::WorldFactory;
 use crate::world::World;
@@ -27,6 +28,8 @@ pub trait Root {
   fn get_factory(&self) -> Rc<dyn WorldFactory>;
 
   fn get_game(&self) -> Rc<dyn Game>;
+
+  fn get_options(&self) -> Rc<dyn Options>;
 
   fn get_overlay(&self) -> Rc<RefCell<Overlay>>;
 

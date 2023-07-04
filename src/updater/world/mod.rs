@@ -13,8 +13,7 @@
 
 use crate::configuration::Configuration;
 use crate::constant::{AMMO_DUMP_COUNT, OBSTACLE_COUNT};
-use crate::game::Game;
-use crate::options::Options;
+use crate::root::Root;
 use crate::updater::ammo_dump::AmmoDumpUpdater;
 use crate::updater::bullet::BulletUpdater;
 use crate::updater::explosion::ExplosionUpdater;
@@ -26,9 +25,7 @@ use crate::visitor::explosion::ExplosionVisitor;
 use crate::visitor::Visitor;
 use crate::world::builder::WorldBuilder;
 use crate::world::director::WorldBuilderDirector;
-use crate::world::factory::WorldFactory;
 use crate::world::seed::WorldSeed;
-use crate::world::World;
 use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::rc::Rc;
@@ -40,23 +37,18 @@ pub trait WorldUpdaterInputs {
 pub struct WorldUpdater {
   child_updaters: Vec<Box<dyn Updater>>,
   configuration: Configuration,
-  factory: Rc<dyn WorldFactory>,
-  game: Rc<dyn Game>,
   inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
-  options: Rc<RefCell<Options>>,
+  root: Rc<dyn Root>,
   visitors: Vec<Box<dyn Visitor>>,
-  world: Rc<dyn World>,
 }
 
 impl WorldUpdater {
   pub fn new(
     configuration: Configuration,
-    factory: Rc<dyn WorldFactory>,
-    game: Rc<dyn Game>,
     inputs: Rc<RefCell<dyn WorldUpdaterInputs>>,
-    options: Rc<RefCell<Options>>,
-    world: Rc<dyn World>,
+    root: Rc<dyn Root>,
   ) -> Self {
+    let world = root.get_world();
     let ammo_dump_updater = AmmoDumpUpdater::new(world.get_ammo_dumps());
     let bullet_updater = BulletUpdater::new(world.get_bullets());
     let explosion_updater = ExplosionUpdater::new(world.get_explosions());
@@ -81,24 +73,24 @@ impl WorldUpdater {
     Self {
       child_updaters,
       configuration,
-      factory,
-      game,
       inputs,
-      options,
+      root,
       visitors,
-      world,
     }
   }
 
   fn reset(&self) {
+    let factory = self.root.get_factory();
+    let world = self.root.get_world();
     let world_builder = WorldBuilder {
-      factory: self.factory.clone(),
-      world: self.world.clone(),
+      factory,
+      world,
     };
+    let level = self.root.get_game().get_level();
     let seed = WorldSeed {
       ammo_dump_count: AMMO_DUMP_COUNT,
       bounds: self.configuration.bounds,
-      level: self.game.get_level(),
+      level,
       obstacle_count: OBSTACLE_COUNT,
     };
     let world_builder_director = WorldBuilderDirector {
@@ -115,13 +107,12 @@ impl Updater for WorldUpdater {
       self.reset();
       return;
     }
-    if self.options.borrow().pause {
+    if self.root.get_options().get_pause() {
       return;
     }
     self.child_updaters.iter_mut().for_each(|updater| updater.update());
-    self
-      .visitors
-      .iter()
-      .for_each(|visitor| self.world.accept_visitor(visitor.as_ref()));
+    self.visitors.iter().for_each(|visitor| {
+      self.root.get_world().accept_visitor(visitor.as_ref())
+    });
   }
 }

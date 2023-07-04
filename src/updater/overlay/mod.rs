@@ -5,13 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-06-03
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::constant::OVERLAY_REFRESH_PERIOD_MILLIS;
+use crate::options::Options;
 use crate::overlay::Overlay;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
 use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
@@ -26,15 +27,8 @@ pub trait OverlayUpdaterEvents {
 
 pub trait OverlayUpdaterInputs {
   fn get_current_time_millis(&self) -> f64;
-  // fn get_pause_change_requested(&self) -> Option<bool>;
-  // fn get_reset_requested(&self) -> bool;
   fn get_time_to_update(&self) -> bool;
   fn get_update_rate_display_change_requested(&self) -> Option<bool>;
-}
-
-pub trait OverlayUpdaterOptions {
-  fn get_pause(&self) -> bool;
-  fn get_update_rate_display(&self) -> bool;
 }
 
 pub struct OverlayUpdater {
@@ -42,7 +36,7 @@ pub struct OverlayUpdater {
   frame_rater: Rc<RefCell<dyn FrameRater>>,
   inputs: Rc<RefCell<dyn OverlayUpdaterInputs>>,
   metronome: DeltaMetronome,
-  options: Rc<RefCell<dyn OverlayUpdaterOptions>>,
+  options: Rc<dyn Options>,
   overlay: Rc<RefCell<Overlay>>,
 }
 
@@ -58,7 +52,7 @@ impl OverlayUpdater {
     events: Rc<RefCell<dyn OverlayUpdaterEvents>>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     inputs: Rc<RefCell<dyn OverlayUpdaterInputs>>,
-    options: Rc<RefCell<dyn OverlayUpdaterOptions>>,
+    options: Rc<dyn Options>,
     overlay: Rc<RefCell<Overlay>>,
   ) -> Self {
     let metronome = DeltaMetronome {
@@ -76,13 +70,13 @@ impl OverlayUpdater {
   }
 
   fn update_overlay(&self) {
-    let options: Ref<dyn OverlayUpdaterOptions> = self.options.borrow();
     let mut overlay: RefMut<Overlay> = self.overlay.borrow_mut();
-    if !options.get_pause() && options.get_update_rate_display() {
-      overlay.update_rate_string = self.make_update_rate_string();
-      // TODO: Only set updated to true when the overlay data changes
-      self.events.borrow_mut().set_updated();
+    if self.options.get_pause() || !self.options.get_update_rate_display() {
+      return;
     }
+    overlay.update_rate_string = self.make_update_rate_string();
+    // TODO: Only set updated to true when the overlay data changes
+    self.events.borrow_mut().set_updated();
   }
 }
 

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-06-24
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -30,13 +30,13 @@ pub trait OptionsUpdaterInputs {
 
 pub struct OptionsUpdater {
   inputs: Rc<RefCell<dyn OptionsUpdaterInputs>>,
-  options: Rc<RefCell<Options>>,
+  options: Rc<dyn Options>,
 }
 
 impl OptionsUpdater {
   pub fn new(
     inputs: Rc<RefCell<dyn OptionsUpdaterInputs>>,
-    options: Rc<RefCell<Options>>,
+    options: Rc<dyn Options>,
   ) -> Self {
     Self {
       inputs,
@@ -51,16 +51,16 @@ impl Updater for OptionsUpdater {
     if let Some(frame_rate_display) =
       inputs.get_update_rate_display_change_requested()
     {
-      self.options.borrow_mut().update_rate_display = frame_rate_display;
+      self.options.set_update_rate_display(frame_rate_display);
     }
     if let Some(node_display) = inputs.get_node_display_change_requested() {
-      self.options.borrow_mut().node_display = node_display;
+      self.options.set_node_display(node_display);
     }
     if let Some(path_display) = inputs.get_path_display_change_requested() {
-      self.options.borrow_mut().path_display = path_display;
+      self.options.set_path_display(path_display);
     }
     if let Some(pause) = inputs.get_pause_change_requested() {
-      self.options.borrow_mut().pause = pause;
+      self.options.set_pause(pause);
     }
     // if let Some(time_display) = inputs.get_time_display_change_requested() {
     //   self.options.borrow_mut().time_display = time_display;

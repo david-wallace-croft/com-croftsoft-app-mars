@@ -12,7 +12,6 @@
 // =============================================================================
 
 use crate::inputs::Inputs;
-use crate::options::Options;
 use crate::painter::root::RootPainter;
 use crate::root::Root;
 use com_croftsoft_lib_animation::web_sys::{
@@ -30,7 +29,6 @@ pub struct CanvasComponent {
   id: String,
   // TODO
   // inputs: Rc<RefCell<Inputs>>,
-  options: Rc<RefCell<Options>>,
   root: Rc<dyn Root>,
   root_painter_option: Option<RootPainter>,
   unbounded_receiver_option: Option<UnboundedReceiver<MouseEvent>>,
@@ -51,13 +49,11 @@ impl CanvasComponent {
     id: &str,
     // TODO
     _inputs: Rc<RefCell<Inputs>>,
-    options: Rc<RefCell<Options>>,
     root: Rc<dyn Root>,
   ) -> Self {
     Self {
       id: String::from(id),
       // inputs,
-      options,
       unbounded_receiver_option: None,
       root_painter_option: None,
       root,
@@ -112,11 +108,8 @@ impl Component for CanvasComponent {
 impl Initializer for CanvasComponent {
   fn initialize(&mut self) {
     self.unbounded_receiver_option = add_mouse_down_handler_by_id(&self.id);
-    self.root_painter_option = Some(RootPainter::new(
-      "canvas",
-      self.options.clone(),
-      self.root.clone(),
-    ));
+    self.root_painter_option =
+      Some(RootPainter::new("canvas", self.root.clone()));
   }
 }
 

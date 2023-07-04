@@ -19,7 +19,6 @@ use super::overlay::OverlayPainter;
 use super::tank::TankPainter;
 use super::{ammo_dump::AmmoDumpPainter, path::PathPainter};
 use crate::constant::BACKGROUND_FILL_STYLE;
-use crate::options::Options;
 use crate::root::Root;
 use com_croftsoft_lib_animation::painter::background::BackgroundPainter;
 use com_croftsoft_lib_role::Painter;
@@ -38,7 +37,6 @@ pub struct RootPainter {
 impl RootPainter {
   pub fn new(
     canvas_element_id: &str,
-    options: Rc<RefCell<Options>>,
     root: Rc<dyn Root>,
   ) -> Self {
     let document: Document = window().unwrap().document().unwrap();
@@ -65,6 +63,7 @@ impl RootPainter {
       BulletPainter::new(world.get_bullets(), context.clone());
     let explosion_painter =
       ExplosionPainter::new(context.clone(), world.get_explosions());
+    let options = root.get_options();
     let node_painter: NodePainter = NodePainter::new(
       context.clone(),
       options.clone(),

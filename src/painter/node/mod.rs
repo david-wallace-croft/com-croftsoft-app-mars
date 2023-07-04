@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-24
-//! - Updated: 2023-06-25
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -30,7 +30,7 @@ pub struct NodePainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
   fill_style_blue: JsValue,
   fill_style_red: JsValue,
-  options: Rc<RefCell<Options>>,
+  options: Rc<dyn Options>,
   stroke_style: JsValue,
   tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
@@ -38,7 +38,7 @@ pub struct NodePainter {
 impl NodePainter {
   pub fn new(
     context: Rc<RefCell<CanvasRenderingContext2d>>,
-    options: Rc<RefCell<Options>>,
+    options: Rc<dyn Options>,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
     let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
@@ -88,8 +88,7 @@ impl NodePainter {
 
 impl Painter for NodePainter {
   fn paint(&mut self) {
-    let options = self.options.borrow();
-    if !options.node_display {
+    if !self.options.get_node_display() {
       return;
     }
     let tank_operators = self.tank_operators.borrow();

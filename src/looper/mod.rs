@@ -16,7 +16,6 @@ use crate::configuration::Configuration;
 use crate::constant::CONFIGURATION;
 use crate::events::Events;
 use crate::inputs::Inputs;
-use crate::options::Options;
 use crate::root::default::DefaultRoot;
 use crate::updater::root::RootUpdater;
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
@@ -47,22 +46,11 @@ impl Looper {
     ));
     let events = Rc::new(RefCell::new(Events::default()));
     let inputs = Rc::new(RefCell::new(Inputs::default()));
-    let options = Rc::new(RefCell::new(Options::default()));
     let root = Rc::new(DefaultRoot::new(configuration));
-    let root_component = RootComponent::new(
-      events.clone(),
-      "root",
-      inputs.clone(),
-      options.clone(),
-      root.clone(),
-    );
-    let root_updater = RootUpdater::new(
-      events.clone(),
-      frame_rater,
-      inputs.clone(),
-      options,
-      root,
-    );
+    let root_component =
+      RootComponent::new(events.clone(), "root", inputs.clone(), root.clone());
+    let root_updater =
+      RootUpdater::new(events.clone(), frame_rater, inputs.clone(), root);
     Self {
       events,
       inputs,

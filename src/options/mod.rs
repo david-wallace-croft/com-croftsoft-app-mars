@@ -1,20 +1,46 @@
 // =============================================================================
-//! - Options Model for CroftSoft Mars
+//! - Options trait for CroftSoft Mars
 //!
 //! # Metadata
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
-//! - Created: 2023-03-11
-//! - Updated: 2023-06-24
+//! - Created: 2023-07-03
+//! - Updated: 2023-07-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-#[derive(Default)]
-pub struct Options {
-  pub node_display: bool,
-  pub path_display: bool,
-  pub pause: bool,
-  pub update_rate_display: bool,
+pub mod default;
+
+pub trait Options {
+  fn get_node_display(&self) -> bool;
+
+  fn get_path_display(&self) -> bool;
+
+  fn get_pause(&self) -> bool;
+
+  fn get_update_rate_display(&self) -> bool;
+
+  // TODO: Can we get rid of these mutator methods?
+
+  fn set_node_display(
+    &self,
+    node_display: bool,
+  );
+
+  fn set_path_display(
+    &self,
+    path_display: bool,
+  );
+
+  fn set_pause(
+    &self,
+    pause: bool,
+  );
+
+  fn set_update_rate_display(
+    &self,
+    update_rate_display: bool,
+  );
 }
