@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-05
+//! - Updated: 2023-07-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,6 +14,7 @@
 use crate::configuration::Configuration;
 use crate::game::default::DefaultGame;
 use crate::game::Game;
+use crate::inputs::Inputs;
 use crate::options::default::DefaultOptions;
 use crate::options::{Options, OptionsMutator};
 use crate::overlay::Overlay;
@@ -29,6 +30,7 @@ pub struct DefaultRoot {
   configuration: Configuration,
   factory: Rc<DefaultWorldFactory>,
   game: Rc<DefaultGame>,
+  inputs: Rc<RefCell<Inputs>>,
   options: Rc<DefaultOptions>,
   overlay: Rc<RefCell<Overlay>>,
   world: Rc<dyn World>,
@@ -38,6 +40,7 @@ impl DefaultRoot {
   pub fn new(configuration: Configuration) -> Self {
     let factory: Rc<DefaultWorldFactory> = Default::default();
     let game = Default::default();
+    let inputs = Default::default();
     let options = Default::default();
     let overlay = Default::default();
     let world = factory.make_world();
@@ -45,6 +48,7 @@ impl DefaultRoot {
       configuration,
       factory,
       game,
+      inputs,
       options,
       overlay,
       world,
@@ -63,6 +67,10 @@ impl Root for DefaultRoot {
 
   fn get_game(&self) -> Rc<dyn Game> {
     self.game.clone()
+  }
+
+  fn get_inputs(&self) -> Rc<RefCell<Inputs>> {
+    self.inputs.clone()
   }
 
   fn get_options(&self) -> Rc<dyn Options> {

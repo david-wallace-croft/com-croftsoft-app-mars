@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-05
+//! - Updated: 2023-07-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,8 +15,8 @@ use crate::component::root::RootComponent;
 use crate::configuration::Configuration;
 use crate::constant::CONFIGURATION;
 use crate::events::Events;
-use crate::inputs::Inputs;
 use crate::root::default::DefaultRoot;
+use crate::root::Root;
 use crate::updater::root::RootUpdater;
 use com_croftsoft_lib_animation::frame_rater::simple::SimpleFrameRater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
@@ -28,7 +28,7 @@ use std::rc::Rc;
 // TODO: rename this
 pub struct Looper {
   events: Rc<RefCell<Events>>,
-  inputs: Rc<RefCell<Inputs>>,
+  root: Rc<dyn Root>,
   root_component: RootComponent,
   root_updater: RootUpdater,
 }
@@ -45,20 +45,14 @@ impl Looper {
       SimpleFrameRater::new(configuration.update_period_millis_initial),
     ));
     let events = Rc::new(RefCell::new(Events::default()));
-    let inputs = Rc::new(RefCell::new(Inputs::default()));
     let root = Rc::new(DefaultRoot::new(configuration));
     let root_component =
-      RootComponent::new(events.clone(), "root", inputs.clone(), root.clone());
-    let root_updater = RootUpdater::new(
-      events.clone(),
-      frame_rater,
-      inputs.clone(),
-      root.clone(),
-      root,
-    );
+      RootComponent::new(events.clone(), "root", root.clone());
+    let root_updater =
+      RootUpdater::new(events.clone(), frame_rater, root.clone(), root.clone());
     Self {
       events,
-      inputs,
+      root,
       root_component,
       root_updater,
     }
@@ -74,21 +68,23 @@ impl Default for Looper {
 impl Initializer for Looper {
   fn initialize(&mut self) {
     self.root_component.initialize();
-    self.inputs.borrow_mut().reset_requested = true;
+    self.root.get_inputs().borrow_mut().reset_requested = true;
   }
 }
 
 impl LoopUpdater for Looper {
+  // TODO: maybe move this function to root.update()
   // TODO: rename this function
   fn update_loop(
     &mut self,
     update_time_millis: f64,
   ) {
-    self.inputs.borrow_mut().current_time_millis = update_time_millis;
+    self.root.get_inputs().borrow_mut().current_time_millis =
+      update_time_millis;
     self.root_component.update();
     self.root_updater.update();
     self.root_component.paint();
     self.events.borrow_mut().clear();
-    self.inputs.borrow_mut().clear();
+    self.root.get_inputs().borrow_mut().clear();
   }
 }

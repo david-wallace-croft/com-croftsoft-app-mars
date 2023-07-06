@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-05
+//! - Updated: 2023-07-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,6 +13,7 @@
 
 use crate::configuration::Configuration;
 use crate::game::Game;
+use crate::inputs::Inputs;
 use crate::options::{Options, OptionsMutator};
 use crate::overlay::Overlay;
 use crate::world::factory::WorldFactory;
@@ -28,6 +29,8 @@ pub trait Root {
   fn get_factory(&self) -> Rc<dyn WorldFactory>;
 
   fn get_game(&self) -> Rc<dyn Game>;
+
+  fn get_inputs(&self) -> Rc<RefCell<Inputs>>;
 
   fn get_options(&self) -> Rc<dyn Options>;
 

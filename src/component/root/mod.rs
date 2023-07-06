@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-06
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -46,9 +46,9 @@ impl RootComponent {
     _events: Rc<RefCell<Events>>,
     // TODO: do something with the ID
     _id: &str,
-    inputs: Rc<RefCell<Inputs>>,
     root: Rc<dyn Root>,
   ) -> Self {
+    let inputs: Rc<RefCell<Inputs>> = root.get_inputs();
     let canvas_component = Rc::new(RefCell::new(CanvasComponent::new(
       "canvas",
       inputs.clone(),
