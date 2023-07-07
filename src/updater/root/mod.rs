@@ -5,13 +5,12 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-07-06
+//! - Updated: 2023-07-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use self::events::RootUpdaterEvents;
 use self::events::RootUpdaterEventsAdapter;
 use self::inputs::RootUpdaterInputsAdapter;
 use crate::overlay::Overlay;
@@ -40,16 +39,16 @@ pub struct RootUpdater {
 
 impl RootUpdater {
   pub fn new(
-    events: Rc<RefCell<dyn RootUpdaterEvents>>,
     frame_rater: Rc<RefCell<dyn FrameRater>>,
     root: Rc<dyn Root>,
     root_mutator: Rc<dyn RootMutator>,
   ) -> Self {
-    let root_updater_events_adapter =
-      Rc::new(RefCell::new(RootUpdaterEventsAdapter::new(events.clone())));
+    let root_updater_events_adapter = Rc::new(RefCell::new(
+      RootUpdaterEventsAdapter::new(root.get_events()),
+    ));
     // TODO: Get rid of the adapters
     let root_updater_inputs_adapter = Rc::new(RefCell::new(
-      RootUpdaterInputsAdapter::new(events.clone(), root.get_inputs()),
+      RootUpdaterInputsAdapter::new(root.get_events(), root.get_inputs()),
     ));
     // TODO: Should OptionsMutator extend Options?
     let options = root.get_options();

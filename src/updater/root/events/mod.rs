@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-03
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -58,12 +58,13 @@ impl RootUpdaterEvents for Events {
   }
 }
 
+// TODO: get rid of adapters; maybe git rid of events
 pub struct RootUpdaterEventsAdapter {
-  events: Rc<RefCell<dyn RootUpdaterEvents>>,
+  events: Rc<RefCell<Events>>,
 }
 
 impl RootUpdaterEventsAdapter {
-  pub fn new(events: Rc<RefCell<dyn RootUpdaterEvents>>) -> Self {
+  pub fn new(events: Rc<RefCell<Events>>) -> Self {
     Self {
       events,
     }

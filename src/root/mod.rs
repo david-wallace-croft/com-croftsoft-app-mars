@@ -5,13 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-06
+//! - Updated: 2023-07-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::configuration::Configuration;
+use crate::events::Events;
 use crate::game::Game;
 use crate::inputs::Inputs;
 use crate::options::{Options, OptionsMutator};
@@ -29,6 +30,8 @@ pub trait Root {
   fn get_factory(&self) -> Rc<dyn WorldFactory>;
 
   fn get_game(&self) -> Rc<dyn Game>;
+
+  fn get_events(&self) -> Rc<RefCell<Events>>;
 
   fn get_inputs(&self) -> Rc<RefCell<Inputs>>;
 

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-06
+//! - Updated: 2023-07-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,7 +20,6 @@ use crate::root::Root;
 // use super::speed::SpeedComponent;
 use super::canvas::CanvasComponent;
 use super::update_rate::UpdateRateComponent;
-use crate::events::Events;
 use crate::inputs::Inputs;
 use com_croftsoft_lib_animation::web_sys::get_window;
 use com_croftsoft_lib_role::{Initializer, Painter, Updater};
@@ -42,8 +41,6 @@ pub struct RootComponent {
 
 impl RootComponent {
   pub fn new(
-    // TODO
-    _events: Rc<RefCell<Events>>,
     // TODO: do something with the ID
     _id: &str,
     root: Rc<dyn Root>,

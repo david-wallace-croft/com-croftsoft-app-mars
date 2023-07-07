@@ -5,13 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-06
+//! - Updated: 2023-07-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::configuration::Configuration;
+use crate::events::Events;
 use crate::game::default::DefaultGame;
 use crate::game::Game;
 use crate::inputs::Inputs;
@@ -28,6 +29,7 @@ use super::{Root, RootMutator};
 
 pub struct DefaultRoot {
   configuration: Configuration,
+  events: Rc<RefCell<Events>>,
   factory: Rc<DefaultWorldFactory>,
   game: Rc<DefaultGame>,
   inputs: Rc<RefCell<Inputs>>,
@@ -38,6 +40,7 @@ pub struct DefaultRoot {
 
 impl DefaultRoot {
   pub fn new(configuration: Configuration) -> Self {
+    let events: Rc<RefCell<Events>> = Default::default();
     let factory: Rc<DefaultWorldFactory> = Default::default();
     let game = Default::default();
     let inputs = Default::default();
@@ -46,6 +49,7 @@ impl DefaultRoot {
     let world = factory.make_world();
     Self {
       configuration,
+      events,
       factory,
       game,
       inputs,
@@ -59,6 +63,10 @@ impl DefaultRoot {
 impl Root for DefaultRoot {
   fn get_configuration(&self) -> Configuration {
     self.configuration.clone()
+  }
+
+  fn get_events(&self) -> Rc<RefCell<Events>> {
+    self.events.clone()
   }
 
   fn get_factory(&self) -> Rc<dyn WorldFactory> {

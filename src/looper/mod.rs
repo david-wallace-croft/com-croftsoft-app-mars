@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-06
+//! - Updated: 2023-07-07
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,6 @@
 use crate::component::root::RootComponent;
 use crate::configuration::Configuration;
 use crate::constant::CONFIGURATION;
-use crate::events::Events;
 use crate::root::default::DefaultRoot;
 use crate::root::Root;
 use crate::updater::root::RootUpdater;
@@ -27,7 +26,6 @@ use std::rc::Rc;
 
 // TODO: rename this
 pub struct Looper {
-  events: Rc<RefCell<Events>>,
   root: Rc<dyn Root>,
   root_component: RootComponent,
   root_updater: RootUpdater,
@@ -44,14 +42,11 @@ impl Looper {
     let frame_rater: Rc<RefCell<dyn FrameRater>> = Rc::new(RefCell::new(
       SimpleFrameRater::new(configuration.update_period_millis_initial),
     ));
-    let events = Rc::new(RefCell::new(Events::default()));
     let root = Rc::new(DefaultRoot::new(configuration));
-    let root_component =
-      RootComponent::new(events.clone(), "root", root.clone());
+    let root_component = RootComponent::new("root", root.clone());
     let root_updater =
-      RootUpdater::new(events.clone(), frame_rater, root.clone(), root.clone());
+      RootUpdater::new(frame_rater, root.clone(), root.clone());
     Self {
-      events,
       root,
       root_component,
       root_updater,
@@ -84,7 +79,9 @@ impl LoopUpdater for Looper {
     self.root_component.update();
     self.root_updater.update();
     self.root_component.paint();
-    self.events.borrow_mut().clear();
+    // TODO: put a clear() method on root
+    // TODO: should clear go at the beginning of the loop to help debugging?
+    self.root.get_events().borrow_mut().clear();
     self.root.get_inputs().borrow_mut().clear();
   }
 }
