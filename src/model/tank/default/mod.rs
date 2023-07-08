@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-19
+//! - Updated: 2023-07-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,9 +17,9 @@ use crate::ai::tank_operator::TankOperator;
 use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
   TANK_BODY_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_BURNING_DURATION_SECONDS,
-  TANK_DAMAGE_MAX, TANK_RADIUS, TANK_SPARKING_DURATION_SECONDS,
-  TANK_SPEED_METERS_PER_SECOND, TANK_TREAD_LENGTH,
-  TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
+  TANK_DAMAGE_MAX, TANK_RADIUS, TANK_RELOAD_TIME_SECONDS,
+  TANK_SPARKING_DURATION_SECONDS, TANK_SPEED_METERS_PER_SECOND,
+  TANK_TREAD_LENGTH, TANK_TURRET_ROTATION_SPEED_RADIANS_PER_SECOND, TANK_Z,
 };
 use crate::model::bullet::Bullet;
 use crate::model::{Damageable, Model, ModelAccessor};
@@ -54,6 +54,7 @@ pub struct DefaultTank {
   sparking_time_remaining: f64,
   state: State,
   target_point: Point2DD,
+  time_since_last_fired: f64,
   tread_offset_left: f64,
   tread_offset_right: f64,
   turret_heading: f64,
@@ -104,6 +105,7 @@ impl DefaultTank {
       sparking_time_remaining: 0.,
       state: State::default(),
       target_point: Point2DD::default(),
+      time_since_last_fired: 0.,
       tread_offset_left: 0.,
       tread_offset_right: 0.,
       turret_heading: 0.,
@@ -179,7 +181,11 @@ impl DefaultTank {
     }
   }
 
-  fn update_fire(&mut self) {
+  fn update_fire(
+    &mut self,
+    time_delta: f64,
+  ) {
+    self.time_since_last_fired += time_delta;
     if !self.fire_requested {
       return;
     }
@@ -188,12 +194,13 @@ impl DefaultTank {
       return;
     }
     self.updated = true;
-    if self.ammo < 1 {
+    if self.ammo < 1 || self.time_since_last_fired < TANK_RELOAD_TIME_SECONDS {
       self.dry_firing = true;
       return;
     }
     self.ammo -= 1;
     self.firing = true;
+    self.time_since_last_fired = 0.;
     let bullet_origin_x: f64 =
       self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
     let bullet_origin_y: f64 =
@@ -401,7 +408,7 @@ impl Model for DefaultTank {
         self.update_ammo();
         self.update_position(time_delta);
         self.update_turret_heading(time_delta);
-        self.update_fire();
+        self.update_fire(time_delta);
       },
       State::Sparking(state_operator) => {
         self.sparking_time_remaining -= time_delta;

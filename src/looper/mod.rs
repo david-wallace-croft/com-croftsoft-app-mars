@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-07
+//! - Updated: 2023-07-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -68,7 +68,6 @@ impl Initializer for Looper {
 }
 
 impl LoopUpdater for Looper {
-  // TODO: maybe move this function to root.update()
   // TODO: rename this function
   fn update_loop(
     &mut self,
@@ -79,8 +78,6 @@ impl LoopUpdater for Looper {
     self.root_component.update();
     self.root_updater.update();
     self.root_component.paint();
-    // TODO: put a clear() method on root
-    // TODO: should clear go at the beginning of the loop to help debugging?
     self.root.get_events().borrow_mut().clear();
     self.root.get_inputs().borrow_mut().clear();
   }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-02
+//! - Updated: 2023-07-08
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -78,6 +78,7 @@ pub const TANK_FILL_STYLE_RED: &str = "rgb(255, 127, 99)";
 pub const TANK_FILL_STYLE_SPARKING: &str = "red";
 pub const TANK_FIRING_PROBABILITY: f64 = 1.;
 pub const TANK_RADIUS: f64 = 25.;
+pub const TANK_RELOAD_TIME_SECONDS: f64 = 2.;
 pub const TANK_SPARKING_DURATION_SECONDS: f64 = 0.1;
 pub const TANK_SPEED_METERS_PER_SECOND: f64 = 30.;
 pub const TANK_STROKE_STYLE: &str = "black";
