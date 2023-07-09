@@ -142,6 +142,7 @@ impl TankOperator for DefaultTankOperator {
         tank.get_closest_enemy_tank_center(self.world.get_tank_operators());
       if self.target_point.is_none() {
         // Rotate turret toward nearest obstacle
+        // TODO: Make SpaceTester not consider the nearest obstacle an obstacle
         self.target_point =
           self.world.get_closest_obstacle_center(&self.center);
       }

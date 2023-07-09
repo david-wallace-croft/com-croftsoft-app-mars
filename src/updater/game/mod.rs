@@ -38,6 +38,12 @@ impl Updater for GameUpdater {
     if obstacles.borrow().len() == 0 {
       self.root_mutator.get_game_mutator().increment_level();
       self.root.get_inputs().borrow_mut().reset_requested = true;
+      return;
     }
+    let tank_operators = self.root.get_world().get_tank_operators();
+    if tank_operators.borrow().len() != 0 {
+      return;
+    }
+    self.root.get_inputs().borrow_mut().reset_requested = true;
   }
 }
