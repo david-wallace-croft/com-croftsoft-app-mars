@@ -96,7 +96,7 @@ impl WorldBuilderDirector {
   fn direct_tank_operators(&self) {
     let heading_blue = -FRAC_PI_2;
     let heading_red = FRAC_PI_2;
-    for index in 0..=self.seed.level {
+    for index in 0..self.seed.level {
       let spacer_index = (index + 1) / 2;
       let delta_x: i64 = if index % 2 == 0 {
         spacer_index as i64 * 200
