@@ -5,14 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use crate::configuration::Configuration;
-use crate::constant::{AMMO_DUMP_COUNT, OBSTACLE_COUNT};
 use crate::root::Root;
 use crate::updater::ammo_dump::AmmoDumpUpdater;
 use crate::updater::bullet::BulletUpdater;
@@ -88,10 +87,8 @@ impl WorldUpdater {
     };
     let level = self.root.get_game().get_level();
     let seed = WorldSeed {
-      ammo_dump_count: AMMO_DUMP_COUNT,
       bounds: self.configuration.bounds,
       level,
-      obstacle_count: OBSTACLE_COUNT,
     };
     let world_builder_director = WorldBuilderDirector {
       seed,

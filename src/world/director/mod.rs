@@ -43,7 +43,7 @@ impl WorldBuilderDirector {
   fn direct_ammo_dumps(&self) {
     let world: &Rc<dyn World> = &self.world_builder.world;
     let mut rng: ThreadRng = rand::thread_rng();
-    for index in 0..self.seed.ammo_dump_count {
+    for index in 0..self.seed.level {
       let mut circle = Circle {
         center_x: 0.,
         center_y: 0.,
@@ -73,7 +73,7 @@ impl WorldBuilderDirector {
     let mut rng = rand::thread_rng();
     let radius_uniform =
       Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
-    for index in 0..self.seed.obstacle_count {
+    for index in 0..self.seed.level {
       let mut circle = Circle {
         center_x: 0.,
         center_y: 0.,
