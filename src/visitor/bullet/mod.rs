@@ -5,13 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-04
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::Visitor;
+use crate::constant::OBSTACLE_BULLET_DAMAGE_MULTIPLIER;
 use crate::model::ammo_dump::AmmoDump;
 use crate::model::obstacle::Obstacle;
 use crate::model::tank::Tank;
@@ -68,7 +69,7 @@ impl Visitor for BulletVisitor {
         continue;
       }
       bullet.mark_spent();
-      obstacle.add_damage(damage);
+      obstacle.add_damage(OBSTACLE_BULLET_DAMAGE_MULTIPLIER * damage);
       if !obstacle.is_active() {
         return;
       }

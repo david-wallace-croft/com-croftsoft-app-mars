@@ -56,6 +56,7 @@ pub static INFO: &str = "CroftSoft Mars \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
 pub const NODE_STROKE_STYLE: &str = "black";
+pub const OBSTACLE_BULLET_DAMAGE_MULTIPLIER: f64 = 10.;
 pub const OBSTACLE_COUNT_MAXIMUM: usize = 10;
 pub const OBSTACLE_FILL_STYLE: &str = "#40826D";
 pub const OBSTACLE_JERK_MAGNITUDE_MAX: f64 = 10.;

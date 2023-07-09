@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-06-25
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -25,6 +25,7 @@ pub struct TankCartographer {
   directions: usize,
   goal_state_space_node: StateSpaceNode,
   id: usize,
+  ignore_obstacles: bool,
   init_step_size: f64,
   start_state_space_node: StateSpaceNode,
   tank: Rc<RefCell<dyn Tank>>,
@@ -58,6 +59,7 @@ impl TankCartographer {
       directions,
       goal_state_space_node,
       id,
+      ignore_obstacles: false,
       init_step_size,
       start_state_space_node,
       tank,
@@ -88,6 +90,13 @@ impl TankCartographer {
     goal_point_xy: &Point2DD,
   ) {
     self.goal_state_space_node.set_point_xy(goal_point_xy);
+  }
+
+  pub fn set_ignore_obstacles(
+    &mut self,
+    ignore_obstacles: bool,
+  ) {
+    self.ignore_obstacles = ignore_obstacles;
   }
 
   pub fn set_start_state_space_node(
@@ -141,10 +150,11 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
           y + step_size * heading.sin(),
         ),
       );
-      if self.tank.borrow().is_space_available(
-        adjacent_state_space_node.get_point_xy().get_x(),
-        adjacent_state_space_node.get_point_xy().get_y(),
-      ) && self.push_adjacent_node(&adjacent_state_space_node)
+      if self.ignore_obstacles
+        || self.tank.borrow().is_space_available(
+          adjacent_state_space_node.get_point_xy().get_x(),
+          adjacent_state_space_node.get_point_xy().get_y(),
+        ) && self.push_adjacent_node(&adjacent_state_space_node)
       {
         adjacent_list.push(adjacent_state_space_node);
       }
