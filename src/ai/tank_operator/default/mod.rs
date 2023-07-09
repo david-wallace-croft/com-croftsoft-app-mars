@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-06-25
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -33,12 +33,12 @@ pub struct DefaultTankOperator {
   a_star: AStar<TankCartographer, StateSpaceNode>,
   center: Point2DD,
   destination: Point2DD,
-  // TODO: was PointXY
-  enemy_center: Option<Point2DD>,
   id: usize,
   start_state_space_node: StateSpaceNode,
   tank: Rc<RefCell<dyn Tank>>,
   tank_cartographer: Rc<RefCell<TankCartographer>>,
+  // TODO: was PointXY
+  target_point: Option<Point2DD>,
   world: Rc<dyn World>,
 }
 
@@ -87,17 +87,17 @@ impl DefaultTankOperator {
     let a_star = AStar::new(tank_cartographer.clone());
     let center = Point2DD::default();
     let destination = Point2DD::default();
-    let enemy_center = None;
+    let target_point = None;
     let start_state_space_node = StateSpaceNode::default();
     Self {
       a_star,
       center,
       destination,
-      enemy_center,
       id,
       start_state_space_node,
       tank_cartographer,
       tank,
+      target_point,
       world,
     }
   }
@@ -138,9 +138,14 @@ impl TankOperator for DefaultTankOperator {
       // Rotate turret toward nearest enemy tank
       let mut tank: RefMut<dyn Tank> = tank.borrow_mut();
       self.center = tank.get_center();
-      self.enemy_center =
+      self.target_point =
         tank.get_closest_enemy_tank_center(self.world.get_tank_operators());
-      tank.rotate_turret(&self.enemy_center);
+      if self.target_point.is_none() {
+        // Rotate turret toward nearest obstacle
+        self.target_point =
+          self.world.get_closest_obstacle_center(&self.center);
+      }
+      tank.rotate_turret(&self.target_point);
     }
     {
       // Move toward nearest ammo dump
@@ -162,7 +167,7 @@ impl TankOperator for DefaultTankOperator {
     // Move toward nearest enemy tank
     let mut thread_rng: ThreadRng = rand::thread_rng();
     let uniform = Uniform::from(0.0..1.);
-    if let Some(enemy_center) = self.enemy_center {
+    if let Some(enemy_center) = self.target_point {
       let destination: Point2DD =
         self.get_first_step(&enemy_center, tank.borrow().get_body_heading());
       tank.borrow_mut().go(&destination);

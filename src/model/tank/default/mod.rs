@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-07-08
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -217,7 +217,6 @@ impl DefaultTank {
     &mut self,
     time_delta: f64,
   ) {
-    // log(&format!("destination {:?}", self.destination));
     if self.destination.is_none() {
       return;
     }
@@ -228,7 +227,6 @@ impl DefaultTank {
     // if ((Math.abs(deltaX) < 0.5) && (Math.abs(deltaY) < 0.5)) {
     //   return;
     // }
-    // TODO: verify delta_y and delta_x not reversed
     let mut aim_heading: f64 = delta_y.atan2(delta_x);
     if aim_heading < 0. {
       aim_heading += TAU;

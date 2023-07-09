@@ -40,6 +40,7 @@ pub struct DefaultRoot {
 
 impl DefaultRoot {
   pub fn new(configuration: Configuration) -> Self {
+    // TODO: Make an Rc<DefaultRoot> and pass it to the child objects
     let events: Rc<RefCell<Events>> = Default::default();
     let factory: Rc<DefaultWorldFactory> = Default::default();
     let game = Rc::new(DefaultGame::new(0));

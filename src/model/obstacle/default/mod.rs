@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-06-04
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,6 +18,7 @@ use crate::constant::{
 use crate::model::{Damageable, Model, ModelAccessor};
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
+use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::Preparer;
 use rand::rngs::ThreadRng;
@@ -189,7 +190,11 @@ impl ModelAccessor for DefaultObstacle {
 
 impl Obstacle for DefaultObstacle {}
 
-impl ObstacleAccessor for DefaultObstacle {}
+impl ObstacleAccessor for DefaultObstacle {
+  fn get_center(&self) -> Point2DD {
+    self.circle.get_center_point_2dd()
+  }
+}
 
 impl Preparer for DefaultObstacle {
   fn prepare(&mut self) {

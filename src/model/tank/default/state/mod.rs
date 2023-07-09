@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-10
-//! - Updated: 2023-06-14
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -38,6 +38,7 @@ pub struct StateOperator<F> {
 }
 
 impl StateOperator<DataBurning> {
+  // TODO: figure out how to move self during a state transition so cannot reuse
   pub fn to_inactive(&self) -> State {
     State::Inactive
   }
