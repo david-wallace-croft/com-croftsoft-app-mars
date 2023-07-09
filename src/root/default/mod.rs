@@ -14,7 +14,7 @@
 use crate::configuration::Configuration;
 use crate::events::Events;
 use crate::game::default::DefaultGame;
-use crate::game::Game;
+use crate::game::{Game, GameMutator};
 use crate::inputs::Inputs;
 use crate::options::default::DefaultOptions;
 use crate::options::{Options, OptionsMutator};
@@ -42,7 +42,7 @@ impl DefaultRoot {
   pub fn new(configuration: Configuration) -> Self {
     let events: Rc<RefCell<Events>> = Default::default();
     let factory: Rc<DefaultWorldFactory> = Default::default();
-    let game = Rc::new(DefaultGame::new(2));
+    let game = Rc::new(DefaultGame::new(0));
     let inputs = Default::default();
     let options = Default::default();
     let overlay = Default::default();
@@ -95,6 +95,10 @@ impl Root for DefaultRoot {
 }
 
 impl RootMutator for DefaultRoot {
+  fn get_game_mutator(&self) -> Rc<dyn GameMutator> {
+    self.game.clone()
+  }
+
   fn get_options_mutator(&self) -> Rc<dyn OptionsMutator> {
     self.options.clone()
   }

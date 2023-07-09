@@ -11,7 +11,8 @@
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::Game;
+use super::{Game, GameMutator};
+use com_croftsoft_lib_animation::web_sys::log;
 use core::cell::Cell;
 
 pub struct DefaultGame {
@@ -29,5 +30,12 @@ impl DefaultGame {
 impl Game for DefaultGame {
   fn get_level(&self) -> usize {
     self.level.get()
+  }
+}
+
+impl GameMutator for DefaultGame {
+  fn increment_level(&self) {
+    self.level.set(self.level.get() + 1);
+    log(&format!("level {}", self.level.get()));
   }
 }

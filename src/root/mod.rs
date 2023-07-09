@@ -13,7 +13,7 @@
 
 use crate::configuration::Configuration;
 use crate::events::Events;
-use crate::game::Game;
+use crate::game::{Game, GameMutator};
 use crate::inputs::Inputs;
 use crate::options::{Options, OptionsMutator};
 use crate::overlay::Overlay;
@@ -43,5 +43,7 @@ pub trait Root {
 }
 
 pub trait RootMutator {
+  fn get_game_mutator(&self) -> Rc<dyn GameMutator>;
+
   fn get_options_mutator(&self) -> Rc<dyn OptionsMutator>;
 }

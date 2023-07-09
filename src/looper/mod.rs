@@ -63,7 +63,6 @@ impl Default for Looper {
 impl Initializer for Looper {
   fn initialize(&mut self) {
     self.root_component.initialize();
-    self.root.get_inputs().borrow_mut().reset_requested = true;
   }
 }
 
@@ -73,12 +72,12 @@ impl LoopUpdater for Looper {
     &mut self,
     update_time_millis: f64,
   ) {
+    self.root.get_events().borrow_mut().clear();
+    self.root.get_inputs().borrow_mut().clear();
     self.root.get_inputs().borrow_mut().current_time_millis =
       update_time_millis;
     self.root_component.update();
     self.root_updater.update();
     self.root_component.paint();
-    self.root.get_events().borrow_mut().clear();
-    self.root.get_inputs().borrow_mut().clear();
   }
 }

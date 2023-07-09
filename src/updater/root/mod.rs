@@ -29,6 +29,8 @@ use com_croftsoft_lib_role::Updater;
 use core::cell::RefCell;
 use std::rc::Rc;
 
+use super::game::GameUpdater;
+
 pub mod events;
 pub mod inputs;
 
@@ -58,6 +60,7 @@ impl RootUpdater {
       frame_rater.clone(),
       root_updater_inputs_adapter.clone(),
     );
+    let game_updater = GameUpdater::new(root.clone(), root_mutator.clone());
     let options_updater = OptionsUpdater::new(
       root_updater_inputs_adapter.clone(),
       root_mutator.get_options_mutator(),
@@ -87,6 +90,7 @@ impl RootUpdater {
     let child_updaters: Vec<Box<dyn Updater>> = vec![
       Box::new(metronome_updater),
       Box::new(options_updater),
+      Box::new(game_updater),
       Box::new(world_updater),
       Box::new(frame_rater_updater),
       Box::new(overlay_updater),

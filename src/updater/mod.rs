@@ -1,6 +1,7 @@
 pub mod ammo_dump;
 pub mod bullet;
 pub mod explosion;
+pub mod game;
 pub mod obstacle;
 pub mod options;
 pub mod overlay;

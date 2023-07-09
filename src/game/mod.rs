@@ -16,3 +16,7 @@ pub mod default;
 pub trait Game {
   fn get_level(&self) -> usize;
 }
+
+pub trait GameMutator {
+  fn increment_level(&self);
+}
