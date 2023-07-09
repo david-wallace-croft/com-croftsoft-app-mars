@@ -5,13 +5,13 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-03
-//! - Updated: 2023-06-28
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::builder::WorldBuilder;
+use super::builder::{WorldBuilder, WorldBuilderTankConfig};
 use super::seed::WorldSeed;
 use super::World;
 use crate::constant::{
@@ -21,7 +21,7 @@ use crate::constant::{
 };
 use crate::model::tank::Color;
 use com_croftsoft_core::math::geom::circle::Circle;
-use core::f64::consts::TAU;
+use core::f64::consts::FRAC_PI_2;
 use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use rand::rngs::ThreadRng;
@@ -94,32 +94,31 @@ impl WorldBuilderDirector {
   }
 
   fn direct_tank_operators(&self) {
-    for index in 0..6 {
-      let center_x: f64 = if index >= 3 {
-        (index * 200 - 500) as f64
+    let heading_blue = -FRAC_PI_2;
+    let heading_red = FRAC_PI_2;
+    for index in 0..=self.seed.level {
+      let spacer_index = (index + 1) / 2;
+      let delta_x: i64 = if index % 2 == 0 {
+        spacer_index as i64 * 200
       } else {
-        (index * 200 + 100) as f64
+        spacer_index as i64 * -200
       };
-      let center_y: f64 = if index >= 3 {
-        100.
-      } else {
-        500.
-      };
-      let color = if index >= 3 {
-        Color::RED
-      } else {
-        Color::BLUE
-      };
-      let body_heading = ((index) as f64) * TAU / 8.;
-      let turret_heading = ((index) as f64) * TAU / 4.;
-      self.world_builder.build_tank_operator(
-        body_heading,
-        center_x,
-        center_y,
-        color,
-        index,
-        turret_heading,
-      );
+      self.world_builder.build_tank_operator(WorldBuilderTankConfig {
+        body_heading: heading_blue,
+        center_x: (300 + delta_x) as f64,
+        center_y: 500.,
+        color: Color::BLUE,
+        id: index * 2,
+        turret_heading: heading_blue,
+      });
+      self.world_builder.build_tank_operator(WorldBuilderTankConfig {
+        body_heading: heading_red,
+        center_x: (300 - delta_x) as f64,
+        center_y: 100.,
+        color: Color::RED,
+        id: index * 2 + 1,
+        turret_heading: heading_red,
+      });
     }
   }
 }

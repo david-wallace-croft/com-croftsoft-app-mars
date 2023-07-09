@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-06-28
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,6 +28,15 @@ use std::rc::Rc;
 pub struct WorldBuilder {
   pub factory: Rc<dyn WorldFactory>,
   pub world: Rc<dyn World>,
+}
+
+pub struct WorldBuilderTankConfig {
+  pub body_heading: f64,
+  pub center_x: f64,
+  pub center_y: f64,
+  pub color: Color,
+  pub id: usize,
+  pub turret_heading: f64,
 }
 
 impl WorldBuilder {
@@ -67,13 +76,16 @@ impl WorldBuilder {
 
   pub fn build_tank_operator(
     &self,
-    body_heading: f64,
-    center_x: f64,
-    center_y: f64,
-    color: Color,
-    id: usize,
-    turret_heading: f64,
+    tank_config: WorldBuilderTankConfig,
   ) {
+    let WorldBuilderTankConfig {
+      body_heading,
+      center_x,
+      center_y,
+      color,
+      id,
+      turret_heading,
+    } = tank_config;
     let tank: Rc<RefCell<DefaultTank>> =
       Rc::new(RefCell::new(DefaultTank::new(
         center_x,

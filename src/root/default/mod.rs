@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-07
+//! - Updated: 2023-07-09
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -42,7 +42,7 @@ impl DefaultRoot {
   pub fn new(configuration: Configuration) -> Self {
     let events: Rc<RefCell<Events>> = Default::default();
     let factory: Rc<DefaultWorldFactory> = Default::default();
-    let game = Default::default();
+    let game = Rc::new(DefaultGame::new(2));
     let inputs = Default::default();
     let options = Default::default();
     let overlay = Default::default();
