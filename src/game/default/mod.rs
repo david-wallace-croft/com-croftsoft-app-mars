@@ -12,7 +12,6 @@
 // =============================================================================
 
 use super::{Game, GameMutator};
-use com_croftsoft_lib_animation::web_sys::log;
 use core::cell::Cell;
 
 pub struct DefaultGame {
@@ -36,6 +35,5 @@ impl Game for DefaultGame {
 impl GameMutator for DefaultGame {
   fn increment_level(&self) {
     self.level.set(self.level.get() + 1);
-    log(&format!("level {}", self.level.get()));
   }
 }

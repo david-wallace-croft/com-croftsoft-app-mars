@@ -15,9 +15,10 @@ use super::builder::{WorldBuilder, WorldBuilderTankConfig};
 use super::seed::WorldSeed;
 use super::World;
 use crate::constant::{
-  AMMO_DUMP_AMMO_MAX, AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX,
+  AMMO_DUMP_AMMO_MAX, AMMO_DUMP_COUNT_MAXIMUM,
+  AMMO_DUMP_RANDOM_PLACEMENT_ATTEMPTS_MAX, OBSTACLE_COUNT_MAXIMUM,
   OBSTACLE_RADIUS_MAX, OBSTACLE_RADIUS_MIN,
-  OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX,
+  OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX, TANK_COUNT_MAXIMUM,
 };
 use crate::model::tank::Color;
 use com_croftsoft_core::math::geom::circle::Circle;
@@ -43,7 +44,8 @@ impl WorldBuilderDirector {
   fn direct_ammo_dumps(&self) {
     let world: &Rc<dyn World> = &self.world_builder.world;
     let mut rng: ThreadRng = rand::thread_rng();
-    for index in 0..self.seed.level {
+    let ammo_dump_count = AMMO_DUMP_COUNT_MAXIMUM.min(self.seed.level);
+    for index in 0..ammo_dump_count {
       let mut circle = Circle {
         center_x: 0.,
         center_y: 0.,
@@ -73,7 +75,8 @@ impl WorldBuilderDirector {
     let mut rng = rand::thread_rng();
     let radius_uniform =
       Uniform::from(OBSTACLE_RADIUS_MIN..=OBSTACLE_RADIUS_MAX);
-    for index in 0..self.seed.level {
+    let obstacle_count = OBSTACLE_COUNT_MAXIMUM.min(self.seed.level);
+    for index in 0..obstacle_count {
       let mut circle = Circle {
         center_x: 0.,
         center_y: 0.,
@@ -96,7 +99,8 @@ impl WorldBuilderDirector {
   fn direct_tank_operators(&self) {
     let heading_blue = -FRAC_PI_2;
     let heading_red = FRAC_PI_2;
-    for index in 0..self.seed.level {
+    let tank_count = TANK_COUNT_MAXIMUM.min(self.seed.level);
+    for index in 0..tank_count {
       let spacer_index = (index + 1) / 2;
       let delta_x: i64 = if index % 2 == 0 {
         spacer_index as i64 * 200
