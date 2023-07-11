@@ -103,9 +103,9 @@ impl WorldBuilderDirector {
     for index in 0..tank_count {
       let spacer_index = (index + 1) / 2;
       let delta_x: i64 = if index % 2 == 0 {
-        spacer_index as i64 * 200
+        spacer_index as i64 * 100
       } else {
-        spacer_index as i64 * -200
+        spacer_index as i64 * -100
       };
       self.world_builder.build_tank_operator(WorldBuilderTankConfig {
         body_heading: heading_blue,
