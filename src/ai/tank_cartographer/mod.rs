@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,7 +18,7 @@ use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
 use std::cell::RefCell;
 use std::f64::consts::PI;
-use std::rc::Rc;
+use std::rc::Weak;
 
 pub struct TankCartographer {
   adjacent_nodes: RefCell<Vec<StateSpaceNode>>,
@@ -28,7 +28,7 @@ pub struct TankCartographer {
   ignore_obstacles: bool,
   init_step_size: f64,
   start_state_space_node: StateSpaceNode,
-  tank: Rc<RefCell<dyn Tank>>,
+  tank: Weak<RefCell<dyn Tank>>,
 }
 
 impl TankCartographer {
@@ -38,7 +38,8 @@ impl TankCartographer {
     to_node: &StateSpaceNode,
   ) -> f64 {
     let distance: f64 = from_node.distance(to_node);
-    let tank_speed: f64 = self.tank.borrow().get_tank_speed();
+    let tank_speed: f64 =
+      self.tank.upgrade().unwrap().borrow().get_tank_speed();
     distance / tank_speed
   }
 
@@ -50,7 +51,7 @@ impl TankCartographer {
     id: usize,
     init_step_size: f64,
     directions: usize,
-    tank: Rc<RefCell<dyn Tank>>,
+    tank: Weak<RefCell<dyn Tank>>,
   ) -> Self {
     let goal_state_space_node = StateSpaceNode::new(0., Point2DD::default());
     let start_state_space_node = StateSpaceNode::new(0., Point2DD::default());
@@ -151,7 +152,7 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
         ),
       );
       if self.ignore_obstacles
-        || self.tank.borrow().is_space_available(
+        || self.tank.upgrade().unwrap().borrow().is_space_available(
           adjacent_state_space_node.get_point_xy().get_x(),
           adjacent_state_space_node.get_point_xy().get_y(),
         ) && self.push_adjacent_node(&adjacent_state_space_node)
@@ -169,7 +170,8 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
   ) -> f64 {
     let mut rotation: f64 = from_node.rotation(to_node);
     rotation = rotation.abs();
-    let body_rotation_speed: f64 = self.tank.borrow().get_body_rotation_speed();
+    let body_rotation_speed: f64 =
+      self.tank.upgrade().unwrap().borrow().get_body_rotation_speed();
     let rotation_time: f64 = rotation / body_rotation_speed;
     let travel_time: f64 = self.calculate_travel_time(from_node, to_node);
     let total_time: f64 = travel_time + rotation_time;

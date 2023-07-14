@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -82,7 +82,7 @@ impl DefaultTankOperator {
       id,
       A_STAR_STEP_SIZE,
       A_STAR_DIRECTIONS,
-      tank.clone(),
+      Rc::downgrade(&tank),
     )));
     let a_star = AStar::new(tank_cartographer.clone());
     let center = Point2DD::default();
