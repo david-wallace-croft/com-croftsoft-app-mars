@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-04
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,14 +18,14 @@ use crate::model::obstacle::Obstacle;
 use crate::model::tank::Tank;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::Circle;
-use std::rc::Rc;
+use std::rc::Weak;
 
 pub struct BulletVisitor {
-  world: Rc<dyn World>,
+  world: Weak<dyn World>,
 }
 
 impl BulletVisitor {
-  pub fn new(world: Rc<dyn World>) -> Self {
+  pub fn new(world: Weak<dyn World>) -> Self {
     Self {
       world,
     }
@@ -41,7 +41,9 @@ impl Visitor for BulletVisitor {
       return;
     }
     let circle: Circle = ammo_dump.get_circle();
-    for bullet in self.world.get_bullets().borrow_mut().iter_mut() {
+    for bullet in
+      self.world.upgrade().unwrap().get_bullets().borrow_mut().iter_mut()
+    {
       let damage = bullet.get_damage();
       if damage <= 0. || !bullet.intersects_circle(&circle) {
         continue;
@@ -59,7 +61,9 @@ impl Visitor for BulletVisitor {
     if !obstacle.is_active() {
       return;
     }
-    for bullet in self.world.get_bullets().borrow_mut().iter_mut() {
+    for bullet in
+      self.world.upgrade().unwrap().get_bullets().borrow_mut().iter_mut()
+    {
       let damage = bullet.get_damage();
       if damage <= 0. {
         continue;
@@ -84,7 +88,9 @@ impl Visitor for BulletVisitor {
       return;
     }
     let circle: Circle = tank.get_circle();
-    for bullet in self.world.get_bullets().borrow_mut().iter_mut() {
+    for bullet in
+      self.world.upgrade().unwrap().get_bullets().borrow_mut().iter_mut()
+    {
       let damage = bullet.get_damage();
       if damage <= 0. || !bullet.intersects_circle(&circle) {
         continue;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -62,9 +62,9 @@ impl WorldUpdater {
       Box::new(obstacle_updater),
       Box::new(bullet_updater),
     ];
-    let bullet_visitor = BulletVisitor::new(world.clone());
+    let bullet_visitor = BulletVisitor::new(Rc::downgrade(&world));
     // TODO: add a collision detection visitor
-    let explosion_visitor = ExplosionVisitor::new(world.clone());
+    let explosion_visitor = ExplosionVisitor::new(Rc::downgrade(&world));
     let visitors: Vec<Box<dyn Visitor>> = vec![
       Box::new(explosion_visitor),
       Box::new(bullet_visitor),

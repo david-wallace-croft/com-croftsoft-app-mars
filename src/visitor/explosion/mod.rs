@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-04
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-17
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,10 +17,10 @@ use crate::model::obstacle::Obstacle;
 use crate::model::tank::Tank;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
-use std::rc::Rc;
+use std::rc::Weak;
 
 pub struct ExplosionVisitor {
-  world: Rc<dyn World>,
+  world: Weak<dyn World>,
 }
 
 impl ExplosionVisitor {
@@ -31,6 +31,8 @@ impl ExplosionVisitor {
   ) -> f64 {
     self
       .world
+      .upgrade()
+      .unwrap()
       .get_explosions()
       .borrow()
       .iter()
@@ -38,7 +40,7 @@ impl ExplosionVisitor {
       .fold(0., |damage, explosion| damage + explosion.get_damage())
   }
 
-  pub fn new(world: Rc<dyn World>) -> Self {
+  pub fn new(world: Weak<dyn World>) -> Self {
     Self {
       world,
     }
