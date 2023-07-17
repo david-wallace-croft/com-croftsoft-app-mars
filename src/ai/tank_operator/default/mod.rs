@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-07-14
+//! - Updated: 2023-07-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -27,7 +27,7 @@ use rand::distributions::Uniform;
 use rand::prelude::Distribution;
 use rand::rngs::ThreadRng;
 use std::collections::VecDeque;
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 
 pub struct DefaultTankOperator {
   a_star: AStar<TankCartographer, StateSpaceNode>,
@@ -39,7 +39,7 @@ pub struct DefaultTankOperator {
   tank_cartographer: Rc<RefCell<TankCartographer>>,
   // TODO: was PointXY
   target_point: Option<Point2DD>,
-  world: Rc<dyn World>,
+  world: Weak<dyn World>,
 }
 
 impl DefaultTankOperator {
@@ -76,7 +76,7 @@ impl DefaultTankOperator {
   pub fn new(
     id: usize,
     tank: Rc<RefCell<dyn Tank>>,
-    world: Rc<dyn World>,
+    world: Weak<dyn World>,
   ) -> Self {
     let tank_cartographer = Rc::new(RefCell::new(TankCartographer::new(
       id,
@@ -138,12 +138,16 @@ impl TankOperator for DefaultTankOperator {
       // Rotate turret toward nearest enemy tank
       let mut tank: RefMut<dyn Tank> = tank.borrow_mut();
       self.center = tank.get_center();
-      self.target_point =
-        tank.get_closest_enemy_tank_center(self.world.get_tank_operators());
+      self.target_point = tank.get_closest_enemy_tank_center(
+        self.world.upgrade().unwrap().get_tank_operators(),
+      );
       if self.target_point.is_none() {
         // Rotate turret toward nearest obstacle
-        self.target_point =
-          self.world.get_closest_obstacle_center(&self.center);
+        self.target_point = self
+          .world
+          .upgrade()
+          .unwrap()
+          .get_closest_obstacle_center(&self.center);
         self.tank_cartographer.borrow_mut().set_ignore_obstacles(true);
       } else {
         self.tank_cartographer.borrow_mut().set_ignore_obstacles(false);

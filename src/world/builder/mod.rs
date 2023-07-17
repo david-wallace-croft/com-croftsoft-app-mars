@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-16
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -100,7 +100,7 @@ impl WorldBuilder {
     let tank_operator = DefaultTankOperator::new(
       tank.borrow().get_id(),
       tank.clone(),
-      self.world.clone(),
+      Rc::downgrade(&self.world),
     );
     self.world.add_tank_operator(Box::new(tank_operator));
   }
