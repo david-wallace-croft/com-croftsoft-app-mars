@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -33,7 +33,7 @@ use core::f64::consts::{PI, TAU};
 use core::f64::INFINITY;
 use std::cell::RefCell;
 use std::collections::VecDeque;
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 
 pub mod state;
 
@@ -59,7 +59,7 @@ pub struct DefaultTank {
   tread_offset_right: f64,
   turret_heading: f64,
   updated: bool,
-  world: Rc<dyn World>,
+  world: Weak<dyn World>,
 }
 
 impl DefaultTank {
@@ -82,7 +82,7 @@ impl DefaultTank {
     color: Color,
     factory: Rc<dyn WorldFactory>,
     id: usize,
-    world: Rc<dyn World>,
+    world: Weak<dyn World>,
   ) -> Self {
     let circle: Circle = Circle {
       center_x: 0.,
@@ -163,7 +163,7 @@ impl DefaultTank {
       return;
     }
     let mut ammo_needed: usize = TANK_AMMO_MAX - self.ammo;
-    let ammo_dumps = self.world.get_ammo_dumps();
+    let ammo_dumps = self.world.upgrade().unwrap().get_ammo_dumps();
     for ammo_dump in ammo_dumps.borrow_mut().iter_mut() {
       if !ammo_dump.contains(self.circle.center_x, self.circle.center_y) {
         continue;
@@ -210,7 +210,7 @@ impl DefaultTank {
       bullet_origin_x,
       bullet_origin_y,
     );
-    self.world.add_bullet(bullet);
+    self.world.upgrade().unwrap().add_bullet(bullet);
   }
 
   fn update_position(
@@ -270,10 +270,10 @@ impl DefaultTank {
     self.circle.center_x = new_x;
     self.circle.center_y = new_y;
     // TODO
-    if self.world.is_blocked_by_impassable(&self.circle) {
+    if self.world.upgrade().unwrap().is_blocked_by_impassable(&self.circle) {
       self.circle.center_x = old_x;
       self.circle.center_y = old_y;
-      if self.world.is_blocked_by_impassable(&self.circle) {
+      if self.world.upgrade().unwrap().is_blocked_by_impassable(&self.circle) {
         self.circle.center_x = new_x;
         self.circle.center_y = new_y;
         self.updated = true;
@@ -474,13 +474,17 @@ impl SpaceTester for DefaultTank {
     tank_circle.center_x = x;
     tank_circle.center_y = y;
     // TODO: previously operated on an array of Impassable
-    for obstacle in self.world.get_obstacles().borrow().iter() {
+    for obstacle in
+      self.world.upgrade().unwrap().get_obstacles().borrow().iter()
+    {
       if obstacle.get_circle().intersects_circle(&tank_circle) {
         return false;
       }
     }
     let self_tank_color = self.get_color();
-    for other_tank_operator in self.world.get_tank_operators().borrow().iter() {
+    for other_tank_operator in
+      self.world.upgrade().unwrap().get_tank_operators().borrow().iter()
+    {
       let other_tank = other_tank_operator.get_tank();
       let other_tank = other_tank.borrow();
       if !other_tank.is_active() {
@@ -564,7 +568,7 @@ impl TankAccessor for DefaultTank {
     let mut closest_ammo_dump_center: Option<Point2DD> = None;
     let tank_center = self.get_center();
     let mut closest_distance: f64 = INFINITY;
-    let world = &self.world;
+    let world = &self.world.upgrade().unwrap();
     let ammo_dumps = world.get_ammo_dumps();
     for ammo_dump in ammo_dumps.borrow().iter() {
       let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();

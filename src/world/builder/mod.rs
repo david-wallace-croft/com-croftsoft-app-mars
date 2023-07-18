@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-07-16
+//! - Updated: 2023-07-18
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -93,7 +93,7 @@ impl WorldBuilder {
         color,
         self.factory.clone(),
         id,
-        self.world.clone(),
+        Rc::downgrade(&self.world),
       )));
     tank.borrow_mut().set_body_heading(body_heading);
     tank.borrow_mut().set_turret_heading(turret_heading);
