@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-07-18
+//! - Updated: 2023-07-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -47,7 +47,7 @@ pub struct DefaultTank {
   // TODO: was PointXY
   destination: Option<Point2DD>,
   dry_firing: bool,
-  factory: Rc<dyn WorldFactory>,
+  factory: Weak<dyn WorldFactory>,
   fire_requested: bool,
   firing: bool,
   id: usize,
@@ -80,7 +80,7 @@ impl DefaultTank {
     center_x: f64,
     center_y: f64,
     color: Color,
-    factory: Rc<dyn WorldFactory>,
+    factory: Weak<dyn WorldFactory>,
     id: usize,
     world: Weak<dyn World>,
   ) -> Self {
@@ -205,7 +205,7 @@ impl DefaultTank {
       self.circle.center_x + (TANK_RADIUS + 3.) * self.turret_heading.cos();
     let bullet_origin_y: f64 =
       self.circle.center_y + (TANK_RADIUS + 3.) * self.turret_heading.sin();
-    let bullet: Box<dyn Bullet> = self.factory.make_bullet(
+    let bullet: Box<dyn Bullet> = self.factory.upgrade().unwrap().make_bullet(
       self.turret_heading,
       bullet_origin_x,
       bullet_origin_y,

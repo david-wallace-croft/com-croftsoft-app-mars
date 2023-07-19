@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-07-18
+//! - Updated: 2023-07-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,11 +23,11 @@ use crate::model::ModelAccessor;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 
 pub struct WorldBuilder {
-  pub factory: Rc<dyn WorldFactory>,
-  pub world: Rc<dyn World>,
+  pub factory: Weak<dyn WorldFactory>,
+  pub world: Weak<dyn World>,
 }
 
 pub struct WorldBuilderTankConfig {
@@ -55,7 +55,7 @@ impl WorldBuilder {
       id,
       self.world.clone(),
     );
-    self.world.add_ammo_dump(Box::new(ammo_dump));
+    self.world.upgrade().unwrap().add_ammo_dump(Box::new(ammo_dump));
   }
 
   pub fn build_obstacle(
@@ -71,7 +71,7 @@ impl WorldBuilder {
       OBSTACLE_RADIUS_MIN,
       self.world.clone(),
     );
-    self.world.add_obstacle(Box::new(obstacle));
+    self.world.upgrade().unwrap().add_obstacle(Box::new(obstacle));
   }
 
   pub fn build_tank_operator(
@@ -93,15 +93,15 @@ impl WorldBuilder {
         color,
         self.factory.clone(),
         id,
-        Rc::downgrade(&self.world),
+        self.world.clone(),
       )));
     tank.borrow_mut().set_body_heading(body_heading);
     tank.borrow_mut().set_turret_heading(turret_heading);
     let tank_operator = DefaultTankOperator::new(
       tank.borrow().get_id(),
       tank.clone(),
-      Rc::downgrade(&self.world),
+      self.world.clone(),
     );
-    self.world.add_tank_operator(Box::new(tank_operator));
+    self.world.upgrade().unwrap().add_tank_operator(Box::new(tank_operator));
   }
 }

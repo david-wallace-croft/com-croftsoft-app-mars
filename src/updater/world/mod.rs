@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-07-17
+//! - Updated: 2023-07-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -79,8 +79,8 @@ impl WorldUpdater {
   }
 
   fn reset(&self) {
-    let factory = self.root.get_factory();
-    let world = self.root.get_world();
+    let factory = Rc::downgrade(&self.root.get_factory());
+    let world = Rc::downgrade(&self.root.get_world());
     let world_builder = WorldBuilder {
       factory,
       world,

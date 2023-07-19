@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-03
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,14 +35,14 @@ pub struct WorldBuilderDirector {
 
 impl WorldBuilderDirector {
   pub fn direct(&self) {
-    self.world_builder.world.clear();
+    self.world_builder.world.upgrade().unwrap().clear();
     self.direct_tank_operators();
     self.direct_obstacles();
     self.direct_ammo_dumps();
   }
 
   fn direct_ammo_dumps(&self) {
-    let world: &Rc<dyn World> = &self.world_builder.world;
+    let world: &Rc<dyn World> = &self.world_builder.world.upgrade().unwrap();
     let mut rng: ThreadRng = rand::thread_rng();
     let ammo_dump_count = AMMO_DUMP_COUNT_MAXIMUM.min(self.seed.level);
     for index in 0..ammo_dump_count {
@@ -88,7 +88,13 @@ impl WorldBuilderDirector {
       for _ in 0..OBSTACLE_RANDOM_PLACEMENT_ATTEMPTS_MAX {
         circle.center_x = center_uniform.sample(&mut rng);
         circle.center_y = center_uniform.sample(&mut rng);
-        if !self.world_builder.world.is_blocked_by_impassable(&circle) {
+        if !self
+          .world_builder
+          .world
+          .upgrade()
+          .unwrap()
+          .is_blocked_by_impassable(&circle)
+        {
           break;
         }
       }

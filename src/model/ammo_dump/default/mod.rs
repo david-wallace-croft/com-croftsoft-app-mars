@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-06-13
+//! - Updated: 2023-06-19
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,7 +22,7 @@ use crate::world::factory::WorldFactory;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_lib_role::Preparer;
-use std::rc::Rc;
+use std::rc::Weak;
 
 pub mod state;
 
@@ -31,11 +31,11 @@ pub struct DefaultAmmoDump {
   ammo_growth_rate: f64,
   ammo_max: f64,
   circle: Circle,
-  factory: Rc<dyn WorldFactory>,
+  factory: Weak<dyn WorldFactory>,
   id: usize,
   state: State,
   updated: bool,
-  world: Rc<dyn World>,
+  world: Weak<dyn World>,
   z: f64,
 }
 
@@ -44,9 +44,9 @@ impl DefaultAmmoDump {
     ammo: f64,
     center_x: f64,
     center_y: f64,
-    factory: Rc<dyn WorldFactory>,
+    factory: Weak<dyn WorldFactory>,
     id: usize,
-    world: Rc<dyn World>,
+    world: Weak<dyn World>,
   ) -> Self {
     let circle = Circle {
       center_x,
@@ -129,9 +129,12 @@ impl Model for DefaultAmmoDump {
         let mut explosion_circle = Circle::default();
         explosion_circle.set_center_from_circle(&self.circle);
         explosion_circle.radius = AMMO_DUMP_EXPLOSION_FACTOR * self.ammo;
-        let explosion =
-          self.factory.make_explosion(explosion_circle, self.ammo);
-        self.world.add_explosion(explosion);
+        let explosion = self
+          .factory
+          .upgrade()
+          .unwrap()
+          .make_explosion(explosion_circle, self.ammo);
+        self.world.upgrade().unwrap().add_explosion(explosion);
         self.set_ammo(0.);
       },
       State::Nominal(_) => {
