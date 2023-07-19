@@ -51,7 +51,7 @@ pub const EXPLOSION_FILL_STYLE: &str = "yellow";
 pub const EXPLOSION_STROKE_STYLE: &str = "red";
 pub static FONT: &str = "bold 17px monospace";
 pub static INFO: &str = "CroftSoft Mars \
-  v0.0.2 \
+  v0.0.3-SNAPSHOT \
   Copyright 2023 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
