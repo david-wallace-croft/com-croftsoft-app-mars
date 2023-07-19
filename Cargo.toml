@@ -10,7 +10,7 @@ name = "com-crofsoft-app-mars"
 publish = false
 readme = "README.md"
 repository = "https://github.com/david-wallace-croft/com-croftsoft-app-mars"
-version = "0.0.2-SNAPSHOT"
+version = "0.0.2"
 
 [dependencies]
 anyhow = "1.0.71"
