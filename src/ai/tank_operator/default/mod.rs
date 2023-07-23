@@ -30,13 +30,13 @@ use std::collections::VecDeque;
 use std::rc::{Rc, Weak};
 
 pub struct DefaultTankOperator {
-  a_star: AStar<TankCartographer, StateSpaceNode>,
+  a_star: AStar<StateSpaceNode>,
   center: Point2DD,
   destination: Point2DD,
   id: usize,
   start_state_space_node: StateSpaceNode,
   tank: Rc<RefCell<dyn Tank>>,
-  tank_cartographer: Rc<RefCell<TankCartographer>>,
+  tank_cartographer: TankCartographer,
   // TODO: was PointXY
   target_point: Option<Point2DD>,
   world: Weak<dyn World>,
@@ -51,15 +51,14 @@ impl DefaultTankOperator {
     self.start_state_space_node.set_point_xy(&self.center);
     self.start_state_space_node.set_heading(heading);
     self.a_star.reset(self.start_state_space_node);
-    self.tank_cartographer.borrow().reset();
+    self.tank_cartographer.reset();
     // TODO: How was this passed in the original code?
     self
       .tank_cartographer
-      .borrow_mut()
       .set_start_state_space_node(self.start_state_space_node);
-    self.tank_cartographer.borrow_mut().set_goal_point_xy(destination);
+    self.tank_cartographer.set_goal_point_xy(destination);
     for _ in 0..A_STAR_LOOPS {
-      if !self.a_star.loop_once() {
+      if !self.a_star.loop_once(&self.tank_cartographer) {
         break;
       }
     }
@@ -78,13 +77,13 @@ impl DefaultTankOperator {
     tank: Rc<RefCell<dyn Tank>>,
     world: Weak<dyn World>,
   ) -> Self {
-    let tank_cartographer = Rc::new(RefCell::new(TankCartographer::new(
+    let tank_cartographer = TankCartographer::new(
       id,
       A_STAR_STEP_SIZE,
       A_STAR_DIRECTIONS,
       Rc::downgrade(&tank),
-    )));
-    let a_star = AStar::new(tank_cartographer.clone());
+    );
+    let a_star = AStar::<StateSpaceNode>::default();
     let center = Point2DD::default();
     let destination = Point2DD::default();
     let target_point = None;
@@ -148,9 +147,9 @@ impl TankOperator for DefaultTankOperator {
           .upgrade()
           .unwrap()
           .get_closest_obstacle_center(&self.center);
-        self.tank_cartographer.borrow_mut().set_ignore_obstacles(true);
+        self.tank_cartographer.set_ignore_obstacles(true);
       } else {
-        self.tank_cartographer.borrow_mut().set_ignore_obstacles(false);
+        self.tank_cartographer.set_ignore_obstacles(false);
       }
       tank.rotate_turret(&self.target_point);
     }
