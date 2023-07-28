@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-04
-//! - Updated: 2023-07-17
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -41,8 +41,13 @@ impl Visitor for BulletVisitor {
       return;
     }
     let circle: Circle = ammo_dump.get_circle();
-    for bullet in
-      self.world.upgrade().unwrap().get_bullets().borrow_mut().iter_mut()
+    for bullet in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_bullets()
+      .borrow_mut()
+      .iter_mut()
     {
       let damage = bullet.get_damage();
       if damage <= 0. || !bullet.intersects_circle(&circle) {
@@ -61,8 +66,13 @@ impl Visitor for BulletVisitor {
     if !obstacle.is_active() {
       return;
     }
-    for bullet in
-      self.world.upgrade().unwrap().get_bullets().borrow_mut().iter_mut()
+    for bullet in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_bullets()
+      .borrow_mut()
+      .iter_mut()
     {
       let damage = bullet.get_damage();
       if damage <= 0. {
@@ -88,8 +98,13 @@ impl Visitor for BulletVisitor {
       return;
     }
     let circle: Circle = tank.get_circle();
-    for bullet in
-      self.world.upgrade().unwrap().get_bullets().borrow_mut().iter_mut()
+    for bullet in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_bullets()
+      .borrow_mut()
+      .iter_mut()
     {
       let damage = bullet.get_damage();
       if damage <= 0. || !bullet.intersects_circle(&circle) {

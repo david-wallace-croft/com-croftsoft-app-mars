@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-04-13
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -29,7 +29,9 @@ impl StateSpaceNode {
     &self,
     other_state_space_node: &StateSpaceNode,
   ) -> f64 {
-    self.point_2dd.distance_to(&other_state_space_node.point_2dd)
+    self
+      .point_2dd
+      .distance_to(&other_state_space_node.point_2dd)
   }
 
   pub fn get_heading(&self) -> f64 {

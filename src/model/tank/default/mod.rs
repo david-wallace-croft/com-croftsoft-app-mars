@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-07-19
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -270,10 +270,20 @@ impl DefaultTank {
     self.circle.center_x = new_x;
     self.circle.center_y = new_y;
     // TODO
-    if self.world.upgrade().unwrap().is_blocked_by_impassable(&self.circle) {
+    if self
+      .world
+      .upgrade()
+      .unwrap()
+      .is_blocked_by_impassable(&self.circle)
+    {
       self.circle.center_x = old_x;
       self.circle.center_y = old_y;
-      if self.world.upgrade().unwrap().is_blocked_by_impassable(&self.circle) {
+      if self
+        .world
+        .upgrade()
+        .unwrap()
+        .is_blocked_by_impassable(&self.circle)
+      {
         self.circle.center_x = new_x;
         self.circle.center_y = new_y;
         self.updated = true;
@@ -474,16 +484,26 @@ impl SpaceTester for DefaultTank {
     tank_circle.center_x = x;
     tank_circle.center_y = y;
     // TODO: previously operated on an array of Impassable
-    for obstacle in
-      self.world.upgrade().unwrap().get_obstacles().borrow().iter()
+    for obstacle in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_obstacles()
+      .borrow()
+      .iter()
     {
       if obstacle.get_circle().intersects_circle(&tank_circle) {
         return false;
       }
     }
     let self_tank_color = self.get_color();
-    for other_tank_operator in
-      self.world.upgrade().unwrap().get_tank_operators().borrow().iter()
+    for other_tank_operator in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_tank_operators()
+      .borrow()
+      .iter()
     {
       let other_tank = other_tank_operator.get_tank();
       let other_tank = other_tank.borrow();

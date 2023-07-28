@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-03
-//! - Updated: 2023-07-19
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -98,7 +98,9 @@ impl WorldBuilderDirector {
           break;
         }
       }
-      self.world_builder.build_obstacle(circle, self.seed.bounds, index);
+      self
+        .world_builder
+        .build_obstacle(circle, self.seed.bounds, index);
     }
   }
 
@@ -113,22 +115,26 @@ impl WorldBuilderDirector {
       } else {
         spacer_index as i64 * -100
       };
-      self.world_builder.build_tank_operator(WorldBuilderTankConfig {
-        body_heading: heading_blue,
-        center_x: (300 + delta_x) as f64,
-        center_y: 500.,
-        color: Color::BLUE,
-        id: index * 2,
-        turret_heading: heading_blue,
-      });
-      self.world_builder.build_tank_operator(WorldBuilderTankConfig {
-        body_heading: heading_red,
-        center_x: (300 - delta_x) as f64,
-        center_y: 100.,
-        color: Color::RED,
-        id: index * 2 + 1,
-        turret_heading: heading_red,
-      });
+      self
+        .world_builder
+        .build_tank_operator(WorldBuilderTankConfig {
+          body_heading: heading_blue,
+          center_x: (300 + delta_x) as f64,
+          center_y: 500.,
+          color: Color::BLUE,
+          id: index * 2,
+          turret_heading: heading_blue,
+        });
+      self
+        .world_builder
+        .build_tank_operator(WorldBuilderTankConfig {
+          body_heading: heading_red,
+          center_x: (300 - delta_x) as f64,
+          center_y: 100.,
+          color: Color::RED,
+          id: index * 2 + 1,
+          turret_heading: heading_red,
+        });
     }
   }
 }

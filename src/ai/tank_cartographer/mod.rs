@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-07-14
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -170,8 +170,12 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
   ) -> f64 {
     let mut rotation: f64 = from_node.rotation(to_node);
     rotation = rotation.abs();
-    let body_rotation_speed: f64 =
-      self.tank.upgrade().unwrap().borrow().get_body_rotation_speed();
+    let body_rotation_speed: f64 = self
+      .tank
+      .upgrade()
+      .unwrap()
+      .borrow()
+      .get_body_rotation_speed();
     let rotation_time: f64 = rotation / body_rotation_speed;
     let travel_time: f64 = self.calculate_travel_time(from_node, to_node);
     let total_time: f64 = travel_time + rotation_time;

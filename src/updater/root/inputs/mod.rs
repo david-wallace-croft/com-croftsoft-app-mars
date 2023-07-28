@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-03
-//! - Updated: 2023-06-28
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -80,7 +80,10 @@ impl RootUpdaterInputsAdapter {
 
 impl FrameRaterUpdaterInputs for RootUpdaterInputsAdapter {
   fn get_frame_rate_display_change_requested(&self) -> Option<bool> {
-    self.inputs.borrow().get_update_rate_display_change_requested()
+    self
+      .inputs
+      .borrow()
+      .get_update_rate_display_change_requested()
   }
 
   fn get_reset_requested(&self) -> bool {
@@ -144,7 +147,10 @@ impl OptionsUpdaterInputs for RootUpdaterInputsAdapter {
   }
 
   fn get_update_rate_display_change_requested(&self) -> Option<bool> {
-    self.inputs.borrow().get_update_rate_display_change_requested()
+    self
+      .inputs
+      .borrow()
+      .get_update_rate_display_change_requested()
   }
 
   fn get_update_time_millis(&self) -> f64 {
@@ -170,7 +176,10 @@ impl OverlayUpdaterInputs for RootUpdaterInputsAdapter {
   }
 
   fn get_update_rate_display_change_requested(&self) -> Option<bool> {
-    self.inputs.borrow().get_update_rate_display_change_requested()
+    self
+      .inputs
+      .borrow()
+      .get_update_rate_display_change_requested()
   }
 }
 

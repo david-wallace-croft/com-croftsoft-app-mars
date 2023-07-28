@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-29
-//! - Updated: 2023-07-09
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -107,9 +107,12 @@ impl World for DefaultWorld {
     &self,
     point_2dd: &Point2DD,
   ) -> Option<Point2DD> {
-    self.obstacles.borrow().iter().map(|obstacle| obstacle.get_center()).fold(
-      None,
-      |closest, center| {
+    self
+      .obstacles
+      .borrow()
+      .iter()
+      .map(|obstacle| obstacle.get_center())
+      .fold(None, |closest, center| {
         if let Some(closest_center) = closest {
           // TODO: Should not have to recalculate best distance
           if closest_center.distance_to(point_2dd)
@@ -122,8 +125,7 @@ impl World for DefaultWorld {
         } else {
           Some(center)
         }
-      },
-    )
+      })
   }
 
   fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>> {

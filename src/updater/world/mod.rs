@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-07-19
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -107,7 +107,10 @@ impl Updater for WorldUpdater {
     if self.root.get_options().get_pause() {
       return;
     }
-    self.child_updaters.iter_mut().for_each(|updater| updater.update());
+    self
+      .child_updaters
+      .iter_mut()
+      .for_each(|updater| updater.update());
     self.visitors.iter().for_each(|visitor| {
       self.root.get_world().accept_visitor(visitor.as_ref())
     });

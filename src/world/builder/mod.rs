@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-07-19
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -55,7 +55,11 @@ impl WorldBuilder {
       id,
       self.world.clone(),
     );
-    self.world.upgrade().unwrap().add_ammo_dump(Box::new(ammo_dump));
+    self
+      .world
+      .upgrade()
+      .unwrap()
+      .add_ammo_dump(Box::new(ammo_dump));
   }
 
   pub fn build_obstacle(
@@ -71,7 +75,11 @@ impl WorldBuilder {
       OBSTACLE_RADIUS_MIN,
       self.world.clone(),
     );
-    self.world.upgrade().unwrap().add_obstacle(Box::new(obstacle));
+    self
+      .world
+      .upgrade()
+      .unwrap()
+      .add_obstacle(Box::new(obstacle));
   }
 
   pub fn build_tank_operator(
@@ -102,6 +110,10 @@ impl WorldBuilder {
       tank.clone(),
       self.world.clone(),
     );
-    self.world.upgrade().unwrap().add_tank_operator(Box::new(tank_operator));
+    self
+      .world
+      .upgrade()
+      .unwrap()
+      .add_tank_operator(Box::new(tank_operator));
   }
 }

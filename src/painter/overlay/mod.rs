@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-07-03
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -52,6 +52,8 @@ impl Painter for OverlayPainter {
     context.set_fill_style(&self.fill_style);
     context.set_font(FONT);
     let overlay: Ref<Overlay> = self.overlay.borrow();
-    context.fill_text(&overlay.update_rate_string, 4., 34.).unwrap();
+    context
+      .fill_text(&overlay.update_rate_string, 4., 34.)
+      .unwrap();
   }
 }

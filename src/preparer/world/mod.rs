@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-06-19
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -43,6 +43,9 @@ impl WorldPreparer {
 
 impl Preparer for WorldPreparer {
   fn prepare(&mut self) {
-    self.child_preparers.iter_mut().for_each(|preparer| preparer.prepare());
+    self
+      .child_preparers
+      .iter_mut()
+      .for_each(|preparer| preparer.prepare());
   }
 }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-07-19
+//! - Updated: 2023-07-28
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -128,7 +128,12 @@ impl Model for DefaultObstacle {
     self.velocity_x = velocity_x;
     self.velocity_y = velocity_y;
     if new_center_x != old_center_x || new_center_y != old_center_y {
-      if self.world.upgrade().unwrap().is_blocked_by_impassable(&self.circle) {
+      if self
+        .world
+        .upgrade()
+        .unwrap()
+        .is_blocked_by_impassable(&self.circle)
+      {
         self.circle.center_x = new_center_x;
         self.circle.center_y = new_center_y;
         // TODO: updated event
@@ -138,7 +143,11 @@ impl Model for DefaultObstacle {
           center_y: new_center_y,
           radius,
         };
-        if !self.world.upgrade().unwrap().is_blocked_by_impassable(&new_circle)
+        if !self
+          .world
+          .upgrade()
+          .unwrap()
+          .is_blocked_by_impassable(&new_circle)
         {
           self.circle.center_x = new_center_x;
           self.circle.center_y = new_center_y;
