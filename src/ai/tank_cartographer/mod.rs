@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-07-28
+//! - Updated: 2023-07-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -151,6 +151,9 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
           y + step_size * heading.sin(),
         ),
       );
+      // TODO: Logic bug here in that if ignore obstacles, ignores all
+      //   things that take up space, including friendly Tanks, instead
+      //   of just Obstacles
       if self.ignore_obstacles
         || self.tank.upgrade().unwrap().borrow().is_space_available(
           adjacent_state_space_node.get_point_xy().get_x(),

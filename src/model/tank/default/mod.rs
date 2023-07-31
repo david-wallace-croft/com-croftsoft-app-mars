@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-07-28
+//! - Updated: 2023-07-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -510,7 +510,10 @@ impl SpaceTester for DefaultTank {
       if !other_tank.is_active() {
         continue;
       }
-      if self_tank_color != other_tank.get_color() && self.get_ammo() > 0 {
+      if self.get_ammo() > 0
+        && !other_tank.is_burning()
+        && self_tank_color != other_tank.get_color()
+      {
         continue;
       }
       let other_tank_circle = other_tank.get_circle();
