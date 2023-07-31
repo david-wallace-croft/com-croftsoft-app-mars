@@ -133,7 +133,6 @@ impl TankOperator for DefaultTankOperator {
     time_delta: f64,
   ) {
     let tank: Rc<RefCell<dyn Tank>> = self.tank.clone();
-    self.tank_cartographer.set_ignore_obstacles(false);
     {
       // Rotate turret toward nearest enemy tank
       let mut tank: RefMut<dyn Tank> = tank.borrow_mut();
@@ -148,9 +147,6 @@ impl TankOperator for DefaultTankOperator {
           .upgrade()
           .unwrap()
           .get_closest_obstacle_center(&self.center);
-        // TODO: See the note about the logic bug in TankCartographer line 154;
-        //   Needs to ignore just the goal node, not all things that take space
-        self.tank_cartographer.set_ignore_obstacles(true);
       }
       tank.rotate_turret(&self.target_point);
     }

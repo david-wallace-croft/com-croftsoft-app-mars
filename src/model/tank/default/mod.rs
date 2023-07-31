@@ -474,6 +474,7 @@ impl Preparer for DefaultTank {
 }
 
 impl SpaceTester for DefaultTank {
+  // TODO: Include target radius as being available; move to TankOperator
   fn is_space_available(
     &self,
     // TODO: this was PointXY; could be a Circle
