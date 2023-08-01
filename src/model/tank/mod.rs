@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-06-19
+//! - Updated: 2023-08-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -27,17 +27,8 @@ pub enum Color {
   RED,
 }
 
-pub trait SpaceTester {
-  fn is_space_available(
-    &self,
-    // TODO: this was PointXY
-    x: f64,
-    y: f64,
-  ) -> bool;
-}
-
 // trait TankConsole
-pub trait Tank: Damageable + Model + SpaceTester + TankAccessor {
+pub trait Tank: Damageable + Model + TankAccessor {
   // TODO: remove this mutator methods by moving TankOperator into Tank update
   //   or by having TankOperator send commands via an input queue
 

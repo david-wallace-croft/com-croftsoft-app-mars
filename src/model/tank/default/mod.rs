@@ -5,14 +5,14 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-07-30
+//! - Updated: 2023-08-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use self::state::State;
-use super::{Color, SpaceTester, Tank, TankAccessor};
+use super::{Color, Tank, TankAccessor};
 use crate::ai::tank_operator::TankOperator;
 use crate::constant::{
   TANK_AMMO_INITIAL, TANK_AMMO_MAX,
@@ -470,59 +470,6 @@ impl Preparer for DefaultTank {
     self.updated = false;
     self.firing = false;
     self.dry_firing = false;
-  }
-}
-
-impl SpaceTester for DefaultTank {
-  // TODO: Include target radius as being available; move to TankOperator
-  fn is_space_available(
-    &self,
-    // TODO: this was PointXY; could be a Circle
-    x: f64,
-    y: f64,
-  ) -> bool {
-    let mut tank_circle = self.get_circle();
-    tank_circle.center_x = x;
-    tank_circle.center_y = y;
-    // TODO: previously operated on an array of Impassable
-    for obstacle in self
-      .world
-      .upgrade()
-      .unwrap()
-      .get_obstacles()
-      .borrow()
-      .iter()
-    {
-      if obstacle.get_circle().intersects_circle(&tank_circle) {
-        return false;
-      }
-    }
-    let self_tank_color = self.get_color();
-    for other_tank_operator in self
-      .world
-      .upgrade()
-      .unwrap()
-      .get_tank_operators()
-      .borrow()
-      .iter()
-    {
-      let other_tank = other_tank_operator.get_tank();
-      let other_tank = other_tank.borrow();
-      if !other_tank.is_active() {
-        continue;
-      }
-      if self.get_ammo() > 0
-        && !other_tank.is_burning()
-        && self_tank_color != other_tank.get_color()
-      {
-        continue;
-      }
-      let other_tank_circle = other_tank.get_circle();
-      if other_tank_circle.intersects_circle(&tank_circle) {
-        return false;
-      }
-    }
-    true
   }
 }
 

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-07-30
+//! - Updated: 2023-08-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -13,7 +13,9 @@
 
 use super::state_space_node::StateSpaceNode;
 use crate::model::tank::Tank;
+use crate::world::World;
 use com_croftsoft_core::ai::astar::traits::Cartographer;
+use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
 use std::cell::RefCell;
@@ -28,6 +30,7 @@ pub struct TankCartographer {
   init_step_size: f64,
   start_state_space_node: StateSpaceNode,
   tank: Weak<RefCell<dyn Tank>>,
+  world: Weak<dyn World>,
 }
 
 impl TankCartographer {
@@ -46,11 +49,65 @@ impl TankCartographer {
     self.id
   }
 
+  // TODO: Include target radius as being available
+  fn is_space_available(
+    &self,
+    // TODO: this was PointXY; could be a Circle
+    x: f64,
+    y: f64,
+  ) -> bool {
+    let tank = self.tank.upgrade().unwrap();
+    let tank = tank.borrow();
+    let mut tank_circle = tank.get_circle();
+    tank_circle.center_x = x;
+    tank_circle.center_y = y;
+    // TODO: previously operated on an array of Impassable
+    for obstacle in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_obstacles()
+      .borrow()
+      .iter()
+    {
+      if obstacle.get_circle().intersects_circle(&tank_circle) {
+        return false;
+      }
+    }
+    let self_tank_color = tank.get_color();
+    for other_tank_operator in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_tank_operators()
+      .borrow()
+      .iter()
+    {
+      let other_tank = other_tank_operator.get_tank();
+      let other_tank = other_tank.borrow();
+      if !other_tank.is_active() {
+        continue;
+      }
+      if tank.get_ammo() > 0
+        && !other_tank.is_burning()
+        && self_tank_color != other_tank.get_color()
+      {
+        continue;
+      }
+      let other_tank_circle = other_tank.get_circle();
+      if other_tank_circle.intersects_circle(&tank_circle) {
+        return false;
+      }
+    }
+    true
+  }
+
   pub fn new(
     id: usize,
     init_step_size: f64,
     directions: usize,
     tank: Weak<RefCell<dyn Tank>>,
+    world: Weak<dyn World>,
   ) -> Self {
     let goal_state_space_node = StateSpaceNode::new(0., Point2DD::default());
     let start_state_space_node = StateSpaceNode::new(0., Point2DD::default());
@@ -62,6 +119,7 @@ impl TankCartographer {
       init_step_size,
       start_state_space_node,
       tank,
+      world,
     }
   }
 
@@ -142,7 +200,7 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
           y + step_size * heading.sin(),
         ),
       );
-      if self.tank.upgrade().unwrap().borrow().is_space_available(
+      if self.is_space_available(
         adjacent_state_space_node.get_point_xy().get_x(),
         adjacent_state_space_node.get_point_xy().get_y(),
       ) && self.push_adjacent_node(&adjacent_state_space_node)

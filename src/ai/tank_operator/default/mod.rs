@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-07-30
+//! - Updated: 2023-08-01
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -82,6 +82,7 @@ impl DefaultTankOperator {
       A_STAR_STEP_SIZE,
       A_STAR_DIRECTIONS,
       Rc::downgrade(&tank),
+      world.clone(),
     );
     let a_star = AStar::<StateSpaceNode>::default();
     let center = Point2DD::default();
