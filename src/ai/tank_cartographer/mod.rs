@@ -18,9 +18,9 @@ use com_croftsoft_core::ai::astar::traits::Cartographer;
 use com_croftsoft_core::math::geom::circle::CircleAccessor;
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell};
 use std::f64::consts::PI;
-use std::rc::Weak;
+use std::rc::{Rc, Weak};
 
 pub struct TankCartographer {
   adjacent_nodes: RefCell<Vec<StateSpaceNode>>,
@@ -56,8 +56,8 @@ impl TankCartographer {
     x: f64,
     y: f64,
   ) -> bool {
-    let tank = self.tank.upgrade().unwrap();
-    let tank = tank.borrow();
+    let tank: Rc<RefCell<dyn Tank>> = self.tank.upgrade().unwrap();
+    let tank: Ref<dyn Tank> = tank.borrow();
     let mut tank_circle = tank.get_circle();
     tank_circle.center_x = x;
     tank_circle.center_y = y;
@@ -200,10 +200,9 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
           y + step_size * heading.sin(),
         ),
       );
-      if self.is_space_available(
-        adjacent_state_space_node.get_point_xy().get_x(),
-        adjacent_state_space_node.get_point_xy().get_y(),
-      ) && self.push_adjacent_node(&adjacent_state_space_node)
+      let point_xy = adjacent_state_space_node.get_point_xy();
+      if self.is_space_available(point_xy.get_x(), point_xy.get_y())
+        && self.push_adjacent_node(&adjacent_state_space_node)
       {
         adjacent_list.push(adjacent_state_space_node);
       }
