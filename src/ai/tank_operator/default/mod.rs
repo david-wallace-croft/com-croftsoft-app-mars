@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-08-01
+//! - Updated: 2023-08-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,6 +21,7 @@ use crate::constant::{
 use crate::model::tank::Tank;
 use crate::world::World;
 use com_croftsoft_core::ai::astar::structures::AStar;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};
 use rand::distributions::Uniform;
@@ -37,15 +38,14 @@ pub struct DefaultTankOperator {
   start_state_space_node: StateSpaceNode,
   tank: Rc<RefCell<dyn Tank>>,
   tank_cartographer: TankCartographer,
-  // TODO: was PointXY
-  target_point: Option<Point2DD>,
+  target_circle: Option<Circle>,
   world: Weak<dyn World>,
 }
 
 impl DefaultTankOperator {
   fn get_first_step(
     &mut self,
-    destination: &Point2DD,
+    destination: Circle,
     heading: f64,
   ) -> Point2DD {
     self.start_state_space_node.set_point_xy(&self.center);
@@ -56,19 +56,19 @@ impl DefaultTankOperator {
     self
       .tank_cartographer
       .set_start_state_space_node(self.start_state_space_node);
-    self.tank_cartographer.set_goal_point_xy(destination);
+    self.tank_cartographer.set_goal_circle(destination);
     for _ in 0..A_STAR_LOOPS {
       if !self.a_star.loop_once(&self.tank_cartographer) {
         break;
       }
     }
     if !self.a_star.is_goal_found() {
-      return *destination;
+      return destination.get_center_point_2dd();
     }
     if let Some(state_space_node) = self.a_star.get_first_step() {
       state_space_node.get_point_xy()
     } else {
-      *destination
+      destination.get_center_point_2dd()
     }
   }
 
@@ -87,7 +87,7 @@ impl DefaultTankOperator {
     let a_star = AStar::<StateSpaceNode>::default();
     let center = Point2DD::default();
     let destination = Point2DD::default();
-    let target_point = None;
+    let target_circle = None;
     let start_state_space_node = StateSpaceNode::default();
     Self {
       a_star,
@@ -97,7 +97,7 @@ impl DefaultTankOperator {
       start_state_space_node,
       tank_cartographer,
       tank,
-      target_point,
+      target_circle,
       world,
     }
   }
@@ -138,29 +138,35 @@ impl TankOperator for DefaultTankOperator {
       // Rotate turret toward nearest enemy tank
       let mut tank: RefMut<dyn Tank> = tank.borrow_mut();
       self.center = tank.get_center();
-      self.target_point = tank.get_closest_enemy_tank_center(
+      self.target_circle = tank.get_closest_enemy_tank_circle(
         self.world.upgrade().unwrap().get_tank_operators(),
       );
-      if self.target_point.is_none() {
+      if self.target_circle.is_none() {
         // Rotate turret toward nearest obstacle
-        self.target_point = self
+        self.target_circle = self
           .world
           .upgrade()
           .unwrap()
-          .get_closest_obstacle_center(&self.center);
+          .get_closest_obstacle_circle(&self.center);
       }
-      tank.rotate_turret(&self.target_point);
+      let target_point: Option<Point2DD> =
+        if let Some(target_circle) = &self.target_circle {
+          Some(target_circle.get_center_point_2dd())
+        } else {
+          None
+        };
+      tank.rotate_turret(&target_point);
     }
     {
       // Move toward nearest ammo dump
       let ammo: usize = tank.borrow().get_ammo();
       if ammo < 1 {
-        let closest_ammo_dump_center_option: Option<Point2DD> =
-          tank.borrow().get_closest_ammo_dump_center();
-        if let Some(closest_ammo_dump_center) = closest_ammo_dump_center_option
+        let closest_ammo_dump_circle_option: Option<Circle> =
+          tank.borrow().get_closest_ammo_dump_circle();
+        if let Some(closest_ammo_dump_circle) = closest_ammo_dump_circle_option
         {
           let destination: Point2DD = self.get_first_step(
-            &closest_ammo_dump_center,
+            closest_ammo_dump_circle,
             tank.borrow().get_body_heading(),
           );
           tank.borrow_mut().go(&destination);
@@ -171,9 +177,9 @@ impl TankOperator for DefaultTankOperator {
     // Move toward nearest enemy tank
     let mut thread_rng: ThreadRng = rand::thread_rng();
     let uniform = Uniform::from(0.0..1.);
-    if let Some(enemy_center) = self.target_point {
+    if let Some(enemy_circle) = self.target_circle {
       let destination: Point2DD =
-        self.get_first_step(&enemy_center, tank.borrow().get_body_heading());
+        self.get_first_step(enemy_circle, tank.borrow().get_body_heading());
       tank.borrow_mut().go(&destination);
     } else {
       // Move randomly

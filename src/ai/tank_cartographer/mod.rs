@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-07
-//! - Updated: 2023-08-01
+//! - Updated: 2023-08-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -15,7 +15,7 @@ use super::state_space_node::StateSpaceNode;
 use crate::model::tank::Tank;
 use crate::world::World;
 use com_croftsoft_core::ai::astar::traits::Cartographer;
-use com_croftsoft_core::math::geom::circle::CircleAccessor;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
 use std::cell::{Ref, RefCell};
@@ -25,6 +25,7 @@ use std::rc::{Rc, Weak};
 pub struct TankCartographer {
   adjacent_nodes: RefCell<Vec<StateSpaceNode>>,
   directions: usize,
+  goal_circle: Circle,
   goal_state_space_node: StateSpaceNode,
   id: usize,
   init_step_size: f64,
@@ -49,10 +50,8 @@ impl TankCartographer {
     self.id
   }
 
-  // TODO: Include target radius as being available
   fn is_space_available(
     &self,
-    // TODO: this was PointXY; could be a Circle
     x: f64,
     y: f64,
   ) -> bool {
@@ -61,6 +60,10 @@ impl TankCartographer {
     let mut tank_circle = tank.get_circle();
     tank_circle.center_x = x;
     tank_circle.center_y = y;
+    if self.goal_circle.intersects_circle(&tank_circle) {
+      // TODO: Consider not available if a friendly tank is blocking it
+      return true;
+    }
     // TODO: previously operated on an array of Impassable
     for obstacle in self
       .world
@@ -109,11 +112,13 @@ impl TankCartographer {
     tank: Weak<RefCell<dyn Tank>>,
     world: Weak<dyn World>,
   ) -> Self {
+    let goal_circle = Circle::default();
     let goal_state_space_node = StateSpaceNode::new(0., Point2DD::default());
     let start_state_space_node = StateSpaceNode::new(0., Point2DD::default());
     TankCartographer {
       adjacent_nodes: RefCell::new(Vec::new()),
       directions,
+      goal_circle,
       goal_state_space_node,
       id,
       init_step_size,
@@ -142,11 +147,13 @@ impl TankCartographer {
     self.adjacent_nodes.borrow_mut().clear();
   }
 
-  pub fn set_goal_point_xy(
+  pub fn set_goal_circle(
     &mut self,
-    goal_point_xy: &Point2DD,
+    goal_circle: Circle,
   ) {
-    self.goal_state_space_node.set_point_xy(goal_point_xy);
+    self.goal_circle = goal_circle;
+    let goal_point_2dd = goal_circle.get_center_point_2dd();
+    self.goal_state_space_node.set_point_xy(&goal_point_2dd);
   }
 
   pub fn set_start_state_space_node(
@@ -233,6 +240,7 @@ impl Cartographer<StateSpaceNode> for TankCartographer {
     &self,
     node: &StateSpaceNode,
   ) -> bool {
-    self.goal_state_space_node.distance(node) == 0.
+    let point_2dd = node.get_point_xy();
+    self.goal_circle.contains(point_2dd.x, point_2dd.y)
   }
 }

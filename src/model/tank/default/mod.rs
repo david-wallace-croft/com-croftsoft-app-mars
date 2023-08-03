@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-08-01
+//! - Updated: 2023-08-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -535,33 +535,34 @@ impl TankAccessor for DefaultTank {
     Point2DD::new(self.circle.center_x, self.circle.center_y)
   }
 
-  fn get_closest_ammo_dump_center(&self) -> Option<Point2DD> {
-    let mut closest_ammo_dump_center: Option<Point2DD> = None;
+  fn get_closest_ammo_dump_circle(&self) -> Option<Circle> {
+    let mut closest_ammo_dump_circle: Option<Circle> = None;
     let tank_center = self.get_center();
     let mut closest_distance: f64 = INFINITY;
     let world = &self.world.upgrade().unwrap();
     let ammo_dumps = world.get_ammo_dumps();
     for ammo_dump in ammo_dumps.borrow().iter() {
-      let ammo_dump_center = ammo_dump.get_circle().get_center_point_2dd();
+      let ammo_dump_circle = ammo_dump.get_circle();
+      let ammo_dump_center = ammo_dump_circle.get_center_point_2dd();
       let distance: f64 = tank_center.distance_to(&ammo_dump_center);
       if distance < closest_distance {
         closest_distance = distance;
-        closest_ammo_dump_center = Some(ammo_dump_center);
+        closest_ammo_dump_circle = Some(ammo_dump_circle);
       }
     }
-    closest_ammo_dump_center
+    closest_ammo_dump_circle
   }
 
-  fn get_closest_enemy_tank_center(
+  fn get_closest_enemy_tank_circle(
     &self,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
-  ) -> Option<Point2DD> {
+  ) -> Option<Circle> {
     let mut closest_distance: f64 = INFINITY;
     let mut found = false;
     let tank_operators = tank_operators.borrow();
     let length = tank_operators.len();
     let tank_center = Point2DD::new(self.circle.center_x, self.circle.center_y);
-    let mut closest_enemy_tank_center = Point2DD::default();
+    let mut closest_enemy_tank_circle = Circle::default();
     for i in 0..length {
       let tank = tank_operators[i].get_tank();
       let tank = tank.borrow();
@@ -576,11 +577,11 @@ impl TankAccessor for DefaultTank {
       if distance < closest_distance {
         found = true;
         closest_distance = distance;
-        closest_enemy_tank_center = enemy_tank_center;
+        closest_enemy_tank_circle = tank.get_circle();
       }
     }
     if found {
-      return Some(closest_enemy_tank_center);
+      return Some(closest_enemy_tank_circle);
     }
     None
   }

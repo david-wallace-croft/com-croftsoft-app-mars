@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-29
-//! - Updated: 2023-07-28
+//! - Updated: 2023-08-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -18,7 +18,7 @@ use crate::model::bullet::Bullet;
 use crate::model::explosion::Explosion;
 use crate::model::obstacle::Obstacle;
 use crate::visitor::{Visitor, VisitorAcceptor};
-use com_croftsoft_core::math::geom::circle::CircleAccessor;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -103,27 +103,27 @@ impl World for DefaultWorld {
     self.bullets.clone()
   }
 
-  fn get_closest_obstacle_center(
+  fn get_closest_obstacle_circle(
     &self,
     point_2dd: &Point2DD,
-  ) -> Option<Point2DD> {
+  ) -> Option<Circle> {
     self
       .obstacles
       .borrow()
       .iter()
-      .map(|obstacle| obstacle.get_center())
-      .fold(None, |closest, center| {
-        if let Some(closest_center) = closest {
+      .map(|obstacle| obstacle.get_circle())
+      .fold(None, |closest, circle| {
+        if let Some(closest_circle) = closest {
           // TODO: Should not have to recalculate best distance
-          if closest_center.distance_to(point_2dd)
-            > center.distance_to(point_2dd)
+          if closest_circle.get_center_point_2dd().distance_to(point_2dd)
+            > circle.get_center_point_2dd().distance_to(point_2dd)
           {
-            Some(center)
+            Some(circle)
           } else {
             closest
           }
         } else {
-          Some(center)
+          Some(circle)
         }
       })
   }

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-20
-//! - Updated: 2023-07-09
+//! - Updated: 2023-08-02
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,7 @@ use crate::model::bullet::Bullet;
 use crate::model::explosion::Explosion;
 use crate::model::obstacle::Obstacle;
 use crate::visitor::VisitorAcceptor;
-use com_croftsoft_core::math::geom::circle::CircleAccessor;
+use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::RefCell;
 use std::collections::VecDeque;
@@ -61,10 +61,10 @@ pub trait World: VisitorAcceptor {
 
   fn get_bullets(&self) -> Rc<RefCell<VecDeque<Box<dyn Bullet>>>>;
 
-  fn get_closest_obstacle_center(
+  fn get_closest_obstacle_circle(
     &self,
     point_2dd: &Point2DD,
-  ) -> Option<Point2DD>;
+  ) -> Option<Circle>;
 
   fn get_explosions(&self) -> Rc<RefCell<VecDeque<Box<dyn Explosion>>>>;
 
