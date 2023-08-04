@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-19
+//! - Updated: 2023-08-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -51,7 +51,7 @@ pub const EXPLOSION_FILL_STYLE: &str = "yellow";
 pub const EXPLOSION_STROKE_STYLE: &str = "red";
 pub static FONT: &str = "bold 17px monospace";
 pub static INFO: &str = "CroftSoft Mars \
-  v0.0.3-SNAPSHOT \
+  v0.0.3 \
   Copyright 2023 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
