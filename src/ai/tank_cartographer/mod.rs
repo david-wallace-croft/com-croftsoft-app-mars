@@ -60,8 +60,42 @@ impl TankCartographer {
     let mut tank_circle = tank.get_circle();
     tank_circle.center_x = x;
     tank_circle.center_y = y;
+    let tank_color = tank.get_color();
+    let tank_out_of_ammo = tank.get_ammo() == 0;
+    for other_tank_operator in self
+      .world
+      .upgrade()
+      .unwrap()
+      .get_tank_operators()
+      .borrow()
+      .iter()
+    {
+      let other_tank = other_tank_operator.get_tank();
+      let other_tank = other_tank.borrow();
+      // Inactive tanks are space available
+      if !other_tank.is_active() {
+        continue;
+      }
+      let other_tank_circle = other_tank.get_circle();
+      // Non-intersecting tanks are space available
+      if !other_tank_circle.intersects_circle(&tank_circle) {
+        continue;
+      }
+      // Burning tanks are impassable
+      if other_tank.is_burning() {
+        return false;
+      }
+      // If the tank is out of ammo, all other tanks are impassable
+      if tank_out_of_ammo {
+        return false;
+      }
+      // Friendly tanks are impassable
+      if tank_color == other_tank.get_color() {
+        return false;
+      }
+    }
+    // If the tank is within the goal circle, obstacles are no obstacle
     if self.goal_circle.intersects_circle(&tank_circle) {
-      // TODO: Consider not available if a friendly tank is blocking it
       return true;
     }
     // TODO: previously operated on an array of Impassable
@@ -74,31 +108,6 @@ impl TankCartographer {
       .iter()
     {
       if obstacle.get_circle().intersects_circle(&tank_circle) {
-        return false;
-      }
-    }
-    let self_tank_color = tank.get_color();
-    for other_tank_operator in self
-      .world
-      .upgrade()
-      .unwrap()
-      .get_tank_operators()
-      .borrow()
-      .iter()
-    {
-      let other_tank = other_tank_operator.get_tank();
-      let other_tank = other_tank.borrow();
-      if !other_tank.is_active() {
-        continue;
-      }
-      if tank.get_ammo() > 0
-        && !other_tank.is_burning()
-        && self_tank_color != other_tank.get_color()
-      {
-        continue;
-      }
-      let other_tank_circle = other_tank.get_circle();
-      if other_tank_circle.intersects_circle(&tank_circle) {
         return false;
       }
     }
