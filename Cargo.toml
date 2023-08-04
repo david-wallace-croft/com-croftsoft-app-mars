@@ -10,7 +10,7 @@ name = "com-crofsoft-app-mars"
 publish = false
 readme = "README.md"
 repository = "https://github.com/david-wallace-croft/com-croftsoft-app-mars"
-version = "0.0.3"
+version = "0.0.4-SNAPSHOT"
 
 [dependencies]
 anyhow = "1.0.72"
@@ -30,9 +30,7 @@ wasm-bindgen-futures = "0.4.37"
 
 # TODO: maybe remove this if I can access random number generator via js-sys
 [dependencies.getrandom]
-features = [
-  "js",
-]
+features = ["js"]
 version = "0.2.10"
 
 [dependencies.web-sys]
