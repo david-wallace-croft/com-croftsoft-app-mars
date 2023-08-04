@@ -17,7 +17,7 @@ use core::f64::consts::TAU;
 
 pub const A_STAR_DIRECTIONS: usize = 8;
 pub const A_STAR_LOOPS: usize = 100;
-pub const A_STAR_STEP_SIZE: f64 = TANK_RADIUS;
+pub const A_STAR_STEP_SIZE: f64 = TANK_RADIUS / 2.;
 pub const AMMO_DUMP_AMMO_GROWTH_RATE: f64 = 0.5;
 pub const AMMO_DUMP_AMMO_MAX: f64 = 30.;
 pub const AMMO_DUMP_COOLING_TIME_SECONDS: f64 = 3.;
