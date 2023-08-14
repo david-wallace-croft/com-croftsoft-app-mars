@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-08-02
+//! - Updated: 2023-08-14
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -149,12 +149,10 @@ impl TankOperator for DefaultTankOperator {
           .unwrap()
           .get_closest_obstacle_circle(&self.center);
       }
-      let target_point: Option<Point2DD> =
-        if let Some(target_circle) = &self.target_circle {
-          Some(target_circle.get_center_point_2dd())
-        } else {
-          None
-        };
+      let target_point: Option<Point2DD> = self
+        .target_circle
+        .as_ref()
+        .map(|target_circle| target_circle.get_center_point_2dd());
       tank.rotate_turret(&target_point);
     }
     {
