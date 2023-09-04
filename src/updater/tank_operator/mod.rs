@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-06-19
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -40,7 +40,7 @@ impl TankOperatorUpdater {
 }
 
 impl Updater for TankOperatorUpdater {
-  fn update(&mut self) {
+  fn update(&self) {
     let tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>> =
       self.world.get_tank_operators();
     let length: usize = tank_operators.borrow().len();

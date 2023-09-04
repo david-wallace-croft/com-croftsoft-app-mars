@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-09
-//! - Updated: 2023-07-09
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -33,7 +33,7 @@ impl GameUpdater {
 }
 
 impl Updater for GameUpdater {
-  fn update(&mut self) {
+  fn update(&self) {
     let obstacles = self.root.get_world().get_obstacles();
     if obstacles.borrow().len() == 0 {
       self.root_mutator.get_game_mutator().increment_level();

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-12
-//! - Updated: 2023-06-03
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -46,7 +46,7 @@ impl BulletPainter {
 }
 
 impl Painter for BulletPainter {
-  fn paint(&mut self) {
+  fn paint(&self) {
     let context = self.context.borrow();
     context.set_fill_style(&self.fill_style);
     context.set_stroke_style(&self.stroke_style);

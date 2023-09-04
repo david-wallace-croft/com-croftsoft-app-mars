@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-24
-//! - Updated: 2023-07-03
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -87,7 +87,7 @@ impl NodePainter {
 }
 
 impl Painter for NodePainter {
-  fn paint(&mut self) {
+  fn paint(&self) {
     if !self.options.get_node_display() {
       return;
     }

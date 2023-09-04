@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-07-28
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -99,7 +99,7 @@ impl WorldUpdater {
 }
 
 impl Updater for WorldUpdater {
-  fn update(&mut self) {
+  fn update(&self) {
     if self.inputs.borrow().get_reset_requested() {
       self.reset();
       return;
@@ -109,7 +109,7 @@ impl Updater for WorldUpdater {
     }
     self
       .child_updaters
-      .iter_mut()
+      .iter()
       .for_each(|updater| updater.update());
     self.visitors.iter().for_each(|visitor| {
       self.root.get_world().accept_visitor(visitor.as_ref())

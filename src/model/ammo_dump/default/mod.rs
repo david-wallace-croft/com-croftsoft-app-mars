@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-27
-//! - Updated: 2023-06-19
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -21,7 +21,7 @@ use crate::model::{Damageable, Model, ModelAccessor};
 use crate::world::factory::WorldFactory;
 use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
-use com_croftsoft_lib_role::Preparer;
+use com_croftsoft_lib_role::PreparerMut;
 use std::rc::Weak;
 
 pub mod state;
@@ -186,7 +186,7 @@ impl ModelAccessor for DefaultAmmoDump {
   }
 }
 
-impl Preparer for DefaultAmmoDump {
+impl PreparerMut for DefaultAmmoDump {
   fn prepare(&mut self) {
     // self.exploding = false;
     self.updated = false;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-15
-//! - Updated: 2023-06-20
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -16,7 +16,7 @@ use super::{Explosion, ExplosionAccessor};
 use crate::constant::{EXPLOSION_RADIUS_DECAY_RATE, EXPLOSION_RADIUS_MINIMUM};
 use crate::model::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
-use com_croftsoft_lib_role::Preparer;
+use com_croftsoft_lib_role::PreparerMut;
 
 pub mod state;
 
@@ -115,7 +115,7 @@ impl ModelAccessor for DefaultExplosion {
   }
 }
 
-impl Preparer for DefaultExplosion {
+impl PreparerMut for DefaultExplosion {
   fn prepare(&mut self) {
     self.updated = false;
   }

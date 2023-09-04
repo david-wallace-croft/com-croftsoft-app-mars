@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-06-19
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -154,7 +154,7 @@ impl TankPainter {
 }
 
 impl Painter for TankPainter {
-  fn paint(&mut self) {
+  fn paint(&self) {
     let tank_operators: Ref<VecDeque<Box<dyn TankOperator>>> =
       self.tank_operators.borrow();
     for tank_operator in tank_operators.iter() {

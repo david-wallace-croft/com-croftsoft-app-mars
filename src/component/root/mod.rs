@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-07-07
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -22,7 +22,7 @@ use super::canvas::CanvasComponent;
 use super::update_rate::UpdateRateComponent;
 use crate::inputs::Inputs;
 use com_croftsoft_lib_animation::web_sys::get_window;
-use com_croftsoft_lib_role::{Initializer, Painter, Updater};
+use com_croftsoft_lib_role::{InitializerMut, Painter, UpdaterMut};
 use core::cell::RefCell;
 use std::rc::Rc;
 use web_sys::{Document, HtmlCollection};
@@ -120,7 +120,7 @@ impl Component for RootComponent {
   }
 }
 
-impl Initializer for RootComponent {
+impl InitializerMut for RootComponent {
   fn initialize(&mut self) {
     let document: Document = get_window().unwrap().document().unwrap();
     let html_collection: HtmlCollection =
@@ -138,7 +138,7 @@ impl Initializer for RootComponent {
 }
 
 impl Painter for RootComponent {
-  fn paint(&mut self) {
+  fn paint(&self) {
     // TODO
     // if !self.events.borrow().updated {
     //   return;
@@ -147,7 +147,7 @@ impl Painter for RootComponent {
   }
 }
 
-impl Updater for RootComponent {
+impl UpdaterMut for RootComponent {
   fn update(&mut self) {
     self
       .components

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-18
-//! - Updated: 2023-07-03
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -80,7 +80,7 @@ impl PathPainter {
 }
 
 impl Painter for PathPainter {
-  fn paint(&mut self) {
+  fn paint(&self) {
     if !self.options.get_path_display() {
       return;
     }

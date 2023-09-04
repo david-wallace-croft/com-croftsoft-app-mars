@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-08-02
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,7 +28,7 @@ use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
-use com_croftsoft_lib_role::Preparer;
+use com_croftsoft_lib_role::PreparerMut;
 use core::f64::consts::{PI, TAU};
 use core::f64::INFINITY;
 use std::cell::RefCell;
@@ -465,7 +465,7 @@ impl ModelAccessor for DefaultTank {
   }
 }
 
-impl Preparer for DefaultTank {
+impl PreparerMut for DefaultTank {
   fn prepare(&mut self) {
     self.updated = false;
     self.firing = false;

@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-06-03
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -57,7 +57,7 @@ impl ObstacleUpdater {
 }
 
 impl Updater for ObstacleUpdater {
-  fn update(&mut self) {
+  fn update(&self) {
     // let inputs: Ref<dyn ClockUpdaterInputs> = self.inputs.borrow();
     // if inputs.get_reset_requested() {
     //   clock.time = 0;

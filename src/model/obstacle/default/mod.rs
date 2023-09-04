@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-07-28
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,7 +20,7 @@ use crate::world::World;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
-use com_croftsoft_lib_role::Preparer;
+use com_croftsoft_lib_role::PreparerMut;
 use rand::rngs::ThreadRng;
 use rand::Rng;
 use std::rc::Weak;
@@ -206,7 +206,7 @@ impl ObstacleAccessor for DefaultObstacle {
   }
 }
 
-impl Preparer for DefaultObstacle {
+impl PreparerMut for DefaultObstacle {
   fn prepare(&mut self) {
     self.updated = false;
   }

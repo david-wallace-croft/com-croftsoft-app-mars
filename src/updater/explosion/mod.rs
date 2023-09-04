@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-15
-//! - Updated: 2023-06-03
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -31,7 +31,7 @@ impl ExplosionUpdater {
 }
 
 impl Updater for ExplosionUpdater {
-  fn update(&mut self) {
+  fn update(&self) {
     let length: usize = self.explosions.borrow().len();
     for _index in 0..length {
       let mut explosion = self.explosions.borrow_mut().pop_front().unwrap();

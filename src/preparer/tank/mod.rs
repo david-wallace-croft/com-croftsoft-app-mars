@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-13
-//! - Updated: 2023-06-19
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -32,7 +32,7 @@ impl TankPreparer {
 }
 
 impl Preparer for TankPreparer {
-  fn prepare(&mut self) {
+  fn prepare(&self) {
     let length = self.tank_operators.borrow().len();
     for _index in 0..length {
       // TODO: probably no longer necessary to pop

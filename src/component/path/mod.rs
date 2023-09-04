@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-22
-//! - Updated: 2023-06-24
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -14,7 +14,7 @@
 use super::Component;
 use crate::inputs::Inputs;
 use com_croftsoft_lib_animation::web_sys::add_change_handler_by_id;
-use com_croftsoft_lib_role::{Initializer, Updater};
+use com_croftsoft_lib_role::{InitializerMut, UpdaterMut};
 use core::cell::RefCell;
 use futures::channel::mpsc::{TryRecvError, UnboundedReceiver};
 use std::rc::Rc;
@@ -57,13 +57,13 @@ impl Component for PathComponent {
   }
 }
 
-impl Initializer for PathComponent {
+impl InitializerMut for PathComponent {
   fn initialize(&mut self) {
     self.event_unbounded_receiver_option = add_change_handler_by_id(&self.id);
   }
 }
 
-impl Updater for PathComponent {
+impl UpdaterMut for PathComponent {
   fn update(&mut self) {
     let event_option = self.changed();
     if let Some(event) = event_option {

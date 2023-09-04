@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-07-28
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -44,7 +44,7 @@ impl OverlayPainter {
 }
 
 impl Painter for OverlayPainter {
-  fn paint(&mut self) {
+  fn paint(&self) {
     if self.options.get_pause() || !self.options.get_update_rate_display() {
       return;
     }

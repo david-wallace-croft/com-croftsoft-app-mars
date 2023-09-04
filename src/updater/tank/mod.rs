@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-30
-//! - Updated: 2023-06-19
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -40,7 +40,7 @@ impl TankUpdater {
 }
 
 impl Updater for TankUpdater {
-  fn update(&mut self) {
+  fn update(&self) {
     // let inputs: Ref<dyn ClockUpdaterInputs> = self.inputs.borrow();
     // if inputs.get_reset_requested() {
     //   clock.time = 0;

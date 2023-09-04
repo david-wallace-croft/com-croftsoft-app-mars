@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-10
-//! - Updated: 2023-06-03
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,7 +17,7 @@ use crate::constant::{
 };
 use crate::model::{Model, ModelAccessor};
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
-use com_croftsoft_lib_role::Preparer;
+use com_croftsoft_lib_role::PreparerMut;
 
 pub struct DefaultBullet {
   active: bool,
@@ -134,7 +134,7 @@ impl ModelAccessor for DefaultBullet {
   }
 }
 
-impl Preparer for DefaultBullet {
+impl PreparerMut for DefaultBullet {
   fn prepare(&mut self) {
     self.updated = false;
   }

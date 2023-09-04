@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-07
-//! - Updated: 2023-06-03
+//! - Updated: 2023-09-04
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -31,7 +31,7 @@ impl AmmoDumpUpdater {
 }
 
 impl Updater for AmmoDumpUpdater {
-  fn update(&mut self) {
+  fn update(&self) {
     let length = self.ammo_dumps.borrow().len();
     for _ in 0..length {
       let mut ammo_dump = self.ammo_dumps.borrow_mut().pop_front().unwrap();
