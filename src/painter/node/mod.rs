@@ -56,7 +56,7 @@ impl NodePainter {
 
   fn paint_node(
     &self,
-    tank_operator: &Box<dyn TankOperator>,
+    tank_operator: &dyn TankOperator,
   ) -> Result<(), JsValue> {
     let tank = tank_operator.get_tank();
     let tank = tank.borrow();
@@ -93,7 +93,7 @@ impl Painter for NodePainter {
     }
     let tank_operators = self.tank_operators.borrow();
     for tank_operator in tank_operators.iter() {
-      let _result = self.paint_node(tank_operator);
+      let _result = self.paint_node(tank_operator.as_ref());
     }
   }
 }

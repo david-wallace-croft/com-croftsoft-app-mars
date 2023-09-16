@@ -51,7 +51,7 @@ impl PathPainter {
 
   fn paint_path(
     &self,
-    tank_operator: &Box<dyn TankOperator>,
+    tank_operator: &dyn TankOperator,
   ) -> Result<(), JsValue> {
     let tank = tank_operator.get_tank();
     let tank = tank.borrow();
@@ -86,7 +86,7 @@ impl Painter for PathPainter {
     }
     let tank_operators = self.tank_operators.borrow();
     for tank_operator in tank_operators.iter() {
-      let _result = self.paint_path(tank_operator);
+      let _result = self.paint_path(tank_operator.as_ref());
     }
   }
 }
