@@ -2,10 +2,10 @@
 //! - Constant values for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2024 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-08-03
+//! - Updated: 2024-02-23
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -52,7 +52,7 @@ pub const EXPLOSION_STROKE_STYLE: &str = "red";
 pub static FONT: &str = "bold 17px monospace";
 pub static INFO: &str = "CroftSoft Mars \
   v0.0.4-SNAPSHOT \
-  Copyright 2023 \
+  Copyright 2023-2024 \
   CroftSoft Inc";
 pub const MILLIS_PER_SECOND: f64 = 1_000.;
 pub const NODE_STROKE_STYLE: &str = "black";
