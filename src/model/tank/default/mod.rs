@@ -2,10 +2,10 @@
 //! - Tank state for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2024 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2023-09-04
+//! - Updated: 2024-07-29
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -30,7 +30,6 @@ use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;
 use com_croftsoft_lib_role::PreparerMut;
 use core::f64::consts::{PI, TAU};
-use core::f64::INFINITY;
 use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::{Rc, Weak};
@@ -538,7 +537,7 @@ impl TankAccessor for DefaultTank {
   fn get_closest_ammo_dump_circle(&self) -> Option<Circle> {
     let mut closest_ammo_dump_circle: Option<Circle> = None;
     let tank_center = self.get_center();
-    let mut closest_distance: f64 = INFINITY;
+    let mut closest_distance: f64 = f64::INFINITY;
     let world = &self.world.upgrade().unwrap();
     let ammo_dumps = world.get_ammo_dumps();
     for ammo_dump in ammo_dumps.borrow().iter() {
@@ -557,7 +556,7 @@ impl TankAccessor for DefaultTank {
     &self,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Option<Circle> {
-    let mut closest_distance: f64 = INFINITY;
+    let mut closest_distance: f64 = f64::INFINITY;
     let mut found = false;
     let tank_operators = tank_operators.borrow();
     let length = tank_operators.len();
