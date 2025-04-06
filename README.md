@@ -14,7 +14,8 @@
 ## Update 2025-04-06
 
 - I had to revert npm to version 8.19.4 to get this to work again
-- I also reverted Node.js to version 17.9.1 but that might no be relevant
+- I also reverted Node.js to version 17.9.1 but that might not be relevant
+- See https://github.com/parrotmac/rust-wasm-hello-world
 
 ## Usage
 
