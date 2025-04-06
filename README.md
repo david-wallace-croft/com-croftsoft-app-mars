@@ -11,6 +11,11 @@
 
 ![CroftSoft Mars version 0.0.3-SNAPSHOT](./media/croftsoft-mars-v0.0.3-SNAPSHOT-2023-07-23-a.png)
 
+## Update 2025-04-06
+
+- I had to revert npm to version 8.19.4 to get this to work again
+- I also reverted Node.js to version 17.9.1 but that might no be relevant
+
 ## Usage
 
 - cd com-croftsoft-app-mars/
