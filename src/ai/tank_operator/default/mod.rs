@@ -2,10 +2,10 @@
 //! - Default Tank Operater for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-06
-//! - Updated: 2023-08-14
+//! - Updated: 2026-08-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,13 +20,11 @@ use crate::constant::{
 };
 use crate::model::tank::Tank;
 use crate::world::World;
+use ::web_sys::js_sys::Math::random;
 use com_croftsoft_core::ai::astar::structures::AStar;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use core::cell::{RefCell, RefMut};
-use rand::distributions::Uniform;
-use rand::prelude::Distribution;
-use rand::rngs::ThreadRng;
 use std::collections::VecDeque;
 use std::rc::{Rc, Weak};
 
@@ -101,6 +99,14 @@ impl DefaultTankOperator {
       world,
     }
   }
+
+  // TODO: This should be x_min..=x_max but is currently x_min..x_max
+  fn uniform(
+    x_min: f64,
+    x_max: f64,
+  ) -> f64 {
+    x_min + (x_max - x_min) * random()
+  }
 }
 
 impl TankOperator for DefaultTankOperator {
@@ -173,19 +179,18 @@ impl TankOperator for DefaultTankOperator {
       }
     }
     // Move toward nearest enemy tank
-    let mut thread_rng: ThreadRng = rand::thread_rng();
-    let uniform = Uniform::from(0.0..1.);
+    // let uniform = Uniform::from(0.0..1.);
     if let Some(enemy_circle) = self.target_circle {
       let destination: Point2DD =
         self.get_first_step(enemy_circle, tank.borrow().get_body_heading());
       tank.borrow_mut().go(&destination);
     } else {
       // Move randomly
-      let random_number = uniform.sample(&mut thread_rng);
+      let random_number = random();
       if random_number < time_delta * TANK_DRIFT_PROBABILITY {
-        let uniform_drift = Uniform::from(-1.0..=1.0);
-        let drift_x = uniform_drift.sample(&mut thread_rng);
-        let drift_y = uniform_drift.sample(&mut thread_rng);
+        // let uniform_drift = Uniform::from(-1.0..=1.0);
+        let drift_x = Self::uniform(-1., 1.);
+        let drift_y = Self::uniform(-1., 1.);
         let destination_x = self.center.x + drift_x;
         let destination_y = self.center.y + drift_y;
         self.destination.set_xy(destination_x, destination_y);
@@ -197,7 +202,8 @@ impl TankOperator for DefaultTankOperator {
       self.a_star.reset(self.start_state_space_node);
     }
     // Fire randomly
-    let random_number = uniform.sample(&mut thread_rng);
+    // let random_number = uniform.sample(&mut thread_rng);
+    let random_number = random();
     if random_number < time_delta * TANK_FIRING_PROBABILITY {
       tank.borrow_mut().fire();
     }

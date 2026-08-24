@@ -2,10 +2,10 @@
 //! - Obstacle state for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-12
-//! - Updated: 2023-09-04
+//! - Updated: 2026-08-24
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -17,12 +17,11 @@ use crate::constant::{
 };
 use crate::model::{Damageable, Model, ModelAccessor};
 use crate::world::World;
+use ::web_sys::js_sys::Math::random;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use com_croftsoft_lib_role::PreparerMut;
-use rand::rngs::ThreadRng;
-use rand::Rng;
 use std::rc::Weak;
 
 pub struct DefaultObstacle {
@@ -86,13 +85,12 @@ impl Model for DefaultObstacle {
     if !self.active {
       return;
     }
-    let mut thread_rng: ThreadRng = rand::thread_rng();
-    let velocity_x_delta: f64 = thread_rng.gen_range(-1.0..=1.0)
-      * OBSTACLE_JERK_MAGNITUDE_MAX
-      * time_delta;
-    let velocity_y_delta: f64 = thread_rng.gen_range(-1.0..=1.0)
-      * OBSTACLE_JERK_MAGNITUDE_MAX
-      * time_delta;
+    // TODO: This should be -1.0..=1.0 but currently is -1.0..1.0
+    let velocity_x_delta: f64 =
+      ((random() * 2.) - 1.) as f64 * OBSTACLE_JERK_MAGNITUDE_MAX * time_delta;
+    // TODO: This should be -1.0..=1.0 but currently is -1.0..1.0
+    let velocity_y_delta: f64 =
+      ((random() * 2.) - 1.) as f64 * OBSTACLE_JERK_MAGNITUDE_MAX * time_delta;
     let mut velocity_x: f64 = self.velocity_x + velocity_x_delta;
     let mut velocity_y: f64 = self.velocity_y + velocity_y_delta;
     // TODO: clamp speed of vector instead of individual axis components

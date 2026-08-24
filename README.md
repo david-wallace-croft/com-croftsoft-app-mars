@@ -11,10 +11,9 @@
 
 ![CroftSoft Mars version 0.0.3-SNAPSHOT](./media/croftsoft-mars-v0.0.3-SNAPSHOT-2023-07-23-a.png)
 
-## Update 2025-04-06
+## Update 2026-08-23
 
-- I had to revert npm to version 8.19.4 to get this to work again
-- I also reverted Node.js to version 17.9.1 but that might not be relevant
+- Replaced the webpack build because it stopped working after npm 8.19.4
 - See https://github.com/parrotmac/rust-wasm-hello-world
 
 ## Usage
@@ -25,4 +24,5 @@
 
 ## History
 
-- Initial release: 2023-03-10
+- 2023-03-10: Initial release
+- 2026-08-23: Replaced the webpack build
