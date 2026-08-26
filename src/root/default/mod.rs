@@ -2,10 +2,10 @@
 //! - Default Root Model for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-03
-//! - Updated: 2023-07-09
+//! - Updated: 2026-08-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,9 +19,9 @@ use crate::inputs::Inputs;
 use crate::options::default::DefaultOptions;
 use crate::options::{Options, OptionsMutator};
 use crate::overlay::Overlay;
-use crate::world::factory::default::DefaultWorldFactory;
-use crate::world::factory::WorldFactory;
 use crate::world::World;
+use crate::world::factory::WorldFactory;
+use crate::world::factory::default::DefaultWorldFactory;
 use core::cell::RefCell;
 use std::rc::Rc;
 

@@ -1,9 +1,12 @@
 # Mars
 
 [![MIT licensed][mit-badge]][mit-url]
+[![Rust][rust-badge]][rust-url]
 
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-url]: https://github.com/david-wallace-croft/com-croftsoft-app-mars/blob/main/LICENSE.txt
+[rust-badge]: https://github.com/david-wallace-croft/com-croftsoft/actions/workflows/rust.yml/badge.svg
+[rust-url]: https://github.com/david-wallace-croft/com-croftsoft/actions/workflows/rust.yml
 
 - Tank combat game using the A* algorithm
 - You can see the Rust code compiled to WebAssembly and running in the browser

@@ -2,10 +2,10 @@
 //! - Root Updater for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-13
-//! - Updated: 2023-09-04
+//! - Updated: 2026-08-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -20,8 +20,8 @@ use crate::root::RootMutator;
 use crate::updater::options::OptionsUpdater;
 use crate::updater::overlay::OverlayUpdater;
 use crate::updater::world::WorldUpdater;
-use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::frame_rater::FrameRater;
+use com_croftsoft_lib_animation::frame_rater::updater::FrameRaterUpdater;
 use com_croftsoft_lib_animation::metronome::delta::DeltaMetronome;
 use com_croftsoft_lib_animation::metronome::updater::MetronomeUpdater;
 use com_croftsoft_lib_role::Preparer;

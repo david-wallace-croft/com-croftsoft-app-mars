@@ -2,10 +2,10 @@
 //! - Tank state for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023-2024 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-29
-//! - Updated: 2024-07-29
+//! - Updated: 2026-08-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -23,8 +23,8 @@ use crate::constant::{
 };
 use crate::model::bullet::Bullet;
 use crate::model::{Damageable, Model, ModelAccessor};
-use crate::world::factory::WorldFactory;
 use crate::world::World;
+use crate::world::factory::WorldFactory;
 use com_croftsoft_core::math::geom::circle::{Circle, CircleAccessor};
 use com_croftsoft_core::math::geom::point_2dd::Point2DD;
 use com_croftsoft_core::math::geom::point_xy::PointXY;

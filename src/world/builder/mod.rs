@@ -2,24 +2,24 @@
 //! - World Builder for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-02
-//! - Updated: 2023-07-28
+//! - Updated: 2026-08-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
-use super::factory::WorldFactory;
 use super::World;
+use super::factory::WorldFactory;
 use crate::ai::tank_operator::default::DefaultTankOperator;
 use crate::constant::{AMMO_DUMP_AMMO_MAX, OBSTACLE_RADIUS_MIN};
+use crate::model::ModelAccessor;
 use crate::model::ammo_dump::default::DefaultAmmoDump;
 use crate::model::obstacle::default::DefaultObstacle;
 use crate::model::tank::default::DefaultTank;
 use crate::model::tank::{Color, Tank};
-use crate::model::ModelAccessor;
 use com_croftsoft_core::math::geom::circle::Circle;
 use com_croftsoft_core::math::geom::rectangle::Rectangle;
 use core::cell::RefCell;

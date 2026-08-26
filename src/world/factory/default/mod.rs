@@ -2,22 +2,22 @@
 //! - Default World Factory for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-17
-//! - Updated: 2023-06-15
+//! - Updated: 2026-08-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
 use super::WorldFactory;
-use crate::model::bullet::default::DefaultBullet;
 use crate::model::bullet::Bullet;
-use crate::model::explosion::default::DefaultExplosion;
+use crate::model::bullet::default::DefaultBullet;
 use crate::model::explosion::Explosion;
-use crate::world::default::DefaultWorld;
+use crate::model::explosion::default::DefaultExplosion;
 use crate::world::World;
+use crate::world::default::DefaultWorld;
 use com_croftsoft_core::math::geom::circle::Circle;
 use core::cell::Cell;
 use std::rc::Rc;

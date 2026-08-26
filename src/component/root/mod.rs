@@ -2,20 +2,20 @@
 //! - Root Component for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-11
-//! - Updated: 2023-09-04
+//! - Updated: 2026-08-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
 // =============================================================================
 
+use super::Component;
 use super::node::NodeComponent;
 use super::path::PathComponent;
 use super::pause::PauseComponent;
 use super::reset::ResetComponent;
-use super::Component;
 use crate::root::Root;
 // use super::speed::SpeedComponent;
 use super::canvas::CanvasComponent;

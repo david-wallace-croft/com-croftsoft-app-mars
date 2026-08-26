@@ -2,10 +2,10 @@
 //! - World Updater for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-04-30
-//! - Updated: 2023-09-04
+//! - Updated: 2026-08-25
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,9 +19,9 @@ use crate::updater::explosion::ExplosionUpdater;
 use crate::updater::obstacle::ObstacleUpdater;
 use crate::updater::tank::TankUpdater;
 use crate::updater::tank_operator::TankOperatorUpdater;
+use crate::visitor::Visitor;
 use crate::visitor::bullet::BulletVisitor;
 use crate::visitor::explosion::ExplosionVisitor;
-use crate::visitor::Visitor;
 use crate::world::builder::WorldBuilder;
 use crate::world::director::WorldBuilderDirector;
 use crate::world::seed::WorldSeed;
