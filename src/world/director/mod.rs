@@ -5,7 +5,7 @@
 //! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-05-03
-//! - Updated: 2026-08-24
+//! - Updated: 2026-08-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -105,7 +105,7 @@ impl WorldBuilderDirector {
     let heading_red = FRAC_PI_2;
     let tank_count = TANK_COUNT_MAXIMUM.min(self.seed.level);
     for index in 0..tank_count {
-      let spacer_index = (index + 1) / 2;
+      let spacer_index = index.div_ceil(2);
       let delta_x: i64 = if index % 2 == 0 {
         spacer_index as i64 * 100
       } else {

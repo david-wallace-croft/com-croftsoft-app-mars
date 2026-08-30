@@ -2,10 +2,10 @@
 //! - Game Updater for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-07-09
-//! - Updated: 2023-09-04
+//! - Updated: 2026-08-30
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -35,13 +35,13 @@ impl GameUpdater {
 impl Updater for GameUpdater {
   fn update(&self) {
     let obstacles = self.root.get_world().get_obstacles();
-    if obstacles.borrow().len() == 0 {
+    if obstacles.borrow().is_empty() {
       self.root_mutator.get_game_mutator().increment_level();
       self.root.get_inputs().borrow_mut().reset_requested = true;
       return;
     }
     let tank_operators = self.root.get_world().get_tank_operators();
-    if tank_operators.borrow().len() != 0 {
+    if !tank_operators.borrow().is_empty() {
       return;
     }
     self.root.get_inputs().borrow_mut().reset_requested = true;
