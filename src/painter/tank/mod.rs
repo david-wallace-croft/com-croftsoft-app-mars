@@ -2,10 +2,10 @@
 //! - Tank Painter for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-31
-//! - Updated: 2023-09-04
+//! - Updated: 2026-09-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,10 +28,10 @@ use web_sys::CanvasRenderingContext2d;
 
 pub struct TankPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
-  fill_style_blue: JsValue,
-  fill_style_red: JsValue,
-  fill_style_sparking: JsValue,
-  stroke_style: JsValue,
+  fill_style_blue: &'static str,
+  fill_style_red: &'static str,
+  fill_style_sparking: &'static str,
+  stroke_style: &'static str,
   tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
 
@@ -40,17 +40,12 @@ impl TankPainter {
     context: Rc<RefCell<CanvasRenderingContext2d>>,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
-    let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
-    let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
-    let fill_style_sparking: JsValue =
-      JsValue::from_str(TANK_FILL_STYLE_SPARKING);
-    let stroke_style: JsValue = JsValue::from_str(TANK_STROKE_STYLE);
     Self {
       context,
-      fill_style_blue,
-      fill_style_red,
-      fill_style_sparking,
-      stroke_style,
+      fill_style_blue: TANK_FILL_STYLE_BLUE,
+      fill_style_red: TANK_FILL_STYLE_RED,
+      fill_style_sparking: TANK_FILL_STYLE_SPARKING,
+      stroke_style: TANK_STROKE_STYLE,
       tank_operators,
     }
   }
@@ -68,11 +63,11 @@ impl TankPainter {
     let _result = context.translate(center_x, center_y);
     let _result = context.rotate(tank.get_body_heading());
     let fill_style = match tank.get_color() {
-      Color::RED => &self.fill_style_red,
-      Color::BLUE => &self.fill_style_blue,
+      Color::RED => self.fill_style_red,
+      Color::BLUE => self.fill_style_blue,
     };
-    context.set_fill_style(fill_style);
-    context.set_stroke_style(&self.stroke_style);
+    context.set_fill_style_str(fill_style);
+    context.set_stroke_style_str(self.stroke_style);
     // TODO: rescale this in terms of TANK_RADIUS
     // tank treads
     let x: f64 = -25.;
@@ -114,7 +109,7 @@ impl TankPainter {
     let y: f64 = -2.;
     let w: f64 = 2.;
     let h: f64 = 4.;
-    context.set_fill_style(&self.stroke_style);
+    context.set_fill_style_str(self.stroke_style);
     context.begin_path();
     context.rect(x, y, w, h);
     context.fill();
@@ -134,7 +129,7 @@ impl TankPainter {
     context.begin_path();
     context.rect(10., -2., 4., 4.);
     context.stroke();
-    context.set_fill_style(fill_style);
+    context.set_fill_style_str(fill_style);
     // tank cannon
     context.begin_path();
     context.rect(14., -1., 11., 2.);
@@ -142,7 +137,7 @@ impl TankPainter {
     context.stroke();
     // sparking
     if tank.is_burning() || tank.is_sparking() {
-      context.set_fill_style(&self.fill_style_sparking);
+      context.set_fill_style_str(self.fill_style_sparking);
       context.begin_path();
       context.rect(-5., -5., 10., 10.);
       context.fill();

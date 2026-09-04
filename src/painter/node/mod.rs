@@ -2,10 +2,10 @@
 //! - Node Painter for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-24
-//! - Updated: 2023-09-17
+//! - Updated: 2026-09-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -28,10 +28,10 @@ use web_sys::CanvasRenderingContext2d;
 
 pub struct NodePainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
-  fill_style_blue: JsValue,
-  fill_style_red: JsValue,
+  fill_style_blue: &'static str,
+  fill_style_red: &'static str,
   options: Rc<dyn Options>,
-  stroke_style: JsValue,
+  stroke_style: &'static str,
   tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
 
@@ -41,15 +41,12 @@ impl NodePainter {
     options: Rc<dyn Options>,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
-    let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
-    let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
-    let stroke_style: JsValue = JsValue::from_str(NODE_STROKE_STYLE);
     Self {
       context,
-      fill_style_blue,
-      fill_style_red,
+      fill_style_blue: TANK_FILL_STYLE_BLUE,
+      fill_style_red: TANK_FILL_STYLE_RED,
       options,
-      stroke_style,
+      stroke_style: NODE_STROKE_STYLE,
       tank_operators,
     }
   }
@@ -66,12 +63,12 @@ impl NodePainter {
     let context = self.context.borrow();
     context.save();
     let fill_style = match tank.get_color() {
-      Color::RED => &self.fill_style_red,
-      Color::BLUE => &self.fill_style_blue,
+      Color::RED => self.fill_style_red,
+      Color::BLUE => self.fill_style_blue,
     };
-    context.set_fill_style(fill_style);
+    context.set_fill_style_str(fill_style);
     context.set_line_width(1.);
-    context.set_stroke_style(&self.stroke_style);
+    context.set_stroke_style_str(self.stroke_style);
     let state_space_nodes: Vec<StateSpaceNode> = tank_operator.get_nodes();
     state_space_nodes.iter().for_each(|state_space_node| {
       let point_2dd = state_space_node.get_point_xy();

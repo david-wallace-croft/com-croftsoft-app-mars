@@ -2,10 +2,10 @@
 //! - Obstacle Painter for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-03-15
-//! - Updated: 2023-09-04
+//! - Updated: 2026-09-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -19,14 +19,13 @@ use core::cell::{Ref, RefCell};
 use core::f64::consts::TAU;
 use std::collections::VecDeque;
 use std::rc::Rc;
-use wasm_bindgen::JsValue;
 use web_sys::CanvasRenderingContext2d;
 
 pub struct ObstaclePainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
-  fill_style: JsValue,
+  fill_style: &'static str,
   obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
-  stroke_style: JsValue,
+  stroke_style: &'static str,
 }
 
 impl ObstaclePainter {
@@ -34,13 +33,11 @@ impl ObstaclePainter {
     context: Rc<RefCell<CanvasRenderingContext2d>>,
     obstacles: Rc<RefCell<VecDeque<Box<dyn Obstacle>>>>,
   ) -> Self {
-    let fill_style: JsValue = JsValue::from_str(OBSTACLE_FILL_STYLE);
-    let stroke_style: JsValue = JsValue::from_str(OBSTACLE_STROKE_STYLE);
     Self {
       context,
-      fill_style,
+      fill_style: OBSTACLE_FILL_STYLE,
       obstacles,
-      stroke_style,
+      stroke_style: OBSTACLE_STROKE_STYLE,
     }
   }
 }
@@ -48,8 +45,8 @@ impl ObstaclePainter {
 impl Painter for ObstaclePainter {
   fn paint(&self) {
     let context = self.context.borrow();
-    context.set_fill_style(&self.fill_style);
-    context.set_stroke_style(&self.stroke_style);
+    context.set_fill_style_str(self.fill_style);
+    context.set_stroke_style_str(self.stroke_style);
     let obstacles: Ref<VecDeque<Box<dyn Obstacle>>> = self.obstacles.borrow();
     for obstacle in obstacles.iter() {
       let circle: Circle = obstacle.get_circle();

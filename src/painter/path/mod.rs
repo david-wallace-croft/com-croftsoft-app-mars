@@ -2,10 +2,10 @@
 //! - Path Painter for CroftSoft Mars
 //!
 //! # Metadata
-//! - Copyright: &copy; 2023 [`CroftSoft Inc`]
+//! - Copyright: &copy; 2023-2026 [`CroftSoft Inc`]
 //! - Author: [`David Wallace Croft`]
 //! - Created: 2023-06-18
-//! - Updated: 2023-09-04
+//! - Updated: 2026-09-03
 //!
 //! [`CroftSoft Inc`]: https://www.croftsoft.com/
 //! [`David Wallace Croft`]: https://www.croftsoft.com/people/david/
@@ -26,8 +26,8 @@ use web_sys::CanvasRenderingContext2d;
 
 pub struct PathPainter {
   context: Rc<RefCell<CanvasRenderingContext2d>>,
-  fill_style_blue: JsValue,
-  fill_style_red: JsValue,
+  fill_style_blue: &'static str,
+  fill_style_red: &'static str,
   options: Rc<dyn Options>,
   tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
 }
@@ -38,12 +38,10 @@ impl PathPainter {
     options: Rc<dyn Options>,
     tank_operators: Rc<RefCell<VecDeque<Box<dyn TankOperator>>>>,
   ) -> Self {
-    let fill_style_blue: JsValue = JsValue::from_str(TANK_FILL_STYLE_BLUE);
-    let fill_style_red: JsValue = JsValue::from_str(TANK_FILL_STYLE_RED);
     Self {
       context,
-      fill_style_blue,
-      fill_style_red,
+      fill_style_blue: TANK_FILL_STYLE_BLUE,
+      fill_style_red: TANK_FILL_STYLE_RED,
       options,
       tank_operators,
     }
@@ -61,10 +59,10 @@ impl PathPainter {
     let context = self.context.borrow();
     context.save();
     let stroke_style = match tank.get_color() {
-      Color::RED => &self.fill_style_red,
-      Color::BLUE => &self.fill_style_blue,
+      Color::RED => self.fill_style_red,
+      Color::BLUE => self.fill_style_blue,
     };
-    context.set_stroke_style(stroke_style);
+    context.set_stroke_style_str(stroke_style);
     context.set_line_width(3.);
     let state_space_nodes: VecDeque<StateSpaceNode> = tank_operator.get_path();
     state_space_nodes.iter().for_each(|state_space_node| {
